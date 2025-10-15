@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="til - wtfm">
+  <article>
+    <h1>til</h1>
+    
+    <p>Today I learned. Short notes. No fluff.</p>
+
+    <div class="til-entry" id="2025-10-15">
+      <div class="til-header">
+        <time>2025-10-15</time>
+        <a href="#2025-10-15" class="til-link" aria-label="Link to this TIL">#</a>
+      </div>
+      <p>
+        <code>git commit --amend --no-edit</code> adds staged changes to the last commit without changing the message. Saves time when you forgot a file.
+      </p>
+    </div>
+
+    <div class="til-entry" id="2025-10-14">
+      <div class="til-header">
+        <time>2025-10-14</time>
+        <a href="#2025-10-14" class="til-link" aria-label="Link to this TIL">#</a>
+      </div>
+      <p>
+        <code>bun run</code> is faster than <code>npm run</code> because it skips the overhead of spawning a Node process. Drop-in replacement.
+      </p>
+    </div>
+
+    <div class="til-entry" id="2025-10-13">
+      <div class="til-header">
+        <time>2025-10-13</time>
+        <a href="#2025-10-13" class="til-link" aria-label="Link to this TIL">#</a>
+      </div>
+      <p>
+        Astro inlines CSS automatically with <code>build.inlineStylesheets: 'always'</code>. One less HTTP request. Faster page loads.
+      </p>
+    </div>
+
+    <div class="til-entry" id="2025-10-12">
+      <div class="til-header">
+        <time>2025-10-12</time>
+        <a href="#2025-10-12" class="til-link" aria-label="Link to this TIL">#</a>
+      </div>
+      <p>
+        GitHub Actions can deploy via FTP using <code>SamKirkland/FTP-Deploy-Action</code>. Works with shared hosting. Set secrets in repo settings.
+      </p>
+    </div>
+
+    <div class="til-entry" id="2025-10-11">
+      <div class="til-header">
+        <time>2025-10-11</time>
+        <a href="#2025-10-11" class="til-link" aria-label="Link to this TIL">#</a>
+      </div>
+      <p>
+        CSS <code>prefers-color-scheme: dark</code> respects system settings. But forcing a theme is simpler: just set the colors and skip the media query.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+
+  h1 {
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+  }
+
+  .til-entry {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    background-color: var(--color-til-bg);
+    scroll-margin-top: var(--spacing-md);
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid var(--color-border);
+    clip-path: polygon(
+      6px 0,
+      100% 0,
+      100% calc(100% - 6px),
+      calc(100% - 6px) 100%,
+      6px 100%,
+      0 calc(100% - 6px),
+      0 6px
+    );
+  }
+
+  .til-entry::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: var(--color-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .til-entry::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    bottom: 0;
+    right: 0;
+    height: 6px;
+    background-color: var(--color-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .til-entry:target::before,
+  .til-entry:target::after {
+    background-color: var(--color-accent);
+  }
+
+  .til-entry:target {
+    background-color: var(--color-til-hover);
+    border-color: var(--color-accent);
+  }
+
+  .til-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .til-entry time {
+    color: var(--color-accent);
+    font-size: 0.85rem;
+  }
+
+  .til-link {
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.85rem;
+    padding: 0 0.5rem;
+  }
+
+  .til-entry:hover .til-link,
+  .til-link:focus {
+    opacity: 1;
+  }
+
+  .til-entry p {
+    margin-bottom: 0;
+  }
+
+  .til-entry:hover {
+    background-color: var(--color-til-hover);
+    border-color: var(--color-accent);
+  }
+
+  .til-entry:hover::before,
+  .til-entry:hover::after {
+    background-color: var(--color-accent);
+  }
+</style>

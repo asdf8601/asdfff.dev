@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Write the Fucking Manual">
+  <article>
+    <h1>wtfm</h1>
+    
+    <p>
+      Documentation is the bridge between your code and those who need to use it.
+    </p>
+
+    <p>
+      Yet we skip it. We assume it's obvious. We believe "the code is self-documenting."
+    </p>
+
+    <p>
+      It's not.
+    </p>
+
+    <h2>why it fails</h2>
+    
+    <p>
+      Most documentation fails because it doesn't exist or targets the wrong audience.
+      You can't help if you don't know what they need.
+    </p>
+
+    <h2>how to do better</h2>
+
+    <p>
+      <strong>Start with basics:</strong> What does it do? How to install? How to run?
+    </p>
+
+    <p>
+      <strong>Show, don't tell:</strong> Code examples beat abstract theory.
+    </p>
+
+    <pre><code>$ npm install your-package
+$ your-package --help</code></pre>
+
+    <p>
+      <strong>Keep it simple:</strong> Plain language. Short sentences. Easy to scan.
+    </p>
+
+    <p>
+      <strong>Maintain it:</strong> Outdated docs are worse than no docs.
+    </p>
+
+    <h2>stop procrastinating</h2>
+    
+    <p>
+      Write the fucking manual.
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+
+  h1 {
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+  }
+
+  h2 {
+    text-transform: lowercase;
+  }
+
+  strong {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+</style>

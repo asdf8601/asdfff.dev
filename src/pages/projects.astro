@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="projects - wtfm">
+  <article>
+    <h1>projects</h1>
+    
+    <p>Things I've built. Some finished, some not.</p>
+
+    <div class="project-entry">
+      <div class="project-header">
+        <h3>asdfff.dev</h3>
+        <div class="project-links">
+          <a href="https://github.com/asdf8601/asdfff.dev" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-github"></i>
+          </a>
+        </div>
+      </div>
+      <p>This site. Minimalist terminal aesthetic. Astro + zero dependencies.</p>
+      <div class="project-tags">
+        <span>astro</span>
+        <span>typescript</span>
+        <span>css</span>
+      </div>
+    </div>
+
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+
+  h1 {
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+  }
+
+  .project-entry {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    background-color: var(--color-til-bg);
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid var(--color-border);
+    clip-path: polygon(
+      6px 0,
+      100% 0,
+      100% calc(100% - 6px),
+      calc(100% - 6px) 100%,
+      6px 100%,
+      0 calc(100% - 6px),
+      0 6px
+    );
+  }
+
+  .project-entry::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: var(--color-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .project-entry::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    bottom: 0;
+    right: 0;
+    height: 6px;
+    background-color: var(--color-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .project-entry:hover {
+    background-color: var(--color-til-hover);
+    border-color: var(--color-accent);
+  }
+
+  .project-entry:hover::before,
+  .project-entry:hover::after {
+    background-color: var(--color-accent);
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .project-header h3 {
+    margin: 0;
+    color: var(--color-accent);
+  }
+
+  .project-links {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .project-links a {
+    color: var(--color-text);
+    font-size: 1.2rem;
+    transition: color 0.2s;
+  }
+
+  .project-links a:hover {
+    color: var(--color-accent);
+  }
+
+  .project-entry p {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .project-tags {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+  }
+
+  .project-tags span {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+  }
+</style>

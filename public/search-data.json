@@ -1,0 +1,27 @@
+[
+  {
+    "url": "/404",
+    "title": "404",
+    "content": "404 This page doesn't exist. Go back home"
+  },
+  {
+    "url": "/about",
+    "title": "about",
+    "content": "about This site exists for one reason: to remind you that documentation matters. No frameworks. No tracking. No bullshit. Just plain text on a black screen, like a terminal should be. why this exists Because too many projects die in obscurity not from bad code, but from bad docs. Because \"just read the source\" is not an answer. Because your future self will thank you. what to do Write clear installation instructions. Provide working examples. Explain the why, not just the what. Keep it updated. "
+  },
+  {
+    "url": "/",
+    "title": "wtfm",
+    "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. why it fails Most documentation fails because it doesn't exist or targets the wrong audience. You can't help if you don't know what they need. how to do better Start with basics: What does it do? How to install? How to run? Show, don't tell: Code examples beat abstract theory. $ npm install your-package $ your-package --help"
+  },
+  {
+    "url": "/posts",
+    "title": "posts",
+    "content": "posts Longer thoughts on documentation, tools, and engineering. 2025-10-15 Example Post Title Brief description of what this post is about. Keep it short and to the point."
+  },
+  {
+    "url": "/til",
+    "title": "til",
+    "content": "til Today I learned. Short notes. No fluff. 2025-10-15 git commit --amend --no-edit adds staged changes to the last commit without changing the message. Saves time when you forgot a file. 2025-10-14 bun run is faster than npm run because it skips the overhead of spawning a Node process. Drop-in replacement. 2025-10-13 Astro inlines CSS automatically with build.inlineStylesheets: 'always' . One less HTTP request. Faster page loads. 2025-10-12 GitHub Actions can deploy via FTP using SamKirkland/FT"
+  }
+]

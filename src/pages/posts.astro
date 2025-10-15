@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="posts - wtfm">
+  <article>
+    <h1>posts</h1>
+    
+    <p>Longer thoughts on documentation, tools, and engineering.</p>
+
+    <div class="post-list">
+      <div class="post-entry">
+        <time>2025-10-15</time>
+        <h2><a href="/posts/example">Example Post Title</a></h2>
+        <p>Brief description of what this post is about. Keep it short and to the point.</p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+
+  h1 {
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .post-entry {
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .post-entry:last-child {
+    border-bottom: none;
+  }
+
+  .post-entry time {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .post-entry h2 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.25rem;
+  }
+
+  .post-entry h2 a {
+    text-decoration: none;
+  }
+
+  .post-entry h2 a:hover {
+    text-decoration: underline;
+  }
+
+  .post-entry p {
+    margin: 0;
+    color: var(--color-text);
+  }
+</style>
