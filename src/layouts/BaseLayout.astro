@@ -51,12 +51,21 @@ const base = import.meta.env.BASE_URL;
         const navLinks = document.querySelectorAll('nav a:not(:first-child)');
         
         navLinks.forEach(link => {
+          const originalText = link.textContent?.trim() || '';
+          link.innerHTML = `<span class="link-text">${originalText}</span><span class="link-cursor">█</span>`;
+          
           link.addEventListener('click', (e) => {
             e.preventDefault();
             const href = link.getAttribute('href');
-            const text = link.textContent?.trim() || '';
+            const text = originalText;
+            const linkText = link.querySelector('.link-text') as HTMLElement;
+            const linkCursor = link.querySelector('.link-cursor') as HTMLElement;
             
-            link.innerHTML = '<span class="cursor">█</span>';
+            if (!linkText || !linkCursor) return;
+            
+            linkText.textContent = '';
+            linkCursor.style.opacity = '1';
+            linkCursor.style.animation = 'blinkCursor 0.5s step-end infinite';
             
             setTimeout(() => {
               let charIndex = 0;
@@ -64,10 +73,7 @@ const base = import.meta.env.BASE_URL;
               
               const typeInterval = setInterval(() => {
                 if (charIndex < text.length) {
-                  if (!link.querySelector('.text')) {
-                    link.innerHTML = '<span class="text"></span><span class="cursor">█</span>';
-                  }
-                  link.querySelector('.text')!.textContent = text.substring(0, charIndex + 1);
+                  linkText.textContent = text.substring(0, charIndex + 1);
                   charIndex++;
                 } else {
                   clearInterval(typeInterval);
@@ -111,14 +117,13 @@ const base = import.meta.env.BASE_URL;
     color: var(--color-text);
   }
 
-  nav a:not(:first-child)::after {
-    content: '█';
+  nav a:not(:first-child) .link-cursor {
     color: var(--color-accent);
     margin-left: 0.1rem;
     opacity: 0;
   }
 
-  nav a:not(:first-child):hover::after {
+  nav a:not(:first-child):hover .link-cursor {
     opacity: 1;
   }
 
