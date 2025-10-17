@@ -111,6 +111,12 @@ const base = import.meta.env.BASE_URL;
     color: var(--color-text);
   }
 
+  nav a:not(:first-child):hover::after {
+    content: '█';
+    color: var(--color-accent);
+    margin-left: 0.1rem;
+  }
+
   nav a:not(:first-child) .cursor {
     color: var(--color-accent);
     animation: blinkCursor 0.5s step-end infinite;
