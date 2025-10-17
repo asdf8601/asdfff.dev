@@ -69,7 +69,7 @@ const base = import.meta.env.BASE_URL;
             
             isAnimating = true;
             link.classList.remove('show-hover-cursor');
-            link.innerHTML = '<span class="text"></span><span class="cursor">█</span>';
+            link.innerHTML = '<span class="text"></span><span class="cursor"></span>';
             
             setTimeout(() => {
               let charIndex = 0;
@@ -124,22 +124,27 @@ const base = import.meta.env.BASE_URL;
   }
 
   nav a:not(:first-child)::after {
-    content: '█';
+    content: '';
     margin-left: 0.1rem;
-    color: transparent;
-    font-size: 1.1em;
-    vertical-align: middle;
+    display: inline-block;
+    width: 0.6em;
+    height: 1.2em;
+    background-color: transparent;
+    vertical-align: text-bottom;
   }
 
   nav a:not(:first-child).show-hover-cursor::after {
-    color: var(--color-accent);
+    background-color: var(--color-accent);
   }
 
   nav a:not(:first-child) .cursor {
-    color: var(--color-accent);
+    display: inline-block;
+    width: 0.6em;
+    height: 1.2em;
+    background-color: var(--color-accent);
     animation: blinkCursor 0.5s step-end infinite;
-    font-size: 1.1em;
-    vertical-align: middle;
+    vertical-align: text-bottom;
+    margin-left: 0.1rem;
   }
 
   @keyframes blinkCursor {
