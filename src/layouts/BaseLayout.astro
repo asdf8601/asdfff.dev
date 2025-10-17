@@ -126,6 +126,8 @@ const base = import.meta.env.BASE_URL;
     content: '█';
     margin-left: 0.1rem;
     color: transparent;
+    font-size: 1.1em;
+    vertical-align: middle;
   }
 
   nav a:not(:first-child).show-hover-cursor::after {
@@ -135,6 +137,8 @@ const base = import.meta.env.BASE_URL;
   nav a:not(:first-child) .cursor {
     color: var(--color-accent);
     animation: blinkCursor 0.5s step-end infinite;
+    font-size: 1.1em;
+    vertical-align: middle;
   }
 
   @keyframes blinkCursor {
