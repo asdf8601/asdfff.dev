@@ -66,7 +66,7 @@ const base = import.meta.env.BASE_URL;
               if (href) {
                 window.location.href = href;
               }
-            }, 700);
+            }, 1000);
           });
         });
       });
@@ -104,14 +104,14 @@ const base = import.meta.env.BASE_URL;
   }
 
   nav a:not(:first-child).typing {
-    animation: typeText 0.7s steps(var(--chars), end);
+    animation: typeText 1s steps(var(--chars), end);
     max-width: 0;
   }
 
   nav a:not(:first-child).typing::after {
     content: '█';
     color: var(--color-accent);
-    animation: blinkCursor 0.7s step-end;
+    animation: blinkCursor 1s step-end;
   }
 
   @keyframes typeText {
