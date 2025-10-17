@@ -49,13 +49,26 @@ const base = import.meta.env.BASE_URL;
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const navLinks = document.querySelectorAll('nav a:not(:first-child)');
+        let isAnimating = false;
         
         navLinks.forEach(link => {
+          link.addEventListener('mouseenter', () => {
+            if (!isAnimating) {
+              link.classList.add('show-hover-cursor');
+            }
+          });
+
+          link.addEventListener('mouseleave', () => {
+            link.classList.remove('show-hover-cursor');
+          });
+
           link.addEventListener('click', (e) => {
             e.preventDefault();
             const href = link.getAttribute('href');
             const text = link.textContent?.trim() || '';
             
+            isAnimating = true;
+            link.classList.remove('show-hover-cursor');
             link.innerHTML = '<span class="text"></span><span class="cursor">█</span>';
             
             setTimeout(() => {
@@ -107,6 +120,12 @@ const base = import.meta.env.BASE_URL;
     padding: 0.25rem 0.5rem;
     position: relative;
     color: var(--color-text);
+  }
+
+  nav a:not(:first-child).show-hover-cursor::after {
+    content: '█';
+    color: var(--color-accent);
+    margin-left: 0.1rem;
   }
 
   nav a:not(:first-child) .cursor {
