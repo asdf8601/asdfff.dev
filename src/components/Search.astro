@@ -100,7 +100,7 @@
 
   async function loadPagesData() {
     try {
-      const response = await fetch(`${base}search-data.json`);
+      const response = await fetch(`${base}/search-data.json`);
       pagesData = await response.json();
     } catch (error) {
       console.error('Failed to load search data:', error);
@@ -146,7 +146,7 @@
     searchResults.innerHTML = results
       .map(page => `
         <div class="search-result-item">
-          <a href="${base}${page.url.startsWith('/') ? page.url.slice(1) : page.url}">
+          <a href="${base}/${page.url.startsWith('/') ? page.url.slice(1) : page.url}">
             <div class="search-result-title">${page.title}</div>
             <div class="search-result-excerpt">${getExcerpt(page.content, query)}</div>
           </a>
