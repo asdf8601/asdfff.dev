@@ -45,6 +45,32 @@ const base = import.meta.env.BASE_URL;
     <footer role="contentinfo">
       <p>&copy; {new Date().getFullYear()} Write the Fucking Manual</p>
     </footer>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const navLinks = document.querySelectorAll('nav a:not(:first-child)');
+        
+        navLinks.forEach(link => {
+          if (link.textContent) {
+            const chars = link.textContent.trim().length;
+            link.style.setProperty('--chars', chars.toString());
+          }
+
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = link.getAttribute('href');
+            
+            link.classList.add('typing');
+            
+            setTimeout(() => {
+              if (href) {
+                window.location.href = href;
+              }
+            }, 700);
+          });
+        });
+      });
+    </script>
   </body>
 </html>
 
@@ -73,24 +99,36 @@ const base = import.meta.env.BASE_URL;
     padding: 0.25rem 0.5rem;
     position: relative;
     color: var(--color-text);
+    overflow: hidden;
+    display: inline-block;
   }
 
-  nav a:not(:first-child):hover::after {
-    content: '|';
+  nav a:not(:first-child).typing {
+    animation: typeText 0.7s steps(var(--chars), end);
+    max-width: 0;
+  }
+
+  nav a:not(:first-child).typing::after {
+    content: '█';
     color: var(--color-accent);
-    animation: typing 0.7s steps(1, end);
-    margin-left: 0.1rem;
+    animation: blinkCursor 0.7s step-end;
   }
 
-  @keyframes typing {
-    0% {
-      opacity: 0;
+  @keyframes typeText {
+    from {
+      max-width: 0;
+    }
+    to {
+      max-width: 100%;
+    }
+  }
+
+  @keyframes blinkCursor {
+    0%, 100% {
+      opacity: 1;
     }
     50% {
       opacity: 0;
-    }
-    100% {
-      opacity: 1;
     }
   }
 
