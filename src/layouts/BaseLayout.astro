@@ -58,26 +58,25 @@ const base = import.meta.env.BASE_URL;
             
             link.innerHTML = '<span class="cursor">█</span>';
             
-            let charIndex = 0;
-            const charDelay = 1000 / text.length;
-            
-            const typeInterval = setInterval(() => {
-              if (charIndex < text.length) {
-                const currentText = link.querySelector('.text')?.textContent || '';
-                if (!link.querySelector('.text')) {
-                  link.innerHTML = '<span class="text"></span><span class="cursor">█</span>';
-                }
-                link.querySelector('.text')!.textContent = text.substring(0, charIndex + 1);
-                charIndex++;
-              } else {
-                clearInterval(typeInterval);
-                setTimeout(() => {
+            setTimeout(() => {
+              let charIndex = 0;
+              const charDelay = 100;
+              
+              const typeInterval = setInterval(() => {
+                if (charIndex < text.length) {
+                  if (!link.querySelector('.text')) {
+                    link.innerHTML = '<span class="text"></span><span class="cursor">█</span>';
+                  }
+                  link.querySelector('.text')!.textContent = text.substring(0, charIndex + 1);
+                  charIndex++;
+                } else {
+                  clearInterval(typeInterval);
                   if (href) {
                     window.location.href = href;
                   }
-                }, 100);
-              }
-            }, charDelay);
+                }
+              }, charDelay);
+            }, 200);
           });
         });
       });
