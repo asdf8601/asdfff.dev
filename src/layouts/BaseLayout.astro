@@ -111,10 +111,15 @@ const base = import.meta.env.BASE_URL;
     color: var(--color-text);
   }
 
-  nav a:not(:first-child):hover::after {
+  nav a:not(:first-child)::after {
     content: '█';
     color: var(--color-accent);
     margin-left: 0.1rem;
+    opacity: 0;
+  }
+
+  nav a:not(:first-child):hover::after {
+    opacity: 1;
   }
 
   nav a:not(:first-child) .cursor {
