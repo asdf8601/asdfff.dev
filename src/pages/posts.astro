@@ -2,6 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const base = import.meta.env.BASE_URL;
+
+const posts = await Astro.glob('./posts/*.md');
+
+const sortedPosts = posts.sort((a, b) => {
+  const dateA = new Date(a.frontmatter.date || 0);
+  const dateB = new Date(b.frontmatter.date || 0);
+  return dateB - dateA;
+});
 ---
 
 <BaseLayout title="posts - wtfm">
@@ -11,11 +19,17 @@ const base = import.meta.env.BASE_URL;
     <p>Longer thoughts on documentation, tools, and engineering.</p>
 
     <div class="post-list">
-      <div class="post-entry">
-        <time>2025-10-15</time>
-        <h2><a href={`${base}/posts/example`}>Example Post Title</a></h2>
-        <p>Brief description of what this post is about. Keep it short and to the point.</p>
-      </div>
+      {sortedPosts.length > 0 ? (
+        sortedPosts.map(post => (
+          <div class="post-entry">
+            <time>{post.frontmatter.date}</time>
+            <h2><a href={post.url}>{post.frontmatter.title}</a></h2>
+            <p>{post.frontmatter.description}</p>
+          </div>
+        ))
+      ) : (
+        <p class="empty-state">No posts yet. Add markdown files to src/pages/posts/</p>
+      )}
     </div>
   </article>
 </BaseLayout>

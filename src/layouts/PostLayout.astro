@@ -1,0 +1,19 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+const { frontmatter } = Astro.props;
+const title = frontmatter?.title || 'Untitled';
+const description = frontmatter?.description;
+---
+
+<BaseLayout title={`${title} - wtfm`} description={description}>
+  <article>
+    <slot />
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+</style>

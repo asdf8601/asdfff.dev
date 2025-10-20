@@ -13,8 +13,9 @@
   --color-accent: #00ff00;
   --color-accent-hover: #00cc00;
   --color-border: #1a1a1a;
-  --color-pre-bg: #1a1a1a;
-  --color-pre-border: #2a2a2a;
+  --color-pre-bg: #1d2021;
+  --color-pre-border: #00ff00;
+  --color-pre-text: #ebdbb2;
   --color-til-bg: rgba(26, 26, 26, 0.3);
   --color-til-hover: rgba(0, 255, 0, 0.03);
   --spacing-xs: 0.5rem;
@@ -33,8 +34,9 @@
   --color-accent: #008800;
   --color-accent-hover: #006600;
   --color-border: #d0d0d0;
-  --color-pre-bg: #e8e8e8;
-  --color-pre-border: #d0d0d0;
+  --color-pre-bg: #fbf1c7;
+  --color-pre-border: #008800;
+  --color-pre-text: #3c3836;
   --color-til-bg: transparent;
   --color-til-hover: rgba(0, 136, 0, 0.05);
 }
@@ -116,13 +118,46 @@ pre {
   font-size: 0.95rem;
   background-color: var(--color-pre-bg);
   padding: var(--spacing-sm);
-  border: 1px solid var(--color-pre-border);
+  border-left: 3px solid var(--color-pre-border);
+  border-right: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   overflow-x: auto;
   margin-bottom: var(--spacing-sm);
+  line-height: 1.5;
 }
 
 pre code {
-  color: var(--color-text);
+  color: var(--color-pre-text);
+  font-size: 0.9em;
+}
+
+pre.astro-code {
+  --astro-code-color-text: var(--color-pre-text);
+  --astro-code-color-background: var(--color-pre-bg);
+  --astro-code-token-constant: #d3869b;
+  --astro-code-token-string: #b8bb26;
+  --astro-code-token-comment: #928374;
+  --astro-code-token-keyword: #fb4934;
+  --astro-code-token-parameter: #fabd2f;
+  --astro-code-token-function: #8ec07c;
+  --astro-code-token-string-expression: #b8bb26;
+  --astro-code-token-punctuation: #ebdbb2;
+  --astro-code-token-link: #83a598;
+}
+
+[data-theme="light"] pre.astro-code {
+  --astro-code-color-text: var(--color-pre-text);
+  --astro-code-color-background: var(--color-pre-bg);
+  --astro-code-token-constant: #8f3f71;
+  --astro-code-token-string: #79740e;
+  --astro-code-token-comment: #928374;
+  --astro-code-token-keyword: #9d0006;
+  --astro-code-token-parameter: #b57614;
+  --astro-code-token-function: #427b58;
+  --astro-code-token-string-expression: #79740e;
+  --astro-code-token-punctuation: #3c3836;
+  --astro-code-token-link: #076678;
 }
 
 .skip-link {

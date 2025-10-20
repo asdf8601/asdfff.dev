@@ -1,5 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const tils = await Astro.glob('./til/*.md');
+
+const sortedTils = tils.sort((a, b) => {
+  const dateA = new Date(a.frontmatter.date || 0);
+  const dateB = new Date(b.frontmatter.date || 0);
+  return dateB - dateA;
+});
 ---
 
 <BaseLayout title="til - wtfm">
@@ -8,55 +16,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     
     <p>Today I learned. Short notes. No fluff.</p>
 
-    <div class="til-entry" id="2025-10-15">
-      <div class="til-header">
-        <time>2025-10-15</time>
-        <a href="#2025-10-15" class="til-link" aria-label="Link to this TIL">#</a>
-      </div>
-      <p>
-        <code>git commit --amend --no-edit</code> adds staged changes to the last commit without changing the message. Saves time when you forgot a file.
-      </p>
-    </div>
-
-    <div class="til-entry" id="2025-10-14">
-      <div class="til-header">
-        <time>2025-10-14</time>
-        <a href="#2025-10-14" class="til-link" aria-label="Link to this TIL">#</a>
-      </div>
-      <p>
-        <code>bun run</code> is faster than <code>npm run</code> because it skips the overhead of spawning a Node process. Drop-in replacement.
-      </p>
-    </div>
-
-    <div class="til-entry" id="2025-10-13">
-      <div class="til-header">
-        <time>2025-10-13</time>
-        <a href="#2025-10-13" class="til-link" aria-label="Link to this TIL">#</a>
-      </div>
-      <p>
-        Astro inlines CSS automatically with <code>build.inlineStylesheets: 'always'</code>. One less HTTP request. Faster page loads.
-      </p>
-    </div>
-
-    <div class="til-entry" id="2025-10-12">
-      <div class="til-header">
-        <time>2025-10-12</time>
-        <a href="#2025-10-12" class="til-link" aria-label="Link to this TIL">#</a>
-      </div>
-      <p>
-        GitHub Actions can deploy via FTP using <code>SamKirkland/FTP-Deploy-Action</code>. Works with shared hosting. Set secrets in repo settings.
-      </p>
-    </div>
-
-    <div class="til-entry" id="2025-10-11">
-      <div class="til-header">
-        <time>2025-10-11</time>
-        <a href="#2025-10-11" class="til-link" aria-label="Link to this TIL">#</a>
-      </div>
-      <p>
-        CSS <code>prefers-color-scheme: dark</code> respects system settings. But forcing a theme is simpler: just set the colors and skip the media query.
-      </p>
-    </div>
+    {sortedTils.length > 0 ? (
+      sortedTils.map(til => (
+        <div class="til-entry" id={til.frontmatter.date}>
+          <div class="til-header">
+            <time>{til.frontmatter.date}</time>
+            <a href={`#${til.frontmatter.date}`} class="til-link" aria-label="Link to this TIL">#</a>
+          </div>
+          <til.Content />
+        </div>
+      ))
+    ) : (
+      <p class="empty-state">No TILs yet. Add markdown files to src/pages/til/</p>
+    )}
   </article>
 </BaseLayout>
 

@@ -1,5 +1,5 @@
-import { readdir, readFile, writeFile } from 'fs/promises';
-import { join, basename } from 'path';
+import { readdir, readFile, writeFile, stat } from 'fs/promises';
+import { join } from 'path';
 
 const PAGES_DIR = './src/pages';
 const OUTPUT_FILE = './public/search-data.json';
@@ -41,6 +41,58 @@ async function processFile(filePath, fileName) {
   };
 }
 
+async function processMarkdownFile(filePath, relativePath) {
+  const content = await readFile(filePath, 'utf-8');
+  const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/);
+  
+  let title = 'Untitled';
+  let description = '';
+  
+  if (frontmatterMatch) {
+    const frontmatter = frontmatterMatch[1];
+    const titleMatch = frontmatter.match(/title:\s*["']?([^"'\n]+)["']?/);
+    const descMatch = frontmatter.match(/description:\s*["']?([^"'\n]+)["']?/);
+    
+    if (titleMatch) title = titleMatch[1].trim();
+    if (descMatch) description = descMatch[1].trim();
+  }
+  
+  const text = content
+    .replace(/^---[\s\S]*?---/, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]+`/g, '')
+    .replace(/[#*_~\[\]]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  
+  return {
+    url: relativePath.replace('.md', ''),
+    title,
+    content: description || text.slice(0, 500)
+  };
+}
+
+async function processDirectory(dir, baseDir = PAGES_DIR) {
+  const entries = await readdir(dir);
+  const results = [];
+  
+  for (const entry of entries) {
+    const fullPath = join(dir, entry);
+    const stats = await stat(fullPath);
+    
+    if (stats.isDirectory()) {
+      results.push(...await processDirectory(fullPath, baseDir));
+    } else if (entry.endsWith('.md')) {
+      const relativePath = fullPath
+        .replace(baseDir, '')
+        .replace(/\\/g, '/');
+      results.push(await processMarkdownFile(fullPath, relativePath));
+    }
+  }
+  
+  return results;
+}
+
 async function generateSearchData() {
   const files = await readdir(PAGES_DIR);
   const astroFiles = files.filter(f => f.endsWith('.astro'));
@@ -49,8 +101,12 @@ async function generateSearchData() {
     astroFiles.map(file => processFile(join(PAGES_DIR, file), file))
   );
   
-  await writeFile(OUTPUT_FILE, JSON.stringify(pagesData, null, 2));
-  console.log(`Generated search data for ${pagesData.length} pages`);
+  const markdownData = await processDirectory(PAGES_DIR);
+  
+  const allData = [...pagesData, ...markdownData];
+  
+  await writeFile(OUTPUT_FILE, JSON.stringify(allData, null, 2));
+  console.log(`Generated search data for ${allData.length} pages (${pagesData.length} astro, ${markdownData.length} markdown)`);
 }
 
 generateSearchData().catch(console.error);

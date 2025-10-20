@@ -1,0 +1,25 @@
+---
+title: Test
+date: 2025-10-20
+tag: python
+category: programming
+---
+
+# python 3.14
+
+What’s new in Python 3.14 — Python 3.14.0:
+
+
+1. https://docs.python.org/3.14/whatsnew/3.14.html#a-new-type-of-interpreter
+1. https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-incremental-gc
+1. https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-asyncio-introspection
+1. https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-deferred-annotations
+1. https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-zstandard
+1. https://docs.python.org/3/whatsnew/3.13.html#an-experimental-just-in-time-jit-compiler
+1. https://docs.python.org/3/whatsnew/3.13.html#free-threaded-cpython
+
+Performance:
+
+TL;DR; This version is the fastest python version.
+
+[Python 3.14 Is Here. How Fast Is It?](https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it)
