@@ -1,5 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = await Astro.glob('./posts/*.md');
+
+const sortedPosts = posts
+  .sort((a, b) => {
+    const dateA = new Date(a.frontmatter.date || 0);
+    const dateB = new Date(b.frontmatter.date || 0);
+    return dateB - dateA;
+  })
+  .slice(0, 10);
 ---
 
 <BaseLayout title="Write the Fucking Manual">
@@ -18,6 +28,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       It's not.
     </p>
 
+    {sortedPosts.length > 0 && (
+      <section class="recent-posts">
+        <h2>recent posts</h2>
+        <div class="post-list">
+          {sortedPosts.map(post => (
+            <div class="post-entry">
+              <time>{post.frontmatter.date}</time>
+              <h3><a href={post.url}>{post.frontmatter.title}</a></h3>
+              {post.frontmatter.description && (
+                <p>{post.frontmatter.description}</p>
+              )}
+            </div>
+          ))}
+        </div>
+        <a href="/posts/" class="read-more">read more →</a>
+      </section>
+    )}
   </article>
 </BaseLayout>
 
@@ -38,5 +65,60 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   strong {
     color: var(--color-accent);
     font-weight: 700;
+  }
+
+  .recent-posts {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .post-entry {
+    padding-bottom: var(--spacing-sm);
+  }
+
+  .post-entry time {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .post-entry h3 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .post-entry h3 a {
+    text-decoration: none;
+  }
+
+  .post-entry h3 a:hover {
+    text-decoration: underline;
+  }
+
+  .post-entry p {
+    margin: 0;
+    color: var(--color-text);
+    font-size: 0.95rem;
+  }
+
+  .read-more {
+    display: inline-block;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .read-more:hover {
+    text-decoration: underline;
   }
 </style>

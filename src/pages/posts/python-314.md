@@ -1,14 +1,13 @@
 ---
-title: Test
+title: New Python 3.14
 date: 2025-10-20
 tag: python
 category: programming
 ---
 
-# python 3.14
+# New Python 3.14
 
-What’s new in Python 3.14 — Python 3.14.0:
-
+Here's a list of my favorite new features in Python 3.14:
 
 1. https://docs.python.org/3.14/whatsnew/3.14.html#a-new-type-of-interpreter
 1. https://docs.python.org/3.14/whatsnew/3.14.html#whatsnew314-incremental-gc
@@ -18,7 +17,8 @@ What’s new in Python 3.14 — Python 3.14.0:
 1. https://docs.python.org/3/whatsnew/3.13.html#an-experimental-just-in-time-jit-compiler
 1. https://docs.python.org/3/whatsnew/3.13.html#free-threaded-cpython
 
-Performance:
+
+## Performance:
 
 TL;DR; This version is the fastest python version.
 
