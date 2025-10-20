@@ -1,8 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://asdf8601.github.io',
-  base: '/asdfff.dev',
+  site: 'https://blog.asdfff.dev',
   output: 'static',
   build: {
     inlineStylesheets: 'always',

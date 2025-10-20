@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const base = import.meta.env.BASE_URL;
-
 const posts = await Astro.glob('./posts/*.md');
 
 const sortedPosts = posts.sort((a, b) => {
