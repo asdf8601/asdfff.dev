@@ -71,3 +71,9 @@ tcpdump -i any -nn port 8080 -c 100
 ```bash
 ss -tp state established | grep <service-name>
 ```
+
+9. Bonus: use watch
+
+```bash
+watch -n1 ss -s
+```
