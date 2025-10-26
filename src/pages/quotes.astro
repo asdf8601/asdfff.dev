@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const quotes = await Astro.glob('./quotes/*.md');
+
+const sortedQuotes = quotes.sort((a, b) => {
+  const dateA = new Date(a.frontmatter.date || 0);
+  const dateB = new Date(b.frontmatter.date || 0);
+  return dateB.getTime() - dateA.getTime();
+});
+---
+
+<BaseLayout title="quotes - wtfm">
+  <article>
+    <h1>quotes</h1>
+    
+    <p>Words worth keeping. A curated collection of literary wisdom.</p>
+
+    {sortedQuotes.length > 0 ? (
+      sortedQuotes.map(quote => (
+        <div class="quote-entry" id={quote.frontmatter.date}>
+          <div class="quote-content">
+            <blockquote>
+              <quote.Content />
+            </blockquote>
+            {quote.frontmatter.author && (
+              <cite class="quote-author">— {quote.frontmatter.author}</cite>
+            )}
+            {quote.frontmatter.source && (
+              <span class="quote-source">{quote.frontmatter.source}</span>
+            )}
+          </div>
+          <div class="quote-footer">
+            <time>{quote.frontmatter.date}</time>
+            <a href={`#${quote.frontmatter.date}`} class="quote-link" aria-label="Link to this quote">#</a>
+          </div>
+        </div>
+      ))
+    ) : (
+      <p class="empty-state">No quotes yet. Add markdown files to src/pages/quotes/</p>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 100%;
+  }
+
+  h1 {
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+    font-style: italic;
+  }
+
+  .quote-entry {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background-color: var(--color-til-bg);
+    scroll-margin-top: var(--spacing-md);
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid var(--color-border);
+    clip-path: polygon(
+      6px 0,
+      100% 0,
+      100% calc(100% - 6px),
+      calc(100% - 6px) 100%,
+      6px 100%,
+      0 calc(100% - 6px),
+      0 6px
+    );
+  }
+
+  .quote-entry::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background-color: var(--color-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .quote-entry::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    bottom: 0;
+    right: 0;
+    height: 6px;
+    background-color: var(--color-border);
+    transition: background-color 0.2s ease;
+  }
+
+  .quote-entry:target::before,
+  .quote-entry:target::after {
+    background-color: var(--color-accent);
+  }
+
+  .quote-entry:target {
+    background-color: var(--color-til-hover);
+    border-color: var(--color-accent);
+  }
+
+  .quote-entry:hover {
+    background-color: var(--color-til-hover);
+    border-color: var(--color-accent);
+  }
+
+  .quote-entry:hover::before,
+  .quote-entry:hover::after {
+    background-color: var(--color-accent);
+  }
+
+  .quote-content {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  blockquote {
+    margin: 0 0 var(--spacing-sm) 0;
+    padding: 0;
+    border: none;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .quote-author {
+    display: block;
+    font-style: normal;
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .quote-source {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  .quote-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--spacing-xs);
+    border-top: 1px dashed var(--color-border);
+  }
+
+  .quote-entry time {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .quote-link {
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 0.85rem;
+    padding: 0 0.5rem;
+  }
+
+  .quote-entry:hover .quote-link,
+  .quote-link:focus {
+    opacity: 1;
+  }
+
+  .quote-entry p {
+    margin-bottom: 0;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const quoteLinks = document.querySelectorAll('.quote-link');
+    
+    quoteLinks.forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        
+        if (href) {
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+          } catch (err) {
+            console.error('Failed to copy link:', err);
+          }
+        }
+      });
+    });
+  });
+</script>

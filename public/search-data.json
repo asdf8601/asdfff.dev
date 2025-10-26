@@ -7,17 +7,17 @@
   {
     "url": "/about",
     "title": "about",
-    "content": "about This site exists for one reason: to remind you that documentation matters. No frameworks. No tracking. No bullshit. Just plain text on a black screen, like a terminal should be. why this exists Because too many projects die in obscurity not from bad code, but from bad docs. Because \"just read the source\" is not an answer. Because your future self will thank you. what to do Write clear installation instructions. Provide working examples. Explain the why, not just the what. Keep it updated. "
+    "content": "about This site exists for one reason: to remind you that documentation matters. Source: github.com/asdf8601/asdfff.dev"
   },
   {
     "url": "/",
     "title": "wtfm",
-    "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. why it fails Most documentation fails because it doesn't exist or targets the wrong audience. You can't help if you don't know what they need. how to do better Start with basics: What does it do? How to install? How to run? Show, don't tell: Code examples beat abstract theory. $ npm install your-package $ your-package --help"
+    "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. {sortedPosts.length > 0 && ( recent posts {sortedPosts.map(post => ( {post.frontmatter.date} {post.frontmatter.title} {post.frontmatter.description && ( {post.frontmatter.description} )} ))} read more → )}"
   },
   {
     "url": "/posts",
     "title": "posts",
-    "content": "posts Longer thoughts on documentation, tools, and engineering. 2025-10-15 Example Post Title Brief description of what this post is about. Keep it short and to the point."
+    "content": "posts Longer thoughts on documentation, tools, and engineering. {sortedPosts.length > 0 ? ( sortedPosts.map(post => ( {post.frontmatter.date} {post.frontmatter.title} {post.frontmatter.description} )) ) : ( No posts yet. Add markdown files to src/pages/posts/ )}"
   },
   {
     "url": "/projects",
@@ -25,8 +25,33 @@
     "content": "projects Things I've built. Some finished, some not. asdfff.dev This site. Minimalist terminal aesthetic. Astro + zero dependencies. astro typescript css"
   },
   {
+    "url": "/quotes",
+    "title": "quotes",
+    "content": "quotes Words worth keeping. A curated collection of literary wisdom. {sortedQuotes.length > 0 ? ( sortedQuotes.map(quote => ( {quote.frontmatter.author && ( — {quote.frontmatter.author} )} {quote.frontmatter.source && ( {quote.frontmatter.source} )} {quote.frontmatter.date} # )) ) : ( No quotes yet. Add markdown files to src/pages/quotes/ )}"
+  },
+  {
     "url": "/til",
     "title": "til",
-    "content": "til Today I learned. Short notes. No fluff. 2025-10-15 # git commit --amend --no-edit adds staged changes to the last commit without changing the message. Saves time when you forgot a file. 2025-10-14 # bun run is faster than npm run because it skips the overhead of spawning a Node process. Drop-in replacement. 2025-10-13 # Astro inlines CSS automatically with build.inlineStylesheets: 'always' . One less HTTP request. Faster page loads. 2025-10-12 # GitHub Actions can deploy via FTP using SamKir"
+    "content": "til Today I learned. Short notes. No fluff. {sortedTils.length > 0 ? ( sortedTils.map(til => ( {til.frontmatter.date} # )) ) : ( No TILs yet. Add markdown files to src/pages/til/ )}"
+  },
+  {
+    "url": "src/pages/posts/k-debug",
+    "title": "How to debug a pod",
+    "content": "1. Check open connections (signs of saturation) 2. Check for socket leaks or system limits 3. Test local endpoint (no network involved) 4. Test access from another service (within the cluster) 5. Monitor process usage (signs of CPU/memory saturation) 6. If you suspect too many client connections 7. Check if real traffic is reaching and its volume Measures if requests are actually arriving when latency increases. 8. (optional) Inspect specific connections"
+  },
+  {
+    "url": "src/pages/posts/python-314",
+    "title": "New Python 3.14",
+    "content": "New Python 3.14 Here's a list of my favorite new features in Python 3.14: 1. https://docs.python.org/3.14/whatsnew/3.14.htmla-new-type-of-interpreter 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-incremental-gc 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-asyncio-introspection 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-deferred-annotations 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-zstandard 1. https://docs.python.org/3/whats"
+  },
+  {
+    "url": "src/pages/quotes/example",
+    "title": "Untitled",
+    "content": "I have always imagined that Paradise will be a kind of library."
+  },
+  {
+    "url": "src/pages/til/grep",
+    "title": "Untitled",
+    "content": "shows byte offset of matches"
   }
 ]

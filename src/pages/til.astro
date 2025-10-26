@@ -6,7 +6,7 @@ const tils = await Astro.glob('./til/*.md');
 const sortedTils = tils.sort((a, b) => {
   const dateA = new Date(a.frontmatter.date || 0);
   const dateB = new Date(b.frontmatter.date || 0);
-  return dateB - dateA;
+  return dateB.getTime() - dateA.getTime();
 });
 ---
 
@@ -131,3 +131,26 @@ const sortedTils = tils.sort((a, b) => {
     background-color: var(--color-accent);
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tilLinks = document.querySelectorAll('.til-link');
+    
+    tilLinks.forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        
+        if (href) {
+          const fullUrl = window.location.origin + window.location.pathname + href;
+          
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+          } catch (err) {
+            console.error('Failed to copy link:', err);
+          }
+        }
+      });
+    });
+  });
+</script>
