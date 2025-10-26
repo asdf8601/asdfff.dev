@@ -303,8 +303,23 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     max-width: var(--max-width);
     margin: 0 auto;
     display: flex;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+    }
+    
+    nav a:not(:first-child)::before {
+      display: none;
+    }
+    
+    header {
+      padding: var(--spacing-md) var(--spacing-sm);
+    }
   }
 
   nav a {
@@ -317,6 +332,11 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     padding: 0.25rem 0.5rem;
     position: relative;
     color: var(--color-text);
+    transition: color 0.2s ease;
+  }
+
+  nav a:not(:first-child):hover {
+    color: var(--color-accent);
   }
 
   nav a:not(:first-child)::before {
@@ -329,6 +349,17 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     color: var(--color-text-muted);
     opacity: 0.5;
     margin-right: 0.05rem;
+  }
+
+  @media (max-width: 768px) {
+    nav a:not(:first-child)::before {
+      display: none;
+    }
+    
+    nav {
+      flex-wrap: wrap;
+      gap: var(--spacing-xs);
+    }
   }
 
   nav a:not(:first-child)::after {
