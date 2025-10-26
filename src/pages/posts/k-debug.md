@@ -1,0 +1,73 @@
+---
+title: How to debug a pod
+tag: python
+category: programming
+date: 2025-10-26
+---
+
+
+
+```sh
+kubectl debug <pod-id> -ti --image=nicolaka/netshoot --target=<pod-name> --profile=sysadmin
+```
+
+1. Check open connections (signs of saturation)
+
+```
+ss -s                          # quick summary (states: ESTAB, TIME-WAIT, SYN-RECV)
+ss -tuna | grep 8080 | wc -l   # total connections to the app port
+ss -tuna | grep SYN_RECV       # half-open connections (possible overload)
+ss -tuna | grep TIME_WAIT | wc -l  # connections closing slowly
+```
+
+2. Check for socket leaks or system limits
+
+```
+cat /proc/sys/net/ipv4/ip_local_port_range
+cat /proc/sys/net/ipv4/tcp_fin_timeout
+cat /proc/sys/net/ipv4/tcp_tw_reuse
+ulimit -n                      # file descriptor limit
+```
+
+3. Test local endpoint (no network involved)
+
+```
+time curl -v http://127.0.0.1:8080/health
+time curl -v http://127.0.0.1:8080/predict
+# If this is slow, the issue is inside the container, not the network.
+```
+
+4. Test access from another service (within the cluster)
+
+```
+time curl -v http://<service>:<port>/status
+# If this is slow but the local one isn’t, it’s a network or connection bottleneck.
+```
+
+5. Monitor process usage (signs of CPU/memory saturation)
+
+```
+ps auxf | grep python
+top -p <PID>
+cat /proc/<PID>/status | egrep 'Threads|VmRSS'
+```
+
+6. If you suspect too many client connections
+
+```
+lsof -p <PID> | grep TCP | wc -l
+netstat -anp | grep 8080 | grep ESTAB | wc -l
+```
+
+7. Check if real traffic is reaching and its volume
+
+```
+tcpdump -i any -nn port 8080 -c 100
+```
+# Measures if requests are actually arriving when latency increases.
+
+8. (optional) Inspect specific connections
+
+```
+ss -tp state established | grep header-bidding
+```
