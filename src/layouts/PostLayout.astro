@@ -10,10 +10,475 @@ const description = frontmatter?.description;
   <article>
     <slot />
   </article>
+
+  <script is:inline src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script is:inline>
+    if (typeof mermaid !== 'undefined') {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+      });
+    }
+  </script>
+
+  <div id="post-finder-modal" class="modal">
+    <div class="modal-content">
+      <input type="text" id="post-finder-input" placeholder="search posts..." />
+      <div id="post-finder-results"></div>
+    </div>
+  </div>
+
+  <div id="page-search-modal" class="modal">
+    <div class="modal-content">
+      <input type="text" id="page-search-input" placeholder="search in page..." />
+      <div id="page-search-results"></div>
+    </div>
+  </div>
 </BaseLayout>
 
 <style>
   article {
     max-width: 100%;
   }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-accent);
+    padding: var(--spacing-md);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #post-finder-input {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    padding: var(--spacing-sm);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-md);
+  }
+
+  #post-finder-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  #post-finder-results {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .finder-result {
+    padding: var(--spacing-sm);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+
+  .finder-result:hover {
+    border-left-color: var(--color-accent);
+  }
+
+  .finder-result.selected-item {
+    background-color: var(--color-bg-secondary);
+    border-left-color: var(--color-accent);
+  }
+
+  .finder-result-title {
+    font-weight: bold;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .finder-result-date {
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .search-result {
+    padding: var(--spacing-sm);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+
+  .search-result:hover {
+    border-left-color: var(--color-accent);
+  }
+
+  .search-result.selected-item {
+    background-color: var(--color-bg-secondary);
+    border-left-color: var(--color-accent);
+  }
+
+  .search-result-text {
+    font-size: 0.9rem;
+  }
+
+  .search-highlight {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+    padding: 0 2px;
+  }
 </style>
+
+<script>
+  interface Post {
+    url: string;
+    title: string;
+    date?: string;
+  }
+
+  interface SearchMatch {
+    element: Element;
+    text: string;
+    index: number;
+  }
+
+  let escapeCount = 0;
+  let escapeTimer: number | undefined;
+  let gCount = 0;
+  let gTimer: number | undefined;
+  let finderActive = false;
+  let pageSearchActive = false;
+  let allPosts: Post[] = [];
+  let filteredPosts: Post[] = [];
+  let selectedIndex = -1;
+  let searchMatches: SearchMatch[] = [];
+  let searchSelectedIndex = -1;
+
+  const modal = document.getElementById('post-finder-modal');
+  const input = document.getElementById('post-finder-input') as HTMLInputElement;
+  const results = document.getElementById('post-finder-results');
+
+  const pageSearchModal = document.getElementById('page-search-modal');
+  const pageSearchInput = document.getElementById('page-search-input') as HTMLInputElement;
+  const pageSearchResults = document.getElementById('page-search-results');
+
+  async function loadPosts() {
+    try {
+      const response = await fetch('/search-data.json');
+      const data = await response.json();
+      allPosts = data
+        .filter((item: any) => item.url.startsWith('src/pages/posts/'))
+        .map((item: any) => ({
+          url: item.url.replace('src/pages/posts/', '/posts/'),
+          title: item.title,
+          date: ''
+        }));
+    } catch (error) {
+      console.error('Failed to load posts:', error);
+    }
+  }
+
+  function fuzzyMatch(str: string, pattern: string): number {
+    if (!pattern) return 1;
+
+    const strLower = str.toLowerCase();
+    const patternLower = pattern.toLowerCase();
+
+    let score = 0;
+    let patternIdx = 0;
+    let prevMatchIdx = -1;
+
+    for (let i = 0; i < strLower.length && patternIdx < patternLower.length; i++) {
+      if (strLower[i] === patternLower[patternIdx]) {
+        score += 1;
+        if (prevMatchIdx === i - 1) {
+          score += 5;
+        }
+        prevMatchIdx = i;
+        patternIdx++;
+      }
+    }
+
+    return patternIdx === patternLower.length ? score : 0;
+  }
+
+  function filterPosts(query: string) {
+    if (!query) {
+      filteredPosts = allPosts;
+    } else {
+      filteredPosts = allPosts
+        .map(post => ({
+          post,
+          score: fuzzyMatch(post.title, query)
+        }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.post);
+    }
+    renderResults();
+  }
+
+  function renderResults() {
+    if (!results) return;
+
+    results.innerHTML = '';
+    filteredPosts.forEach((post, index) => {
+      const div = document.createElement('div');
+      div.className = 'finder-result';
+      if (index === selectedIndex) {
+        div.classList.add('selected-item');
+      }
+      div.innerHTML = `
+        <div class="finder-result-title">${post.title}</div>
+        ${post.date ? `<div class="finder-result-date">${post.date}</div>` : ''}
+      `;
+      div.addEventListener('click', () => {
+        window.location.href = post.url;
+      });
+      results.appendChild(div);
+    });
+  }
+
+  function updateSelection() {
+    const resultElements = results?.querySelectorAll('.finder-result');
+    resultElements?.forEach((el, index) => {
+      if (index === selectedIndex) {
+        el.classList.add('selected-item');
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        el.classList.remove('selected-item');
+      }
+    });
+  }
+
+  function openFinder() {
+    finderActive = true;
+    modal?.classList.add('active');
+    input?.focus();
+    selectedIndex = 0;
+    filterPosts('');
+  }
+
+  function closeFinder() {
+    finderActive = false;
+    modal?.classList.remove('active');
+    if (input) input.value = '';
+    selectedIndex = -1;
+  }
+
+  function searchInPage(query: string) {
+    searchMatches = [];
+    if (!query) {
+      renderPageSearchResults();
+      return;
+    }
+
+    const article = document.querySelector('article');
+    if (!article) return;
+
+    const walker = document.createTreeWalker(
+      article,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          if (node.parentElement?.tagName === 'SCRIPT' ||
+              node.parentElement?.tagName === 'STYLE') {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    let node;
+    while ((node = walker.nextNode())) {
+      const text = node.textContent || '';
+      const lowerText = text.toLowerCase();
+      const lowerQuery = query.toLowerCase();
+
+      let index = 0;
+      let position;
+      while ((position = lowerText.indexOf(lowerQuery, index)) !== -1) {
+        searchMatches.push({
+          element: node.parentElement as Element,
+          text: text,
+          index: position
+        });
+        index = position + 1;
+      }
+    }
+
+    renderPageSearchResults();
+  }
+
+  function renderPageSearchResults() {
+    if (!pageSearchResults) return;
+
+    pageSearchResults.innerHTML = '';
+
+    if (searchMatches.length === 0) {
+      pageSearchResults.innerHTML = '<div style="padding: var(--spacing-sm); color: var(--color-text-muted);">No matches found</div>';
+      return;
+    }
+
+    searchMatches.forEach((match, index) => {
+      const div = document.createElement('div');
+      div.className = 'search-result';
+      if (index === searchSelectedIndex) {
+        div.classList.add('selected-item');
+      }
+
+      const start = Math.max(0, match.index - 40);
+      const end = Math.min(match.text.length, match.index + (pageSearchInput?.value.length || 0) + 40);
+      const before = match.text.slice(start, match.index);
+      const matchText = match.text.slice(match.index, match.index + (pageSearchInput?.value.length || 0));
+      const after = match.text.slice(match.index + (pageSearchInput?.value.length || 0), end);
+
+      div.innerHTML = `
+        <div class="search-result-text">
+          ${start > 0 ? '...' : ''}${before}<span class="search-highlight">${matchText}</span>${after}${end < match.text.length ? '...' : ''}
+        </div>
+      `;
+
+      div.addEventListener('click', () => {
+        match.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        closePageSearch();
+      });
+
+      pageSearchResults.appendChild(div);
+    });
+  }
+
+  function updatePageSearchSelection() {
+    const resultElements = pageSearchResults?.querySelectorAll('.search-result');
+    resultElements?.forEach((el, index) => {
+      if (index === searchSelectedIndex) {
+        el.classList.add('selected-item');
+        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        el.classList.remove('selected-item');
+      }
+    });
+  }
+
+  function openPageSearch() {
+    pageSearchActive = true;
+    pageSearchModal?.classList.add('active');
+    pageSearchInput?.focus();
+    searchSelectedIndex = 0;
+    searchInPage('');
+  }
+
+  function closePageSearch() {
+    pageSearchActive = false;
+    pageSearchModal?.classList.remove('active');
+    if (pageSearchInput) pageSearchInput.value = '';
+    searchSelectedIndex = -1;
+    searchMatches = [];
+  }
+
+  loadPosts();
+
+  input?.addEventListener('input', () => {
+    selectedIndex = 0;
+    filterPosts(input.value);
+  });
+
+  pageSearchInput?.addEventListener('input', () => {
+    searchSelectedIndex = 0;
+    searchInPage(pageSearchInput.value);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (pageSearchActive) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closePageSearch();
+      }
+      return;
+    }
+
+    if (finderActive) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeFinder();
+      } else if (e.key === 'j') {
+        e.preventDefault();
+        if (selectedIndex < filteredPosts.length - 1) {
+          selectedIndex++;
+          updateSelection();
+        }
+      } else if (e.key === 'k' && !(e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        if (selectedIndex > 0) {
+          selectedIndex--;
+          updateSelection();
+        }
+      } else if (e.key === 'Enter' && selectedIndex >= 0 && selectedIndex < filteredPosts.length) {
+        e.preventDefault();
+        window.location.href = filteredPosts[selectedIndex].url;
+      }
+      return;
+    }
+
+    if (e.target instanceof HTMLInputElement) return;
+
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      openPageSearch();
+    } else if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      openFinder();
+    } else if (e.key === 'j') {
+      e.preventDefault();
+      window.scrollBy({ top: 100, behavior: 'smooth' });
+    } else if (e.key === 'k') {
+      e.preventDefault();
+      window.scrollBy({ top: -100, behavior: 'smooth' });
+    } else if (e.key === 'g') {
+      gCount++;
+
+      if (gCount === 1) {
+        gTimer = window.setTimeout(() => {
+          gCount = 0;
+        }, 500);
+      } else if (gCount === 2) {
+        e.preventDefault();
+        if (gTimer) {
+          clearTimeout(gTimer);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        gCount = 0;
+      }
+    } else if (e.key === 'G') {
+      e.preventDefault();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    } else if (e.key === 'Escape') {
+      escapeCount++;
+
+      if (escapeCount === 1) {
+        escapeTimer = window.setTimeout(() => {
+          escapeCount = 0;
+        }, 500);
+      } else if (escapeCount === 2) {
+        if (escapeTimer) {
+          clearTimeout(escapeTimer);
+        }
+        window.location.href = '/posts';
+      }
+    }
+  });
+</script>

@@ -1,0 +1,97 @@
+---
+title: Mermaid Diagrams Demo
+date: 2025-01-26
+description: Examples of rendering diagrams using Mermaid
+tags: [diagrams, demo, mermaid]
+draft: true
+---
+
+import Mermaid from '../../components/Mermaid.astro';
+
+# Mermaid Diagrams Demo
+
+## Flowchart
+
+<Mermaid>
+```
+flowchart TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> E[Fix bugs]
+    E --> B
+    C --> F[Deploy]
+    F --> G[End]
+```
+</Mermaid>
+
+## Sequence Diagram
+
+<Mermaid>
+{`
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Server
+    participant Database
+    
+    User->>Browser: Enter URL
+    Browser->>Server: HTTP Request
+    Server->>Database: Query data
+    Database-->>Server: Return results
+    Server-->>Browser: HTTP Response
+    Browser-->>User: Display page
+`}
+</Mermaid>
+
+## Class Diagram
+
+<Mermaid>
+{`
+classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +bark()
+    }
+    class Cat {
+        +String color
+        +meow()
+    }
+    Animal <|-- Dog
+    Animal <|-- Cat
+`}
+</Mermaid>
+
+## State Diagram
+
+<Mermaid>
+{`
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Processing : Start
+    Processing --> Success : Complete
+    Processing --> Error : Fail
+    Success --> [*]
+    Error --> Retry : Retry
+    Retry --> Processing
+    Error --> [*] : Give up
+`}
+</Mermaid>
+
+## Pie Chart
+
+<Mermaid>
+{`
+pie title Programming Languages Usage
+    "Python" : 35
+    "JavaScript" : 25
+    "Go" : 20
+    "Rust" : 12
+    "Other" : 8
+`}
+</Mermaid>

@@ -1,28 +1,54 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageSearchModal from '../components/PageSearchModal.astro';
 
-const posts = await Astro.glob('./posts/*.md');
+const mdPosts = await Astro.glob('./posts/*.md');
+const mdxPosts = await Astro.glob('./posts/*.mdx');
+const posts = [...mdPosts, ...mdxPosts];
 
-const sortedPosts = posts.sort((a, b) => {
-  const dateA = new Date(a.frontmatter.date || 0);
-  const dateB = new Date(b.frontmatter.date || 0);
-  return dateB - dateA;
-});
+const isDev = import.meta.env.DEV;
+
+const sortedPosts = posts
+  .filter(post => isDev || !post.frontmatter.draft)
+  .sort((a, b) => {
+    const dateA = new Date(a.frontmatter.date || 0).getTime();
+    const dateB = new Date(b.frontmatter.date || 0).getTime();
+    return dateB - dateA;
+  });
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
 ---
 
 <BaseLayout title="posts - wtfm">
   <article>
     <h1>posts</h1>
-    
+
     <p>Longer thoughts on documentation, tools, and engineering.</p>
 
     <div class="post-list">
       {sortedPosts.length > 0 ? (
         sortedPosts.map(post => (
           <div class="post-entry">
-            <time>{post.frontmatter.date}</time>
             <h2><a href={post.url}>{post.frontmatter.title}</a></h2>
-            <p>{post.frontmatter.description}</p>
+            <div class="post-meta">
+              <time>{formatDate(post.frontmatter.date)}</time>
+              {post.frontmatter.category && (
+                <span class="category">{post.frontmatter.category}</span>
+              )}
+              {post.frontmatter.tag && (
+                <span class="tag">{post.frontmatter.tag}</span>
+              )}
+            </div>
+            {post.frontmatter.description && (
+              <p>{post.frontmatter.description}</p>
+            )}
           </div>
         ))
       ) : (
@@ -30,6 +56,8 @@ const sortedPosts = posts.sort((a, b) => {
       )}
     </div>
   </article>
+
+  <PageSearchModal />
 </BaseLayout>
 
 <style>
@@ -45,28 +73,43 @@ const sortedPosts = posts.sort((a, b) => {
   .post-list {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
   }
 
   .post-entry {
-    padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .post-entry:last-child {
-    border-bottom: none;
-  }
-
-  .post-entry time {
-    display: block;
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
-    margin-bottom: var(--spacing-xs);
+    padding-bottom: 0;
   }
 
   .post-entry h2 {
     margin: 0 0 var(--spacing-xs) 0;
     font-size: 1.25rem;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.85rem;
+  }
+
+  .post-meta time {
+    color: var(--color-text-muted);
+  }
+
+  .post-meta .category,
+  .post-meta .tag {
+    color: var(--color-accent);
+  }
+
+  .post-meta .category::before {
+    content: '•';
+    margin-right: var(--spacing-xs);
+    color: var(--color-text-muted);
+  }
+
+  .post-meta .tag::before {
+    content: '#';
   }
 
   .post-entry h2 a {
@@ -81,4 +124,69 @@ const sortedPosts = posts.sort((a, b) => {
     margin: 0;
     color: var(--color-text);
   }
+
+  .post-entry.selected-item {
+    padding-left: var(--spacing-sm);
+  }
 </style>
+
+<script>
+  let selectedIndex = -1;
+  const posts = Array.from(document.querySelectorAll('.post-entry'));
+
+  function updateSelection() {
+    posts.forEach((post, index) => {
+      if (index === selectedIndex) {
+        post.classList.add('selected-item');
+        post.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      } else {
+        post.classList.remove('selected-item');
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const target = e.target as HTMLElement;
+    const pageSearchHandlers = (window as any).pageSearchHandlers;
+
+    if (pageSearchHandlers?.isActive()) {
+      pageSearchHandlers.handleKeydown(e);
+      return;
+    }
+
+    if (target instanceof HTMLInputElement) return;
+
+    if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+      return;
+    }
+
+    if (e.key === '/') {
+      e.preventDefault();
+      (window as any).pageSearchHandlers?.open();
+      return;
+    }
+
+    if (e.key === 'j') {
+      e.preventDefault();
+      if (selectedIndex < posts.length - 1) {
+        selectedIndex++;
+        updateSelection();
+      }
+    } else if (e.key === 'k') {
+      e.preventDefault();
+      if (selectedIndex > 0) {
+        selectedIndex--;
+        updateSelection();
+      } else if (selectedIndex === -1 && posts.length > 0) {
+        selectedIndex = 0;
+        updateSelection();
+      }
+    } else if (e.key === 'Enter' && selectedIndex >= 0) {
+      e.preventDefault();
+      const link = posts[selectedIndex].querySelector('a');
+      if (link) {
+        window.location.href = link.href;
+      }
+    }
+  });
+</script>

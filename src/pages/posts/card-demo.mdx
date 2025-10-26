@@ -1,0 +1,80 @@
+---
+layout: ../../layouts/PostLayout.astro
+title: "Card Component Demo"
+date: "2025-01-26"
+description: "Demonstration of the Card component with different types and styles"
+draft: true
+---
+
+import Card from '../../components/Card.astro';
+
+# Card Component Demo
+
+This post demonstrates the Card component that can be used to create fancy callouts.
+
+## Default Card
+
+<Card title="Default Card">
+This is a default card with the standard green accent color. Perfect for general notes and highlights.
+</Card>
+
+## Info Card
+
+<Card type="info" title="Information">
+This is an info card with blue accents. Use it for informational callouts and tips.
+</Card>
+
+## Warning Card
+
+<Card type="warning" title="Warning">
+This is a warning card with orange accents. Use it to highlight warnings or important notices.
+</Card>
+
+## Success Card
+
+<Card type="success" title="Success">
+This is a success card with green accents. Use it to highlight successful operations or positive outcomes.
+</Card>
+
+## Error Card
+
+<Card type="error" title="Error">
+This is an error card with red accents. Use it to highlight errors or critical issues.
+</Card>
+
+## Card Without Title
+
+<Card type="info">
+You can also create cards without titles. Just omit the title prop and the content will fill the entire card.
+</Card>
+
+## Complex Content
+
+<Card type="warning" title="Advanced Usage">
+Cards support **markdown formatting** including:
+
+- Lists
+- **Bold text**
+- *Italic text*
+- `Code blocks`
+
+You can put any markdown content inside the card.
+</Card>
+
+## Code Example
+
+<Card type="success" title="How to Use">
+Import the Card component in your markdown frontmatter:
+
+```astro
+import Card from '../../components/Card.astro';
+```
+
+Then use it anywhere in your markdown:
+
+```astro
+<Card type="info" title="My Card">
+  Your content here
+</Card>
+```
+</Card>

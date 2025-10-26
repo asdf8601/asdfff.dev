@@ -59,16 +59,14 @@ async function processMarkdownFile(filePath, relativePath) {
   
   const text = content
     .replace(/^---[\s\S]*?---/, '')
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/`[^`]+`/g, '')
     .replace(/[#*_~\[\]]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
   
   return {
-    url: relativePath.replace('.md', ''),
+    url: relativePath.replace('.md', '').replace('src/pages', ''),
     title,
-    content: description || text.slice(0, 500)
+    content: text.slice(0, 1000)
   };
 }
 

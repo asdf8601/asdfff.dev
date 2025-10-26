@@ -1,15 +1,29 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const posts = await Astro.glob('./posts/*.md');
+const mdPosts = await Astro.glob('./posts/*.md');
+const mdxPosts = await Astro.glob('./posts/*.mdx');
+const posts = [...mdPosts, ...mdxPosts];
+
+const isDev = import.meta.env.DEV;
 
 const sortedPosts = posts
+  .filter(post => isDev || !post.frontmatter.draft)
   .sort((a, b) => {
     const dateA = new Date(a.frontmatter.date || 0);
     const dateB = new Date(b.frontmatter.date || 0);
-    return dateB - dateA;
+    return dateB.getTime() - dateA.getTime();
   })
   .slice(0, 10);
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+}
 ---
 
 <BaseLayout title="Write the Fucking Manual">
@@ -34,8 +48,8 @@ const sortedPosts = posts
         <div class="post-list">
           {sortedPosts.map(post => (
             <div class="post-entry">
-              <time>{post.frontmatter.date}</time>
               <h3><a href={post.url}>{post.frontmatter.title}</a></h3>
+              <time>{formatDate(post.frontmatter.date)}</time>
               {post.frontmatter.description && (
                 <p>{post.frontmatter.description}</p>
               )}
@@ -59,7 +73,8 @@ const sortedPosts = posts
   }
 
   h2 {
-    text-transform: lowercase;
+    text-transform: capitalize;
+    text-align: center;
   }
 
   strong {
@@ -68,8 +83,8 @@ const sortedPosts = posts
   }
 
   .recent-posts {
-    margin-top: var(--spacing-lg);
-    padding-top: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
     border-top: 1px solid var(--color-border);
   }
 
@@ -84,13 +99,6 @@ const sortedPosts = posts
     padding-bottom: var(--spacing-sm);
   }
 
-  .post-entry time {
-    display: block;
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
-    margin-bottom: var(--spacing-xs);
-  }
-
   .post-entry h3 {
     margin: 0 0 var(--spacing-xs) 0;
     font-size: 1.1rem;
@@ -103,6 +111,13 @@ const sortedPosts = posts
 
   .post-entry h3 a:hover {
     text-decoration: underline;
+  }
+
+  .post-entry time {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+    margin-bottom: var(--spacing-xs);
   }
 
   .post-entry p {

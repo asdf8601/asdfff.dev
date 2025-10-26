@@ -1,0 +1,61 @@
+---
+layout: ../../layouts/PostLayout.astro
+title: Grid Component Demo
+date: 2025-01-26
+description: Examples of using the Grid component in MDX posts
+tags: [demo, components, grid]
+draft: true
+---
+
+import Grid from '../../components/Grid.astro'
+import Card from '../../components/Card.astro'
+
+# Grid Component Demo
+
+## Two Column Grid (Default)
+
+<Grid>
+  <Card type="success" title="First Item">
+    This is the first item in a two-column grid layout.
+  </Card>
+  
+  <Card type="info" title="Second Item">
+    This is the second item in the grid.
+  </Card>
+  
+  <Card type="warning" title="Third Item">
+    This is the third item. The grid wraps to a new row.
+  </Card>
+  
+  <Card type="error" title="Fourth Item">
+    This is the fourth item, completing the second row.
+  </Card>
+</Grid>
+
+## Three Column Grid
+
+<Grid cols={3}>
+  <Card title="Column 1">
+    First column content
+  </Card>
+  
+  <Card title="Column 2">
+    Second column content
+  </Card>
+  
+  <Card title="Column 3">
+    Third column content
+  </Card>
+</Grid>
+
+## Single Column Grid
+
+<Grid cols={1}>
+  <Card type="info" title="Full Width Card">
+    This card takes up the full width of the container.
+  </Card>
+  
+  <Card type="success" title="Another Full Width Card">
+    Grid components are responsive and stack on mobile.
+  </Card>
+</Grid>

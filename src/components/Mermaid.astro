@@ -1,0 +1,6 @@
+---
+let content = await Astro.slots.render('default');
+content = content.replace(/<[^>]*>/g, '').trim();
+---
+
+<pre class="mermaid" set:html={content} />

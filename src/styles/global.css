@@ -8,6 +8,7 @@
 
 :root {
   --color-bg: #000000;
+  --color-bg-secondary: rgba(26, 26, 26, 0.5);
   --color-text: #c0c0c0;
   --color-text-muted: #707070;
   --color-accent: #00ff00;
@@ -25,10 +26,27 @@
   --spacing-xl: 4rem;
   --max-width: 80ch;
   --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  --z-index-skip-link: 100;
+  --z-index-dropdown: 100;
+  --z-index-modal: 1000;
+  --border-width: 2px;
+  --angled-corner: 6px;
+  --modal-width: 600px;
+  --modal-width-percent: 90%;
+  --modal-height: 80vh;
+  --clip-path-angled: polygon(
+    var(--angled-corner) 0,
+    100% 0,
+    100% calc(100% - var(--angled-corner)),
+    calc(100% - var(--angled-corner)) 100%,
+    0 100%,
+    0 var(--angled-corner)
+  );
 }
 
 [data-theme="light"] {
   --color-bg: #f5f5f5;
+  --color-bg-secondary: rgba(208, 208, 208, 0.5);
   --color-text: #1a1a1a;
   --color-text-muted: #666666;
   --color-accent: #008800;
@@ -75,6 +93,7 @@ h1 {
   margin-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--color-border);
   padding-bottom: var(--spacing-xs);
+  clip-path: var(--clip-path-angled);
 }
 
 h2 {
@@ -127,6 +146,32 @@ pre {
   line-height: 1.5;
 }
 
+article pre {
+  clip-path: none;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  main {
+    padding: var(--spacing-sm);
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+}
+
 pre code {
   color: var(--color-pre-text);
   font-size: 0.9em;
@@ -162,15 +207,25 @@ pre.astro-code {
 
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: calc(var(--spacing-xl) * -1);
   left: 0;
   background: var(--color-accent);
   color: var(--color-bg);
   padding: var(--spacing-xs) var(--spacing-sm);
   text-decoration: none;
-  z-index: 100;
+  z-index: var(--z-index-skip-link);
 }
 
 .skip-link:focus {
   top: 0;
+}
+
+.selected-item {
+  background-color: var(--color-til-hover) !important;
+  border-color: var(--color-accent) !important;
+}
+
+.selected-item::before,
+.selected-item::after {
+  background-color: var(--color-accent) !important;
 }

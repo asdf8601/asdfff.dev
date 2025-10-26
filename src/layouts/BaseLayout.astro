@@ -21,10 +21,20 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return 'dark';
+      })();
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to main content</a>
-    
+
     <header role="banner">
       <nav role="navigation" aria-label="Main navigation">
         <a href="/" aria-label="Home">wtfm</a>
@@ -42,25 +52,242 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
       <slot />
     </main>
 
+    <div id="help-modal" class="help-modal" hidden>
+      <div class="help-content">
+        <h2>keyboard shortcuts</h2>
+        <div class="help-shortcuts">
+          <div class="help-section">
+            <h3>navigation</h3>
+            <div class="help-item">
+              <kbd>j</kbd>
+              <span>next item / scroll down</span>
+            </div>
+            <div class="help-item">
+              <kbd>k</kbd>
+              <span>previous item / scroll up</span>
+            </div>
+            <div class="help-item">
+              <kbd>Enter</kbd>
+              <span>open/copy selected item</span>
+            </div>
+            <div class="help-item">
+              <kbd>gg</kbd>
+              <span>go to top</span>
+            </div>
+            <div class="help-item">
+              <kbd>G</kbd>
+              <span>go to bottom</span>
+            </div>
+            <div class="help-item">
+              <kbd>gt</kbd>
+              <span>next page</span>
+            </div>
+            <div class="help-item">
+              <kbd>gT</kbd>
+              <span>previous page</span>
+            </div>
+            <div class="help-item">
+              <kbd>g0</kbd>
+              <span>go home</span>
+            </div>
+            <div class="help-item">
+              <kbd>g1-g5</kbd>
+              <span>go to page 1-5</span>
+            </div>
+            <div class="help-item">
+              <kbd>Esc Esc</kbd>
+              <span>back to posts (from post)</span>
+            </div>
+          </div>
+          <div class="help-section">
+            <h3>search</h3>
+            <div class="help-item">
+              <kbd>Ctrl-k</kbd>
+              <span>global search</span>
+            </div>
+            <div class="help-item">
+              <kbd>/</kbd>
+              <span>search in page/posts</span>
+            </div>
+          </div>
+          <div class="help-section">
+            <h3>clipboard</h3>
+            <div class="help-item">
+              <kbd>yy</kbd>
+              <span>copy current url</span>
+            </div>
+          </div>
+          <div class="help-section">
+            <h3>help</h3>
+            <div class="help-item">
+              <kbd>?</kbd>
+              <span>toggle this help</span>
+            </div>
+            <div class="help-item">
+              <kbd>Esc</kbd>
+              <span>close modals</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="notification" class="notification" hidden></div>
+
     <footer role="contentinfo">
       <p>&copy; {new Date().getFullYear()} Write the Fucking Manual</p>
     </footer>
 
     <script>
+      function showNotification(message: string) {
+        const notification = document.getElementById('notification');
+        if (notification) {
+          notification.textContent = message;
+          notification.hidden = false;
+          setTimeout(() => {
+            notification.hidden = true;
+          }, 2000);
+        }
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         const navLinks = document.querySelectorAll('nav a:not(:first-child)');
-        
-        navLinks.forEach(link => {
+        const currentPath = window.location.pathname;
+
+        navLinks.forEach((link, index) => {
+          link.setAttribute('data-nav-index', (index + 1).toString());
+
+          const href = link.getAttribute('href');
+          if (href && currentPath.startsWith(href)) {
+            link.classList.add('active-page');
+          }
+
           link.addEventListener('click', (e) => {
             e.preventDefault();
             const href = link.getAttribute('href');
-            
+
             if (href) {
               window.location.href = href;
             }
           });
         });
       });
+
+      document.addEventListener('keydown', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+          return;
+        }
+
+        const helpModal = document.getElementById('help-modal');
+
+        if (e.key === 'y') {
+          const lastYPress = (window as any).lastYPress || 0;
+          const now = Date.now();
+
+          if (now - lastYPress < 500) {
+            e.preventDefault();
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+              showNotification('url copied');
+            }).catch(err => {
+              console.error('Failed to copy URL:', err);
+            });
+            (window as any).lastYPress = 0;
+          } else {
+            (window as any).lastYPress = now;
+          }
+        }
+
+        if (e.key === '?') {
+          e.preventDefault();
+          if (helpModal) {
+            helpModal.hidden = !helpModal.hidden;
+          }
+        }
+
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          if (helpModal) {
+            helpModal.hidden = true;
+          }
+        }
+
+        const navLinks = Array.from(document.querySelectorAll('nav a:not(:first-child)')) as HTMLAnchorElement[];
+        const currentPath = window.location.pathname;
+        const currentIndex = navLinks.findIndex(link => {
+          const href = link.getAttribute('href');
+          return href && currentPath.startsWith(href);
+        });
+
+        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          const searchInput = document.getElementById('search-input') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+          }
+          return;
+        }
+
+        if (e.key === 'g') {
+          const lastGPress = (window as any).lastGPress || 0;
+          const now = Date.now();
+
+          if (now - lastGPress < 500) {
+            (window as any).lastGPress = 0;
+          } else {
+            (window as any).lastGPress = now;
+          }
+        }
+
+        if (e.key >= '0' && e.key <= '9') {
+          const lastGPress = (window as any).lastGPress || 0;
+          const now = Date.now();
+
+          if (now - lastGPress < 500 && now - lastGPress > 0) {
+            e.preventDefault();
+            const index = parseInt(e.key);
+            const homeLink = document.querySelector('nav a:first-child') as HTMLAnchorElement;
+
+            if (index === 0 && homeLink) {
+              const href = homeLink.getAttribute('href');
+              if (href) window.location.href = href;
+            } else if (index > 0 && index <= navLinks.length) {
+              const href = navLinks[index - 1].getAttribute('href');
+              if (href) window.location.href = href;
+            }
+
+            (window as any).lastGPress = 0;
+          }
+        }
+
+        if ((e.key === 't' && e.shiftKey && currentIndex >= 0) ||
+            (e.key === 'T' && currentIndex >= 0)) {
+          e.preventDefault();
+          const prevIndex = currentIndex - 1;
+          const targetIndex = prevIndex < 0 ? navLinks.length - 1 : prevIndex;
+          const href = navLinks[targetIndex].getAttribute('href');
+          if (href) window.location.href = href;
+        }
+
+        if (e.key === 't' && !e.shiftKey && currentIndex >= 0) {
+          e.preventDefault();
+          const nextIndex = currentIndex + 1;
+          const targetIndex = nextIndex >= navLinks.length ? 0 : nextIndex;
+          const href = navLinks[targetIndex].getAttribute('href');
+          if (href) window.location.href = href;
+        }
+
+        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          const searchInput = document.getElementById('search-input') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+          }
+        }
+      });
+
+      (window as any).showNotification = showNotification;
     </script>
   </body>
 </html>
@@ -92,6 +319,18 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     color: var(--color-text);
   }
 
+  nav a:not(:first-child)::before {
+    content: attr(data-nav-index);
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+    margin-right: 0.05rem;
+  }
+
   nav a:not(:first-child)::after {
     content: '';
     display: inline-block;
@@ -108,11 +347,21 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
   nav a:first-child {
     margin-right: auto;
+    color: var(--color-text-muted);
+    transition: color 0.2s;
+  }
+
+  nav a:first-child:hover {
+    color: var(--color-text);
   }
 
   nav a:first-child::before {
     content: "$ ";
     color: var(--color-accent);
+  }
+
+  nav a.active-page::after {
+    background-color: var(--color-accent);
   }
 
   footer {
@@ -124,5 +373,109 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     margin: 0 auto;
     color: var(--color-text-muted);
     font-size: 0.85rem;
+  }
+
+  .help-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .help-modal[hidden] {
+    display: none;
+  }
+
+  .help-content {
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-accent);
+    padding: var(--spacing-md);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .help-content h2 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--spacing-xs);
+  }
+
+  .help-content h3 {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-accent);
+    text-transform: lowercase;
+  }
+
+  .help-shortcuts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .help-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .help-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .help-item kbd {
+    background-color: var(--color-til-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.25rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    min-width: 3rem;
+    text-align: center;
+  }
+
+  .help-item span {
+    color: var(--color-text);
+    font-size: 0.9rem;
+  }
+
+  .notification {
+    position: fixed;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 2px;
+    font-size: 0.85rem;
+    z-index: 2000;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  .notification[hidden] {
+    display: none;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 </style>

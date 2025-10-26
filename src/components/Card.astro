@@ -1,0 +1,129 @@
+---
+interface Props {
+  title?: string;
+  type?: 'default' | 'info' | 'warning' | 'success' | 'error';
+}
+
+const { title, type = 'default' } = Astro.props;
+---
+
+<div class={`card card-${type}`}>
+  {title && <div class="card-title">{title}</div>}
+  <div class="card-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .card {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    background-color: transparent;
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid var(--color-accent);
+    clip-path: var(--clip-path-angled);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--angled-corner);
+    background-color: var(--color-accent);
+    transition: background-color 0.2s ease;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    left: var(--angled-corner);
+    bottom: 0;
+    right: 0;
+    height: var(--angled-corner);
+    background-color: var(--color-accent);
+    transition: background-color 0.2s ease;
+  }
+
+  .card-title {
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    text-transform: uppercase;
+  }
+
+  .card-content {
+    position: relative;
+    padding-left: var(--spacing-sm);
+  }
+
+  .card-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .card-content :global(ul),
+  .card-content :global(ol) {
+    margin-left: var(--spacing-md);
+    padding-left: 0;
+  }
+
+  .card-content :global(ul li),
+  .card-content :global(ol li) {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .card-info::before,
+  .card-info::after {
+    background-color: #0088ff;
+  }
+
+  .card-info {
+    border-color: #0088ff;
+  }
+
+  .card-info .card-title {
+    color: #0088ff;
+  }
+
+  .card-warning::before,
+  .card-warning::after {
+    background-color: #ffaa00;
+  }
+
+  .card-warning {
+    border-color: #ffaa00;
+  }
+
+  .card-warning .card-title {
+    color: #ffaa00;
+  }
+
+  .card-success::before,
+  .card-success::after {
+    background-color: var(--color-accent);
+  }
+
+  .card-success {
+    border-color: var(--color-accent);
+  }
+
+  .card-success .card-title {
+    color: var(--color-accent);
+  }
+
+  .card-error::before,
+  .card-error::after {
+    background-color: #ff0000;
+  }
+
+  .card-error {
+    border-color: #ff0000;
+  }
+
+  .card-error .card-title {
+    color: #ff0000;
+  }
+</style>

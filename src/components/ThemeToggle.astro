@@ -40,19 +40,6 @@
 </style>
 
 <script>
-  const theme = (() => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
-    }
-    return 'dark';
-  })();
-
-  if (theme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }
-
   const button = document.getElementById('theme-toggle');
   
   button?.addEventListener('click', () => {
