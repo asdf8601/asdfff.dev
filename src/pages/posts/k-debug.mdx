@@ -3,13 +3,22 @@ title: How to debug a pod
 tag: python
 category: programming
 date: 2025-10-26
+
 ---
 
 
+import Card from '../../components/Card.astro';
+
+
+<Card title="kubectl debug">
 
 ```sh
 kubectl debug <pod-id> -ti --image=nicolaka/netshoot --target=<pod-name> --profile=sysadmin
 ```
+
+</Card>
+
+## Check list
 
 1. Check open connections (signs of saturation)
 

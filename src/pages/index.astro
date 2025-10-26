@@ -1,9 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const mdPosts = await Astro.glob('./posts/*.md');
-const mdxPosts = await Astro.glob('./posts/*.mdx');
-const posts = [...mdPosts, ...mdxPosts];
+const posts = await Astro.glob('./posts/*.mdx');
 
 const isDev = import.meta.env.DEV;
 

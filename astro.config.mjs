@@ -1,7 +1,10 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import remarkMath from 'remark-math';
+import remarkToc from 'remark-toc';
 import rehypeKatex from 'rehype-katex';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 export default defineConfig({
   site: 'https://blog.asdfff.dev',
@@ -18,8 +21,8 @@ export default defineConfig({
     assetsInclude: ['**/*.json']
   },
   markdown: {
-    remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    remarkPlugins: [remarkMath, remarkToc],
+    rehypePlugins: [rehypeKatex, rehypeAutolinkHeadings],
     shikiConfig: {
       theme: 'css-variables'
     }
@@ -28,6 +31,7 @@ export default defineConfig({
     mdx({
       remarkPlugins: [
         remarkMath,
+        remarkToc,
         function defaultLayoutPlugin() {
           return (_tree, file) => {
             if (!file.data.astro?.frontmatter?.layout) {
@@ -42,7 +46,7 @@ export default defineConfig({
           };
         }
       ],
-      rehypePlugins: [rehypeKatex]
+      rehypePlugins: [rehypeKatex, rehypeAutolinkHeadings]
     }),
     {
       name: 'default-layout',
@@ -52,6 +56,7 @@ export default defineConfig({
               markdown: {
                 remarkPlugins: [
                   remarkMath,
+                  remarkToc,
                   function defaultLayoutPlugin() {
                   return (_tree, file) => {
                     if (!file.data.astro?.frontmatter?.layout) {

@@ -111,6 +111,17 @@ p {
   margin-bottom: var(--spacing-sm);
 }
 
+/* ul, ol { */
+/*   margin-bottom: var(--spacing-sm); */
+/*   padding-left: var(--spacing-md); */
+/* } */
+/**/
+/* li { */
+/*   margin-bottom: var(--spacing-xs); */
+/* } */
+
+
+
 a {
   color: var(--color-accent);
   text-decoration: none;
