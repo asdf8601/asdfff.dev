@@ -35,16 +35,6 @@
     "content": "til Today I learned. Short notes. No fluff. {sortedTils.length > 0 ? ( sortedTils.map((til, index) => { const tilNumber = sortedTils.length - index; const date = new Date(til.frontmatter.date); const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); return ( #{tilNumber} {formattedDate} ); }) ) : ( No TILs yet. Add markdown files to src/pages/til/ )}"
   },
   {
-    "url": "/posts/k-debug",
-    "title": "How to debug a pod",
-    "content": "```sh kubectl debug <pod-id> -ti --image=nicolaka/netshoot --target=<pod-name> --profile=sysadmin ``` 1. Check open connections (signs of saturation) ```bash ss -s quick summary (states: ESTAB, TIME-WAIT, SYN-RECV) ss -tuna | grep 8080 | wc -l total connections to the app port ss -tuna | grep SYNRECV half-open connections (possible overload) ss -tuna | grep TIMEWAIT | wc -l connections closing slowly ``` 2. Check for socket leaks or system limits ```bash cat /proc/sys/net/ipv4/iplocalportrange cat /proc/sys/net/ipv4/tcpfintimeout cat /proc/sys/net/ipv4/tcptwreuse ulimit -n file descriptor limit ``` 3. Test local endpoint (no network involved) ```bash If this is slow, the issue is inside the container, not the network. time curl -v http://127.0.0.1:8080/health time curl -v http://127.0.0.1:8080/predict ``` 4. Test access from another service (within the cluster) ```bash If this is slow but the local one isn’t, it’s a network or connection bottleneck. time curl -v http://<service>:<port>"
-  },
-  {
-    "url": "/posts/python-314",
-    "title": "New Python 3.14",
-    "content": "New Python 3.14 Here's a list of my favorite new features in Python 3.14: 1. https://docs.python.org/3.14/whatsnew/3.14.htmla-new-type-of-interpreter 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-incremental-gc 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-asyncio-introspection 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-deferred-annotations 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-zstandard 1. https://docs.python.org/3/whatsnew/3.13.htmlan-experimental-just-in-time-jit-compiler 1. https://docs.python.org/3/whatsnew/3.13.htmlfree-threaded-cpython Performance: TL;DR; This version is the fastest python version. Python 3.14 Is Here. How Fast Is It?(https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it)"
-  },
-  {
     "url": "/quotes/example",
     "title": "Untitled",
     "content": "I have always imagined that Paradise will be a kind of library."

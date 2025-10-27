@@ -57,7 +57,6 @@ const sortedQuotes = quotes.sort((a, b) => {
   h1 {
     margin-bottom: var(--spacing-md);
     text-transform: lowercase;
-    font-style: italic;
   }
 
   .quote-entry {
@@ -80,6 +79,7 @@ const sortedQuotes = quotes.sort((a, b) => {
     width: var(--angled-corner);
     background-color: var(--color-border);
     transition: background-color 0.2s ease;
+    z-index: 0;
   }
 
   .quote-entry::after {
@@ -91,6 +91,13 @@ const sortedQuotes = quotes.sort((a, b) => {
     height: var(--angled-corner);
     background-color: var(--color-border);
     transition: background-color 0.2s ease;
+    z-index: 0;
+  }
+  
+  .quote-header,
+  .quote-content {
+    position: relative;
+    z-index: 1;
   }
 
   .quote-entry:target::before,

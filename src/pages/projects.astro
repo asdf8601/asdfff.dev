@@ -258,6 +258,7 @@ import PageSearchModal from '../components/PageSearchModal.astro';
     width: var(--angled-corner);
     background-color: var(--color-border);
     transition: background-color 0.2s ease;
+    z-index: 0;
   }
 
   .project-entry::after {
@@ -269,6 +270,13 @@ import PageSearchModal from '../components/PageSearchModal.astro';
     height: var(--angled-corner);
     background-color: var(--color-border);
     transition: background-color 0.2s ease;
+    z-index: 0;
+  }
+  
+  .project-header,
+  .project-entry > * {
+    position: relative;
+    z-index: 1;
   }
 
   .project-entry:hover {

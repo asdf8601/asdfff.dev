@@ -69,6 +69,7 @@ const sortedTils = tils.sort((a, b) => {
     width: var(--angled-corner);
     background-color: var(--color-border);
     transition: background-color 0.2s ease;
+    z-index: 0;
   }
 
   .til-entry::after {
@@ -80,6 +81,13 @@ const sortedTils = tils.sort((a, b) => {
     height: var(--angled-corner);
     background-color: var(--color-border);
     transition: background-color 0.2s ease;
+    z-index: 0;
+  }
+  
+  .til-header,
+  .til-entry > * {
+    position: relative;
+    z-index: 1;
   }
 
   .til-entry:target::before,
