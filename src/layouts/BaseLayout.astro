@@ -313,7 +313,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
       gap: var(--spacing-sm);
     }
     
-    nav a:not(:first-child)::before {
+    nav a:not(:first-child)::after {
       display: none;
     }
     
@@ -339,20 +339,34 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     color: var(--color-accent);
   }
 
-  nav a:not(:first-child)::before {
+  nav a:not(:first-child) {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.1rem;
+  }
+
+  nav a:not(:first-child)::after {
     content: attr(data-nav-index);
-    position: absolute;
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--color-text-muted);
     opacity: 0.5;
-    margin-right: 0.05rem;
+    width: 0.5em;
+    height: 0.8em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: sub;
+    line-height: 0;
+  }
+
+  nav a:not(:first-child):hover::after {
+    content: '';
+    background-color: var(--color-accent);
+    opacity: 1;
   }
 
   @media (max-width: 768px) {
-    nav a:not(:first-child)::before {
+    nav a:not(:first-child)::after {
       display: none;
     }
     
@@ -360,20 +374,6 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
       flex-wrap: wrap;
       gap: var(--spacing-xs);
     }
-  }
-
-  nav a:not(:first-child)::after {
-    content: '';
-    display: inline-block;
-    width: 0.5em;
-    height: 1em;
-    background-color: transparent;
-    margin-left: 0.2rem;
-    vertical-align: text-bottom;
-  }
-
-  nav a:not(:first-child):hover::after {
-    background-color: var(--color-accent);
   }
 
   nav a:first-child {
@@ -387,12 +387,14 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   }
 
   nav a:first-child::before {
-    content: "$ ";
+    content: ":";
     color: var(--color-accent);
   }
 
   nav a.active-page::after {
+    content: '';
     background-color: var(--color-accent);
+    opacity: 1;
   }
 
   footer {

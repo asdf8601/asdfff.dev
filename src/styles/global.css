@@ -65,12 +65,14 @@ html {
   line-height: 1.65;
   color: var(--color-text);
   background-color: var(--color-bg);
+  overflow-y: scroll;
 }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  scrollbar-gutter: stable;
 }
 
 main {
