@@ -1,0 +1,34 @@
+name: New TIL
+description: Create a new Today I Learned entry
+title: "[TIL] "
+labels: ["til"]
+assignees:
+  - asdf8601
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Create a new TIL (Today I Learned) entry. Only @asdf8601 can create TILs via issues.
+  
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Short title for the TIL (used for filename)
+      placeholder: "grep -b shows byte offset"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: content
+    attributes:
+      label: Content
+      description: What did you learn? (markdown format)
+      placeholder: |
+        `grep -b` shows byte offset of matches
+        
+        ```sh
+        grep -b "pattern" file.txt
+        ```
+    validations:
+      required: true

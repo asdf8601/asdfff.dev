@@ -1,0 +1,146 @@
+name: Create Content from Issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-content:
+    if: github.event.issue.user.login == 'asdf8601'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Parse issue and create content
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(l => l.name);
+            
+            const parseIssueBody = (body) => {
+              const fields = {};
+              const lines = body.split('\n');
+              let currentField = null;
+              let currentValue = [];
+              
+              for (const line of lines) {
+                const headerMatch = line.match(/^### (.+)$/);
+                if (headerMatch) {
+                  if (currentField) {
+                    fields[currentField] = currentValue.join('\n').trim();
+                  }
+                  currentField = headerMatch[1].toLowerCase();
+                  currentValue = [];
+                } else if (currentField && line.trim() !== '' && !line.startsWith('_No response_')) {
+                  currentValue.push(line);
+                }
+              }
+              
+              if (currentField) {
+                fields[currentField] = currentValue.join('\n').trim();
+              }
+              
+              return fields;
+            };
+            
+            const fields = parseIssueBody(issue.body);
+            const date = new Date().toISOString().split('T')[0];
+            
+            const slugify = (text) => {
+              return text.toLowerCase()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+            };
+            
+            let filePath, fileContent;
+            
+            if (labels.includes('post')) {
+              const title = fields.title || 'Untitled Post';
+              const tag = fields.tag || '';
+              const category = fields.category || '';
+              const content = fields.content || '';
+              const slug = slugify(title);
+              
+              filePath = `src/pages/posts/${slug}.mdx`;
+              fileContent = `---
+title: ${title}
+date: ${date}
+tag: ${tag}
+category: ${category}
+---
+
+# ${title}
+
+${content}
+`;
+            } else if (labels.includes('til')) {
+              const title = fields.title || 'Untitled TIL';
+              const content = fields.content || '';
+              const slug = slugify(title);
+              
+              filePath = `src/pages/til/${slug}.md`;
+              fileContent = `---
+date: ${date}
+---
+
+${content}
+`;
+            } else if (labels.includes('quote')) {
+              const author = fields.author || '';
+              const source = fields.source || '';
+              const content = fields.quote || fields.content || '';
+              const slug = slugify(author + '-' + Math.random().toString(36).substr(2, 5));
+              
+              filePath = `src/pages/quotes/${slug}.md`;
+              fileContent = `---
+date: ${date}
+author: ${author}
+source: ${source}
+---
+
+${content}
+`;
+            } else {
+              core.setFailed('Issue must have a label: post, til, or quote');
+              return;
+            }
+            
+            const fs = require('fs');
+            const path = require('path');
+            
+            const dir = path.dirname(filePath);
+            if (!fs.existsSync(dir)) {
+              fs.mkdirSync(dir, { recursive: true });
+            }
+            
+            fs.writeFileSync(filePath, fileContent);
+            
+            await exec.exec('git', ['config', 'user.name', 'github-actions[bot]']);
+            await exec.exec('git', ['config', 'user.email', 'github-actions[bot]@users.noreply.github.com']);
+            await exec.exec('git', ['add', filePath]);
+            await exec.exec('git', ['commit', '-m', `add ${labels[0]}: ${fields.title || 'content'} (from issue #${issue.number})`]);
+            await exec.exec('git', ['push']);
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: `✅ Content created successfully at \`${filePath}\`\n\nThe site will rebuild automatically.`
+            });
+            
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              state: 'closed'
+            });

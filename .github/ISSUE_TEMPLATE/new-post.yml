@@ -1,0 +1,50 @@
+name: New Post
+description: Create a new blog post
+title: "[POST] "
+labels: ["post"]
+assignees:
+  - asdf8601
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Create a new post for the blog. Only @asdf8601 can create posts via issues.
+  
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: The title of your post
+      placeholder: "My Awesome Post"
+    validations:
+      required: true
+  
+  - type: input
+    id: tag
+    attributes:
+      label: Tag
+      description: Tag for the post (e.g., python, javascript, devops)
+      placeholder: "python"
+    validations:
+      required: true
+  
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      description: Category for the post (e.g., programming, tutorial, opinion)
+      placeholder: "programming"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: content
+    attributes:
+      label: Content
+      description: The content of your post (markdown/MDX format)
+      placeholder: |
+        # Introduction
+        
+        Your content here...
+    validations:
+      required: true
