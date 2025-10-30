@@ -25,6 +25,11 @@ jobs:
             const issue = context.payload.issue;
             const labels = issue.labels.map(l => l.name);
             
+            console.log('Issue number:', issue.number);
+            console.log('Issue title:', issue.title);
+            console.log('Issue author:', issue.user.login);
+            console.log('Labels:', labels);
+            
             const parseIssueBody = (body) => {
               const fields = {};
               const lines = body.split('\n');
