@@ -1,0 +1,48 @@
+---
+title: start stop jobs in background
+date: 2025-10-30
+tag: [bash]
+category: programming
+---
+
+# start/stop jobs in background
+
+```bash
+PID_FILE="/tmp/my-process.pid"
+LOG_FILE="/tmp/my-process.log"
+
+function start() {
+    if [ -f "$PID_FILE" ]; then
+        local pid=$(cat "$PID_FILE" 2>/dev/null)
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            # echo "Already running (PID: $pid)"
+            return 0
+        fi
+        rm -f "$PID_FILE"
+    fi
+
+    nohup bash -c 'while true; do your-command; sleep 2; done' > "$LOG_FILE" 2>&1 &
+    echo $! > "$PID_FILE"
+    noti --title MyTunnel --message "Started (PID: $(cat "$PID_FILE"))"
+}
+
+function stop() {
+    if [ ! -f "$PID_FILE" ]; then
+        echo "Not running"
+        return 1
+    fi
+
+    local pid=$(cat "$PID_FILE" 2>/dev/null)
+    if kill -0 "$pid" 2>/dev/null; then
+        kill "$pid"
+        rm -f "$PID_FILE"
+        # echo "Stopped (PID: $pid)"
+        noti --title MyTunnel --message "Stoped (PID: $(cat "$PID_FILE"))"
+    else
+        rm -f "$PID_FILE"
+        echo "Process not found"
+    fi
+}
+
+start
+```
