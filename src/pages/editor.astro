@@ -4,16 +4,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout title="editor - wtfm">
   <article>
-    <div class="editor-header">
+    <div id="mobile-warning" class="mobile-warning" hidden>
       <h1>vim editor</h1>
-      <div class="editor-controls">
-        <button id="save-btn" title="Save to localStorage (or :w)">save</button>
-        <button id="load-btn" title="Load from localStorage">load</button>
-        <button id="clear-btn" title="Clear editor">clear</button>
-        <button id="copy-btn" title="Copy to clipboard (or yG)">copy</button>
-        <button id="settings-btn" title="Toggle settings">settings</button>
-      </div>
+      <p>this editor requires a desktop browser with a physical keyboard.</p>
+      <p>vim keybindings need proper keyboard input to work correctly.</p>
+      <p>please visit this page from a computer to use the editor.</p>
     </div>
+
+    <div id="editor-wrapper">
+      <div class="editor-header">
+        <h1>vim editor</h1>
+        <div class="editor-controls">
+          <button id="save-btn" title="Save to localStorage (or :w)">save</button>
+          <button id="load-btn" title="Load from localStorage">load</button>
+          <button id="clear-btn" title="Clear editor">clear</button>
+          <button id="copy-btn" title="Copy to clipboard (or yG)">copy</button>
+          <button id="settings-btn" title="Toggle settings">settings</button>
+        </div>
+      </div>
 
     <div id="settings-panel" class="settings-panel" hidden>
       <h3>settings</h3>
@@ -46,6 +54,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="editor-info">
         <span id="cursor-pos">1:1</span>
       </div>
+    </div>
     </div>
   </article>
 </BaseLayout>
@@ -165,6 +174,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .editor-info {
     color: var(--color-text-muted);
+  }
+
+  .mobile-warning {
+    padding: var(--spacing-lg);
+    text-align: center;
+  }
+
+  .mobile-warning h1 {
+    margin-bottom: var(--spacing-md);
+    border: none;
+    padding: 0;
+  }
+
+  .mobile-warning p {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
   }
 
   @media (max-width: 768px) {
@@ -435,7 +461,20 @@ Start typing to replace this text.
     createEditor();
   });
 
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+      || (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    createEditor();
+    const mobileWarning = document.getElementById('mobile-warning');
+    const editorWrapper = document.getElementById('editor-wrapper');
+
+    if (isMobileDevice()) {
+      if (mobileWarning) mobileWarning.hidden = false;
+      if (editorWrapper) editorWrapper.hidden = true;
+    } else {
+      createEditor();
+    }
   });
 </script>
