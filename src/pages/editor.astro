@@ -52,8 +52,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <style>
   article {
-    max-width: 100%;
+    max-width: var(--max-width);
     padding: 0;
+    margin-top: 2rem;
   }
 
   .editor-header {
@@ -72,18 +73,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .editor-controls {
     display: flex;
-    gap: var(--spacing-xs);
+    gap: 0.5rem;
   }
 
   .editor-controls button {
     background-color: var(--color-bg);
     color: var(--color-text);
-    border: 1px solid var(--color-border);
-    padding: 0.4rem 0.8rem;
+    border: 1px solid #333;
+    padding: 0.4rem 0.7rem;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s;
+    border-radius: 4px;
   }
 
   .editor-controls button:hover {
@@ -131,8 +133,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   #editor-container {
-    height: calc(100vh - 250px);
-    min-height: 400px;
+    height: calc((100vh - 250px) * 0.9);
+    min-height: 360px;
     overflow: auto;
   }
 
@@ -144,6 +146,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-top: 1px solid var(--color-border);
     font-size: 0.85rem;
     background-color: var(--color-til-bg);
+    margin-top: 2rem;
   }
 
   .vim-status {
@@ -177,19 +180,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   :global(.cm-editor) {
     height: 100%;
-    background-color: var(--color-bg);
+    background-color: var(--color-pre-bg);
     color: var(--color-text);
     font-family: var(--font-mono);
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   :global(.cm-scroller) {
     overflow: auto;
   }
 
+  :global(.cm-scroller::-webkit-scrollbar-thumb) {
+    background-color: #333;
+  }
+
   :global(.cm-content) {
     padding: var(--spacing-sm);
     caret-color: var(--color-accent);
+    line-height: 1.6;
   }
 
   :global(.cm-line) {
@@ -201,21 +209,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   }
 
   :global(.cm-selectionBackground) {
-    background-color: rgba(46, 196, 46, 0.2) !important;
+    background-color: rgba(46, 196, 46, 0.25) !important;
   }
 
   :global(.cm-focused .cm-selectionBackground) {
-    background-color: rgba(46, 196, 46, 0.3) !important;
+    background-color: rgba(46, 196, 46, 0.25) !important;
   }
 
   :global(.cm-gutters) {
     background-color: var(--color-til-bg);
     border-right: 1px solid var(--color-border);
-    color: var(--color-text-muted);
+    color: #7c7c7c;
   }
 
   :global(.cm-activeLineGutter) {
-    background-color: rgba(46, 196, 46, 0.1);
+    background-color: rgba(46, 196, 46, 0.09);
     color: var(--color-accent);
   }
 
@@ -229,7 +237,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </style>
 
 <script>
-  import { EditorView, basicSetup } from '@codemirror/view';
+  import { EditorView } from 'codemirror';
+  import { basicSetup } from 'codemirror';
   import { EditorState } from '@codemirror/state';
   import { vim, Vim } from '@replit/codemirror-vim';
   import { markdown } from '@codemirror/lang-markdown';
@@ -258,6 +267,11 @@ Basic vim commands:
 - dd: delete line
 - u: undo
 - Ctrl-r: redo
+
+Visual modes:
+- v: visual mode (character)
+- V: visual line mode
+- Ctrl-q: visual block mode (Ctrl-v is captured by browser)
 
 Use the buttons above or vim commands.
 Start typing to replace this text.
@@ -301,9 +315,17 @@ Start typing to replace this text.
         EditorView.theme({
           '&': {
             height: '100%',
+            backgroundColor: 'var(--color-pre-bg)',
           },
           '.cm-scroller': {
             fontFamily: 'var(--font-mono)',
+            fontSize: '1rem',
+            lineHeight: '1.6',
+          },
+          '.cm-gutters': {
+            backgroundColor: 'var(--color-til-bg)',
+            borderRight: '1px solid var(--color-border)',
+            color: '#7c7c7c',
           },
         }),
       ],
