@@ -112,9 +112,9 @@ jobs:
               console.log('Deployment workflow triggered');
               
               const urlMap = {
-                'post': `https://asdfff.dev/posts/${filename}`,
-                'til': `https://asdfff.dev/til/${filename}`,
-                'quote': `https://asdfff.dev/quotes/${filename}`
+                'post': `https://blog.asdfff.dev/posts/${filename}`,
+                'til': `https://blog.asdfff.dev/til/${filename}`,
+                'quote': `https://blog.asdfff.dev/quotes/${filename}`
               };
               
               const contentUrl = urlMap[contentType];
