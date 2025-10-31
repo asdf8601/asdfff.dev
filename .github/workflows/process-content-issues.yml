@@ -23,30 +23,29 @@ jobs:
             const comment = context.payload.comment.body.trim();
             const issue = context.payload.issue;
             
-            const commandMatch = comment.match(/^\/(post|til|quote)\s+([a-z0-9-]+)$/);
+            const commandMatch = comment.match(/^\/mkdir\s+([\w\/\-\.]+)$/);
             
             if (!commandMatch) {
               console.log('Not a valid command, ignoring');
               return;
             }
             
-            const [, contentType, filename] = commandMatch;
-            const labels = issue.labels.map(l => l.name);
+            const [, filePath] = commandMatch;
             
-            if (!labels.includes(contentType)) {
+            if (!filePath.startsWith('src/pages/')) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                body: `❌ Issue must have the \`${contentType}\` label to use \`/${contentType}\` command`
+                body: '❌ File path must start with `src/pages/`'
               });
               return;
             }
             
-            console.log(`Processing /${contentType} ${filename}`);
+            console.log(`Processing /mkdir ${filePath}`);
             
             const parseIssueBody = (body) => {
-              const contentMatch = body.match(/### (?:Post Content|TIL Content|Quote Content)[^\n]*\n\n([\s\S]*)/);
+              const contentMatch = body.match(/### Content[^\n]*\n\n([\s\S]*)/);
               if (contentMatch) {
                 return contentMatch[1].trim();
               }
@@ -64,22 +63,6 @@ jobs:
               });
               return;
             }
-            
-            const extensionMap = {
-              'post': 'mdx',
-              'til': 'md',
-              'quote': 'md'
-            };
-            
-            const dirMap = {
-              'post': 'posts',
-              'til': 'til',
-              'quote': 'quotes'
-            };
-            
-            const ext = extensionMap[contentType];
-            const dir = dirMap[contentType];
-            const filePath = `src/pages/${dir}/${filename}.${ext}`;
             
             console.log(`Creating file: ${filePath}`);
             
@@ -99,7 +82,8 @@ jobs:
             await exec.exec('git', ['add', filePath]);
             
             try {
-              await exec.exec('git', ['commit', '-m', `add ${contentType}: ${filename}`]);
+              const fileName = path.basename(filePath, path.extname(filePath));
+              await exec.exec('git', ['commit', '-m', `add content: ${fileName}`]);
               await exec.exec('git', ['push']);
               console.log('Changes committed and pushed');
               
@@ -111,13 +95,10 @@ jobs:
               });
               console.log('Deployment workflow triggered');
               
-              const urlMap = {
-                'post': `https://blog.asdfff.dev/posts/${filename}`,
-                'til': `https://blog.asdfff.dev/til/${filename}`,
-                'quote': `https://blog.asdfff.dev/quotes/${filename}`
-              };
-              
-              const contentUrl = urlMap[contentType];
+              const urlPath = filePath
+                .replace('src/pages/', '')
+                .replace(/\.(mdx?|astro)$/, '');
+              const contentUrl = `https://blog.asdfff.dev/${urlPath}`;
               
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
