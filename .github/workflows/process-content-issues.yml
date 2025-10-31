@@ -103,6 +103,14 @@ jobs:
               await exec.exec('git', ['push']);
               console.log('Changes committed and pushed');
               
+              await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'deploy.yml',
+                ref: 'main'
+              });
+              console.log('Deployment workflow triggered');
+              
               const urlMap = {
                 'post': `https://asdfff.dev/posts/${filename}`,
                 'til': `https://asdfff.dev/til/${filename}`,
