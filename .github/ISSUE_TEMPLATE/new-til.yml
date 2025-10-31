@@ -1,0 +1,32 @@
+name: New TIL
+description: Create a new Today I Learned entry
+title: "[TIL] "
+labels: ["til"]
+assignees:
+  - asdf8601
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write the complete markdown content below. When ready, comment `/mkdir filename.md` to create the file.
+        
+        Example: `/mkdir grep-tips.md` will create `src/pages/til/grep-tips.md`
+  
+  - type: textarea
+    id: content
+    attributes:
+      label: TIL Content (Markdown)
+      description: Complete markdown file content including frontmatter
+      placeholder: |
+        ---
+        date: 2025-10-31
+        ---
+        
+        `grep -b` shows byte offset of matches
+        
+        ```sh
+        grep -b "pattern" file.txt
+        ```
+      render: markdown
+    validations:
+      required: true

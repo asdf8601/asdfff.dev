@@ -24,29 +24,46 @@ jobs:
             const comment = context.payload.comment.body.trim();
             const issue = context.payload.issue;
             
-            const commandMatch = comment.match(/^\/mkdir\s+([\w\/\-\.]+)$/);
+            const commandMatch = comment.match(/^\/mkdir\s+([\w\-\.]+)$/);
             
             if (!commandMatch) {
               console.log('Not a valid command, ignoring');
               return;
             }
             
-            const [, filePath] = commandMatch;
+            const [, filename] = commandMatch;
+            const labels = issue.labels.map(l => l.name);
             
-            if (!filePath.startsWith('src/pages/')) {
+            let contentType = null;
+            let directory = null;
+            
+            if (labels.includes('post')) {
+              contentType = 'post';
+              directory = 'posts';
+            } else if (labels.includes('til')) {
+              contentType = 'til';
+              directory = 'til';
+            } else if (labels.includes('quote')) {
+              contentType = 'quote';
+              directory = 'quotes';
+            }
+            
+            if (!contentType) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                body: '❌ File path must start with `src/pages/`'
+                body: '❌ Issue must have one of these labels: `post`, `til`, or `quote`'
               });
               return;
             }
             
-            console.log(`Processing /mkdir ${filePath}`);
+            const filePath = `src/pages/${directory}/${filename}`;
+            
+            console.log(`Processing /mkdir ${filename} (${contentType})`);
             
             const parseIssueBody = (body) => {
-              const contentMatch = body.match(/### Content[^\n]*\n\n([\s\S]*)/);
+              const contentMatch = body.match(/### (?:Post Content|TIL Content|Quote Content)[^\n]*\n\n([\s\S]*)/);
               if (contentMatch) {
                 return contentMatch[1].trim();
               }

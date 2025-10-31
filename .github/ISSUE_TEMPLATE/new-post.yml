@@ -1,34 +1,31 @@
-name: New Content
-description: Create new content (post, TIL, quote, or page)
-title: "[CONTENT] "
-labels: ["content"]
+name: New Post
+description: Create a new blog post
+title: "[POST] "
+labels: ["post"]
 assignees:
   - asdf8601
 body:
   - type: markdown
     attributes:
       value: |
-        Write the complete file content below. When ready, comment `/mkdir <path>` to create the file.
+        Write the complete MDX content below. When ready, comment `/mkdir filename.mdx` to create the file.
         
-        Examples:
-        - `/mkdir src/pages/posts/my-post.mdx`
-        - `/mkdir src/pages/til/grep-tips.md`
-        - `/mkdir src/pages/quotes/borges.md`
+        Example: `/mkdir my-post.mdx` will create `src/pages/posts/my-post.mdx`
   
   - type: textarea
     id: content
     attributes:
-      label: Content
-      description: Complete file content including frontmatter
+      label: Post Content (MDX)
+      description: Complete MDX file content including frontmatter
       placeholder: |
         ---
-        title: My Content
+        title: My Awesome Post
         date: 2025-10-31
-        tag: example
-        category: demo
+        tag: python
+        category: programming
         ---
         
-        # My Content
+        # My Awesome Post
         
         Your content here...
       render: markdown
