@@ -8,43 +8,26 @@ body:
   - type: markdown
     attributes:
       value: |
-        Create a new post for the blog. Only @asdf8601 can create posts via issues.
-  
-  - type: input
-    id: title
-    attributes:
-      label: Title
-      description: The title of your post
-      placeholder: "My Awesome Post"
-    validations:
-      required: true
-  
-  - type: input
-    id: tag
-    attributes:
-      label: Tag
-      description: Tag for the post (e.g., python, javascript, devops)
-      placeholder: "python"
-    validations:
-      required: true
-  
-  - type: input
-    id: category
-    attributes:
-      label: Category
-      description: Category for the post (e.g., programming, tutorial, opinion)
-      placeholder: "programming"
-    validations:
-      required: true
+        Write the complete MDX content below. When ready, comment `/post filename` to create the file.
+        
+        Example: `/post my-awesome-post` will create `src/pages/posts/my-awesome-post.mdx`
   
   - type: textarea
     id: content
     attributes:
-      label: Content
-      description: The content of your post (markdown/MDX format)
+      label: Post Content (MDX)
+      description: Complete MDX file content including frontmatter
       placeholder: |
-        # Introduction
+        ---
+        title: My Awesome Post
+        date: 2025-10-31
+        tag: python
+        category: programming
+        ---
+        
+        # My Awesome Post
         
         Your content here...
+      render: markdown
     validations:
       required: true

@@ -8,27 +8,25 @@ body:
   - type: markdown
     attributes:
       value: |
-        Create a new TIL (Today I Learned) entry. Only @asdf8601 can create TILs via issues.
-  
-  - type: input
-    id: title
-    attributes:
-      label: Title
-      description: Short title for the TIL (used for filename)
-      placeholder: "grep -b shows byte offset"
-    validations:
-      required: true
+        Write the complete markdown content below. When ready, comment `/til filename` to create the file.
+        
+        Example: `/til grep-byte-offset` will create `src/pages/til/grep-byte-offset.md`
   
   - type: textarea
     id: content
     attributes:
-      label: Content
-      description: What did you learn? (markdown format)
+      label: TIL Content (Markdown)
+      description: Complete markdown file content including frontmatter
       placeholder: |
+        ---
+        date: 2025-10-31
+        ---
+        
         `grep -b` shows byte offset of matches
         
         ```sh
         grep -b "pattern" file.txt
         ```
+      render: markdown
     validations:
       required: true

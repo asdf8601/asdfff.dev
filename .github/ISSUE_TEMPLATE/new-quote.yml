@@ -8,31 +8,23 @@ body:
   - type: markdown
     attributes:
       value: |
-        Add a new quote to the collection. Only @asdf8601 can create quotes via issues.
-  
-  - type: input
-    id: author
-    attributes:
-      label: Author
-      description: Who said or wrote this?
-      placeholder: "Jorge Luis Borges"
-    validations:
-      required: true
-  
-  - type: input
-    id: source
-    attributes:
-      label: Source
-      description: Where is this quote from?
-      placeholder: "Labyrinths"
-    validations:
-      required: true
+        Write the complete markdown content below. When ready, comment `/quote filename` to create the file.
+        
+        Example: `/quote borges-library` will create `src/pages/quotes/borges-library.md`
   
   - type: textarea
     id: content
     attributes:
-      label: Quote
-      description: The actual quote text
-      placeholder: "I have always imagined that Paradise will be a kind of library."
+      label: Quote Content (Markdown)
+      description: Complete markdown file content including frontmatter
+      placeholder: |
+        ---
+        date: 2025-10-31
+        author: Jorge Luis Borges
+        source: Labyrinths
+        ---
+        
+        I have always imagined that Paradise will be a kind of library.
+      render: markdown
     validations:
       required: true

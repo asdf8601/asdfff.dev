@@ -1,16 +1,13 @@
 name: Process Content Issues
 
 on:
-  workflow_dispatch:
-    inputs:
-      issue_number:
-        description: 'Issue number to process (leave empty to process all open labeled issues)'
-        required: false
-        type: string
+  issue_comment:
+    types: [created]
 
 jobs:
   process-issues:
     runs-on: ubuntu-latest
+    if: github.event.issue.user.login == 'asdf8601' && github.event.comment.user.login == 'asdf8601'
     permissions:
       contents: write
       issues: write
@@ -19,144 +16,92 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Process issues
+      - name: Process command
         uses: actions/github-script@v7
         with:
           script: |
-            const issueNumber = '${{ github.event.inputs.issue_number }}';
-            let issues = [];
+            const comment = context.payload.comment.body.trim();
+            const issue = context.payload.issue;
             
-            if (issueNumber) {
-              const issue = await github.rest.issues.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: parseInt(issueNumber)
-              });
-              issues = [issue.data];
-            } else {
-              const response = await github.rest.issues.listForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open',
-                labels: 'post,til,quote'
-              });
-              issues = response.data.filter(i => i.user.login === 'asdf8601');
+            const commandMatch = comment.match(/^\/(post|til|quote)\s+([a-z0-9-]+)$/);
+            
+            if (!commandMatch) {
+              console.log('Not a valid command, ignoring');
+              return;
             }
             
-            console.log(`Processing ${issues.length} issue(s)`);
+            const [, contentType, filename] = commandMatch;
+            const labels = issue.labels.map(l => l.name);
             
-            for (const issue of issues) {
-              const labels = issue.labels.map(l => l.name);
-              
-              if (!labels.some(l => ['post', 'til', 'quote'].includes(l))) {
-                console.log(`Skipping issue #${issue.number} - no valid label`);
-                continue;
+            if (!labels.includes(contentType)) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `❌ Issue must have the \`${contentType}\` label to use \`/${contentType}\` command`
+              });
+              return;
+            }
+            
+            console.log(`Processing /${contentType} ${filename}`);
+            
+            const parseIssueBody = (body) => {
+              const contentMatch = body.match(/### (?:Post Content|TIL Content|Quote Content)[^\n]*\n\n([\s\S]*)/);
+              if (contentMatch) {
+                return contentMatch[1].trim();
               }
-              
-              console.log(`Processing issue #${issue.number}: ${issue.title}`);
-              console.log(`Labels: ${labels.join(', ')}`);
-              
-              const parseIssueBody = (body) => {
-                const fields = {};
-                const lines = body.split('\n');
-                let currentField = null;
-                let currentValue = [];
-                
-                for (const line of lines) {
-                  const headerMatch = line.match(/^### (.+)$/);
-                  if (headerMatch) {
-                    if (currentField) {
-                      fields[currentField] = currentValue.join('\n').trim();
-                    }
-                    currentField = headerMatch[1].toLowerCase();
-                    currentValue = [];
-                  } else if (currentField && line.trim() !== '' && !line.startsWith('_No response_')) {
-                    currentValue.push(line);
-                  }
-                }
-                
-                if (currentField) {
-                  fields[currentField] = currentValue.join('\n').trim();
-                }
-                
-                return fields;
-              };
-              
-              const fields = parseIssueBody(issue.body);
-              const date = new Date().toISOString().split('T')[0];
-              
-              const slugify = (text) => {
-                return text.toLowerCase()
-                  .replace(/[^\w\s-]/g, '')
-                  .replace(/\s+/g, '-')
-                  .replace(/-+/g, '-')
-                  .trim();
-              };
-              
-              let filePath, fileContent;
-              
-              if (labels.includes('post')) {
-                const title = fields.title || 'Untitled Post';
-                const tag = fields.tag || '';
-                const category = fields.category || '';
-                const content = fields.content || '';
-                const slug = slugify(title);
-                
-                filePath = `src/pages/posts/${slug}.mdx`;
-                fileContent = `---
-title: ${title}
-date: ${date}
-tag: ${tag}
-category: ${category}
----
-
-# ${title}
-
-${content}
-`;
-              } else if (labels.includes('til')) {
-                const title = fields.title || 'Untitled TIL';
-                const content = fields.content || '';
-                const slug = slugify(title);
-                
-                filePath = `src/pages/til/${slug}.md`;
-                fileContent = `---
-date: ${date}
----
-
-${content}
-`;
-              } else if (labels.includes('quote')) {
-                const author = fields.author || '';
-                const source = fields.source || '';
-                const content = fields.quote || fields.content || '';
-                const slug = slugify(author + '-' + Math.random().toString(36).substr(2, 5));
-                
-                filePath = `src/pages/quotes/${slug}.md`;
-                fileContent = `---
-date: ${date}
-author: ${author}
-source: ${source}
----
-
-${content}
-`;
-              }
-              
-              console.log(`Creating file: ${filePath}`);
-              
-              const fs = require('fs');
-              const path = require('path');
-              
-              const dir = path.dirname(filePath);
-              if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, { recursive: true });
-              }
-              
-              fs.writeFileSync(filePath, fileContent);
-              console.log(`File written successfully`);
-              
-              await exec.exec('git', ['add', filePath]);
+              return body;
+            };
+            
+            const content = parseIssueBody(issue.body);
+            
+            if (!content) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: '❌ No content found in issue body'
+              });
+              return;
+            }
+            
+            const extensionMap = {
+              'post': 'mdx',
+              'til': 'md',
+              'quote': 'md'
+            };
+            
+            const dirMap = {
+              'post': 'posts',
+              'til': 'til',
+              'quote': 'quotes'
+            };
+            
+            const ext = extensionMap[contentType];
+            const dir = dirMap[contentType];
+            const filePath = `src/pages/${dir}/${filename}.${ext}`;
+            
+            console.log(`Creating file: ${filePath}`);
+            
+            const fs = require('fs');
+            const path = require('path');
+            
+            const fileDir = path.dirname(filePath);
+            if (!fs.existsSync(fileDir)) {
+              fs.mkdirSync(fileDir, { recursive: true });
+            }
+            
+            fs.writeFileSync(filePath, content);
+            console.log(`File written successfully`);
+            
+            await exec.exec('git', ['config', 'user.name', 'github-actions[bot]']);
+            await exec.exec('git', ['config', 'user.email', 'github-actions[bot]@users.noreply.github.com']);
+            await exec.exec('git', ['add', filePath]);
+            
+            try {
+              await exec.exec('git', ['commit', '-m', `add ${contentType}: ${filename}`]);
+              await exec.exec('git', ['push']);
+              console.log('Changes committed and pushed');
               
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -171,15 +116,12 @@ ${content}
                 issue_number: issue.number,
                 state: 'closed'
               });
-            }
-            
-            await exec.exec('git', ['config', 'user.name', 'github-actions[bot]']);
-            await exec.exec('git', ['config', 'user.email', 'github-actions[bot]@users.noreply.github.com']);
-            
-            try {
-              await exec.exec('git', ['commit', '-m', 'add content from issues']);
-              await exec.exec('git', ['push']);
-              console.log('Changes committed and pushed');
             } catch (error) {
-              console.log('No changes to commit or push failed:', error.message);
+              console.error('Failed to commit or push:', error.message);
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `❌ Failed to create content: ${error.message}`
+              });
             }
