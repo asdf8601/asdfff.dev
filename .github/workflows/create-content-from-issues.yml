@@ -2,15 +2,22 @@ name: Create Content from Issues
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
 
 jobs:
   create-content:
-    if: github.event.issue.user.login == 'asdf8601'
+    if: |
+      (github.event_name == 'issues' && github.event.issue.user.login == 'asdf8601') ||
+      (github.event_name == 'issue_comment' && github.event.comment.body == '/create' && github.event.issue.user.login == 'asdf8601') ||
+      (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
+      pull-requests: write
     
     steps:
       - name: Checkout repository
