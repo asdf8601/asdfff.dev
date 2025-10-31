@@ -103,11 +103,19 @@ jobs:
               await exec.exec('git', ['push']);
               console.log('Changes committed and pushed');
               
+              const urlMap = {
+                'post': `https://asdfff.dev/posts/${filename}`,
+                'til': `https://asdfff.dev/til/${filename}`,
+                'quote': `https://asdfff.dev/quotes/${filename}`
+              };
+              
+              const contentUrl = urlMap[contentType];
+              
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                body: `✅ Content created successfully at \`${filePath}\`\n\nThe site will rebuild automatically.`
+                body: `✅ Content created successfully at \`${filePath}\`\n\nThe site will rebuild automatically.\n\nView it at: ${contentUrl}`
               });
               
               await github.rest.issues.update({
