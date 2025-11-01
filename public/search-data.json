@@ -10,11 +10,6 @@
     "content": "about This site exists for one reason: to remind you that documentation matters. Source: github.com/asdf8601/asdfff.dev"
   },
   {
-    "url": "/editor",
-    "title": "vim editor",
-    "content": "vim editor this editor requires a desktop browser with a physical keyboard. vim keybindings need proper keyboard input to work correctly. please visit this page from a computer to use the editor. vim editor save load clear copy settings settings tab size: line numbers: syntax: none markdown javascript python NORMAL 1:1"
-  },
-  {
     "url": "/",
     "title": "wtfm",
     "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. { sortedPosts.length > 0 && ( recent posts {sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.description && {post.frontmatter.description} } ))} read more → ) }"
