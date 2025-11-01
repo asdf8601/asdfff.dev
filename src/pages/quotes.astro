@@ -207,7 +207,7 @@ const sortedQuotes = quotes.sort((a, b) => {
 </style>
 
 <script>
-  const { openPageSearch, closePageSearch, isPageSearchActive } = (window as any).pageSearchHandlers
+  const { openPageSearch, isPageSearchActive } = (window as any).pageSearchHandlers
 
   document.addEventListener("DOMContentLoaded", () => {
     const quoteLinks = document.querySelectorAll(".quote-link")

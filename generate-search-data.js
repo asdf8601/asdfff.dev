@@ -44,20 +44,17 @@ async function processMarkdownFile(filePath, relativePath) {
   const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/)
 
   let title = "Untitled"
-  let description = ""
 
   if (frontmatterMatch) {
     const frontmatter = frontmatterMatch[1]
     const titleMatch = frontmatter.match(/title:\s*["']?([^"'\n]+)["']?/)
-    const descMatch = frontmatter.match(/description:\s*["']?([^"'\n]+)["']?/)
 
     if (titleMatch) title = titleMatch[1].trim()
-    if (descMatch) description = descMatch[1].trim()
   }
 
   const text = content
     .replace(/^---[\s\S]*?---/, "")
-    .replace(/[#*_~\[\]]/g, "")
+    .replace(/[#*_~[\]]/g, "")
     .replace(/\s+/g, " ")
     .trim()
 

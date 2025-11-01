@@ -364,18 +364,6 @@ const description = frontmatter?.description
     })
   }
 
-  function updatePageSearchSelection() {
-    const resultElements = pageSearchResults?.querySelectorAll(".search-result")
-    resultElements?.forEach((el, index) => {
-      if (index === searchSelectedIndex) {
-        el.classList.add("selected-item")
-        el.scrollIntoView({ block: "nearest", behavior: "smooth" })
-      } else {
-        el.classList.remove("selected-item")
-      }
-    })
-  }
-
   function openPageSearch() {
     pageSearchActive = true
     pageSearchModal?.classList.add("active")
