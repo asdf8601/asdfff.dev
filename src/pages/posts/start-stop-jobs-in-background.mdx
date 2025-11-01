@@ -37,7 +37,7 @@ function stop() {
         kill "$pid"
         rm -f "$PID_FILE"
         # echo "Stopped (PID: $pid)"
-        noti --title MyTunnel --message "Stoped (PID: $(cat "$PID_FILE"))"
+        noti --title MyTunnel --message "Stopped (PID: $(cat "$PID_FILE"))"
     else
         rm -f "$PID_FILE"
         echo "Process not found"

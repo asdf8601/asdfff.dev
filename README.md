@@ -64,6 +64,7 @@ Search data is generated at build time via `generate-search-data.js`. The script
 GitHub Actions automatically deploys to GitHub Pages on push to main.
 
 Enable GitHub Pages in repo settings:
+
 1. Settings → Pages
 2. Source: GitHub Actions
 3. Site will be available at `https://asdf8601.github.io/asdfff.dev/`

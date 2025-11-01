@@ -1,26 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro"
 
-const posts = await Astro.glob('./posts/*.mdx');
+const posts = await Astro.glob("./posts/*.mdx")
 
-const isDev = import.meta.env.DEV;
+const isDev = import.meta.env.DEV
 
 const sortedPosts = posts
   .filter(post => isDev || !post.frontmatter.draft)
   .sort((a, b) => {
-    const dateA = new Date(a.frontmatter.date || 0);
-    const dateB = new Date(b.frontmatter.date || 0);
-    return dateB.getTime() - dateA.getTime();
+    const dateA = new Date(a.frontmatter.date || 0)
+    const dateB = new Date(b.frontmatter.date || 0)
+    return dateB.getTime() - dateA.getTime()
   })
-  .slice(0, 10);
+  .slice(0, 10)
 
 function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
-  });
+  const date = new Date(dateStr)
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })
 }
 ---
 
@@ -28,35 +28,33 @@ function formatDate(dateStr: string): string {
   <article>
     <h1>wtfm</h1>
 
-    <p>
-      Documentation is the bridge between your code and those who need to use it.
-    </p>
+    <p>Documentation is the bridge between your code and those who need to use it.</p>
 
-    <p>
-      Yet we skip it. We assume it's obvious. We believe "the code is self-documenting."
-    </p>
+    <p>Yet we skip it. We assume it's obvious. We believe "the code is self-documenting."</p>
 
-    <p>
-      It's not.
-    </p>
+    <p>It's not.</p>
 
-    {sortedPosts.length > 0 && (
-      <section class="recent-posts">
-        <h2>recent posts</h2>
-        <div class="post-list">
-          {sortedPosts.map(post => (
-            <div class="post-entry">
-              <h3><a href={post.url}>{post.frontmatter.title}</a></h3>
-              <time>{formatDate(post.frontmatter.date)}</time>
-              {post.frontmatter.description && (
-                <p>{post.frontmatter.description}</p>
-              )}
-            </div>
-          ))}
-        </div>
-        <a href="/posts/" class="read-more">read more →</a>
-      </section>
-    )}
+    {
+      sortedPosts.length > 0 && (
+        <section class="recent-posts">
+          <h2>recent posts</h2>
+          <div class="post-list">
+            {sortedPosts.map(post => (
+              <div class="post-entry">
+                <h3>
+                  <a href={post.url}>{post.frontmatter.title}</a>
+                </h3>
+                <time>{formatDate(post.frontmatter.date)}</time>
+                {post.frontmatter.description && <p>{post.frontmatter.description}</p>}
+              </div>
+            ))}
+          </div>
+          <a href="/posts/" class="read-more">
+            read more →
+          </a>
+        </section>
+      )
+    }
   </article>
 </BaseLayout>
 

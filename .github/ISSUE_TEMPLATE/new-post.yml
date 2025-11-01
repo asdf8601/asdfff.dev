@@ -9,9 +9,9 @@ body:
     attributes:
       value: |
         Write the complete MDX content below. When ready, comment `/mkdir filename.mdx` to create the file.
-        
+
         Example: `/mkdir my-post.mdx` will create `src/pages/posts/my-post.mdx`
-  
+
   - type: textarea
     id: content
     attributes:
@@ -24,9 +24,9 @@ body:
         tag: python
         category: programming
         ---
-        
+
         # My Awesome Post
-        
+
         Your content here...
       render: markdown
     validations:

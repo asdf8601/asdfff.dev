@@ -1,10 +1,5 @@
 <div class="search-container">
-  <input
-    type="search"
-    id="search-input"
-    placeholder="ctrl-k"
-    aria-label="Search"
-  />
+  <input type="search" id="search-input" placeholder="ctrl-k" aria-label="Search" />
   <div id="search-results" class="search-results" hidden></div>
 </div>
 
@@ -97,100 +92,103 @@
 </style>
 
 <script>
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
-  const searchResults = document.getElementById('search-results') as HTMLDivElement;
+  const searchInput = document.getElementById("search-input") as HTMLInputElement
+  const searchResults = document.getElementById("search-results") as HTMLDivElement
 
   interface PageData {
-    url: string;
-    title: string;
-    content: string;
+    url: string
+    title: string
+    content: string
   }
 
-  let pagesData: PageData[] = [];
+  let pagesData: PageData[] = []
 
   async function loadPagesData() {
     try {
-      const response = await fetch('/search-data.json');
-      pagesData = await response.json();
+      const response = await fetch("/search-data.json")
+      pagesData = await response.json()
     } catch (error) {
-      console.error('Failed to load search data:', error);
+      console.error("Failed to load search data:", error)
     }
   }
 
   function search(query: string): PageData[] {
-    if (!query || query.length < 2) return [];
+    if (!query || query.length < 2) return []
 
-    const lowerQuery = query.toLowerCase();
+    const lowerQuery = query.toLowerCase()
     return pagesData
-      .filter(page =>
-        page.title.toLowerCase().includes(lowerQuery) ||
-        page.content.toLowerCase().includes(lowerQuery)
+      .filter(
+        page =>
+          page.title.toLowerCase().includes(lowerQuery) ||
+          page.content.toLowerCase().includes(lowerQuery)
       )
-      .slice(0, 5);
+      .slice(0, 5)
   }
 
   function getExcerpt(content: string, query: string): string {
-    const lowerContent = content.toLowerCase();
-    const lowerQuery = query.toLowerCase();
-    const index = lowerContent.indexOf(lowerQuery);
+    const lowerContent = content.toLowerCase()
+    const lowerQuery = query.toLowerCase()
+    const index = lowerContent.indexOf(lowerQuery)
 
-    if (index === -1) return content.slice(0, 150) + '...';
+    if (index === -1) return content.slice(0, 150) + "..."
 
-    const start = Math.max(0, index - 80);
-    const end = Math.min(content.length, index + query.length + 80);
+    const start = Math.max(0, index - 80)
+    const end = Math.min(content.length, index + query.length + 80)
 
-    let excerpt = content.slice(start, end);
-    if (start > 0) excerpt = '...' + excerpt;
-    if (end < content.length) excerpt = excerpt + '...';
+    let excerpt = content.slice(start, end)
+    if (start > 0) excerpt = "..." + excerpt
+    if (end < content.length) excerpt = excerpt + "..."
 
-    return excerpt;
+    return excerpt
   }
 
   function displayResults(results: PageData[], query: string) {
     if (results.length === 0) {
-      searchResults.innerHTML = '<div class="search-no-results">no results found</div>';
-      searchResults.hidden = false;
-      return;
+      searchResults.innerHTML = '<div class="search-no-results">no results found</div>'
+      searchResults.hidden = false
+      return
     }
 
     searchResults.innerHTML = results
-      .map(page => `
+      .map(
+        page => `
         <div class="search-result-item">
           <a href="${page.url}">
             <div class="search-result-title">${page.title}</div>
             <div class="search-result-excerpt">${getExcerpt(page.content, query)}</div>
           </a>
         </div>
-      `)
-      .join('');
+      `
+      )
+      .join("")
 
-    searchResults.hidden = false;
+    searchResults.hidden = false
   }
 
-  searchInput?.addEventListener('input', (e) => {
-    const query = (e.target as HTMLInputElement).value;
+  searchInput?.addEventListener("input", e => {
+    const query = (e.target as HTMLInputElement).value
 
     if (!query || query.length < 2) {
-      searchResults.hidden = true;
-      return;
+      searchResults.hidden = true
+      return
     }
 
-    const results = search(query);
-    displayResults(results, query);
-  });
+    const results = search(query)
+    displayResults(results, query)
+  })
 
-  searchInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      searchInput.blur();
-      searchResults.hidden = true;
+  searchInput?.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      searchInput.blur()
+      searchResults.hidden = true
     }
-  });
+  })
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener("click", e => {
     if (!searchInput?.contains(e.target as Node) && !searchResults?.contains(e.target as Node)) {
-      searchResults.hidden = true;
+      searchResults.hidden = true
     }
-  });
+  })
 
-  loadPagesData();
+  loadPagesData()
 </script>

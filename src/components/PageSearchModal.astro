@@ -86,147 +86,148 @@
 
 <script>
   interface SearchMatch {
-    element: Element;
-    text: string;
-    index: number;
+    element: Element
+    text: string
+    index: number
   }
 
-  let pageSearchActive = false;
-  let searchMatches: SearchMatch[] = [];
-  let searchSelectedIndex = -1;
+  let pageSearchActive = false
+  let searchMatches: SearchMatch[] = []
+  let searchSelectedIndex = -1
 
-  const pageSearchModal = document.getElementById('page-search-modal');
-  const pageSearchInput = document.getElementById('page-search-input') as HTMLInputElement;
-  const pageSearchResults = document.getElementById('page-search-results');
+  const pageSearchModal = document.getElementById("page-search-modal")
+  const pageSearchInput = document.getElementById("page-search-input") as HTMLInputElement
+  const pageSearchResults = document.getElementById("page-search-results")
 
   function searchInPage(query: string) {
-    searchMatches = [];
+    searchMatches = []
     if (!query) {
-      renderPageSearchResults();
-      return;
+      renderPageSearchResults()
+      return
     }
 
-    const article = document.querySelector('article');
-    if (!article) return;
+    const article = document.querySelector("article")
+    if (!article) return
 
-    const walker = document.createTreeWalker(
-      article,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode: (node) => {
-          if (node.parentElement?.tagName === 'SCRIPT' ||
-              node.parentElement?.tagName === 'STYLE') {
-            return NodeFilter.FILTER_REJECT;
-          }
-          return NodeFilter.FILTER_ACCEPT;
+    const walker = document.createTreeWalker(article, NodeFilter.SHOW_TEXT, {
+      acceptNode: node => {
+        if (node.parentElement?.tagName === "SCRIPT" || node.parentElement?.tagName === "STYLE") {
+          return NodeFilter.FILTER_REJECT
         }
-      }
-    );
+        return NodeFilter.FILTER_ACCEPT
+      },
+    })
 
-    let node;
+    let node
     while ((node = walker.nextNode())) {
-      const text = node.textContent || '';
-      const lowerText = text.toLowerCase();
-      const lowerQuery = query.toLowerCase();
+      const text = node.textContent || ""
+      const lowerText = text.toLowerCase()
+      const lowerQuery = query.toLowerCase()
 
-      let index = 0;
-      let position;
+      let index = 0
+      let position
       while ((position = lowerText.indexOf(lowerQuery, index)) !== -1) {
         searchMatches.push({
           element: node.parentElement as Element,
           text: text,
-          index: position
-        });
-        index = position + 1;
+          index: position,
+        })
+        index = position + 1
       }
     }
 
-    renderPageSearchResults();
+    renderPageSearchResults()
   }
 
   function renderPageSearchResults() {
-    if (!pageSearchResults) return;
+    if (!pageSearchResults) return
 
-    pageSearchResults.innerHTML = '';
+    pageSearchResults.innerHTML = ""
 
     if (searchMatches.length === 0) {
-      pageSearchResults.innerHTML = '<div style="padding: var(--spacing-sm); color: var(--color-text-muted);">No matches found</div>';
-      return;
+      pageSearchResults.innerHTML =
+        '<div style="padding: var(--spacing-sm); color: var(--color-text-muted);">No matches found</div>'
+      return
     }
 
     searchMatches.forEach((match, index) => {
-      const div = document.createElement('div');
-      div.className = 'search-result';
+      const div = document.createElement("div")
+      div.className = "search-result"
       if (index === searchSelectedIndex) {
-        div.classList.add('selected-item');
+        div.classList.add("selected-item")
       }
 
-      const start = Math.max(0, match.index - 40);
-      const end = Math.min(match.text.length, match.index + (pageSearchInput?.value.length || 0) + 40);
-      const before = match.text.slice(start, match.index);
-      const matchText = match.text.slice(match.index, match.index + (pageSearchInput?.value.length || 0));
-      const after = match.text.slice(match.index + (pageSearchInput?.value.length || 0), end);
+      const start = Math.max(0, match.index - 40)
+      const end = Math.min(
+        match.text.length,
+        match.index + (pageSearchInput?.value.length || 0) + 40
+      )
+      const before = match.text.slice(start, match.index)
+      const matchText = match.text.slice(
+        match.index,
+        match.index + (pageSearchInput?.value.length || 0)
+      )
+      const after = match.text.slice(match.index + (pageSearchInput?.value.length || 0), end)
 
       div.innerHTML = `
         <div class="search-result-text">
-          ${start > 0 ? '...' : ''}${before}<span class="search-highlight">${matchText}</span>${after}${end < match.text.length ? '...' : ''}
+          ${start > 0 ? "..." : ""}${before}<span class="search-highlight">${matchText}</span>${after}${end < match.text.length ? "..." : ""}
         </div>
-      `;
+      `
 
-      div.addEventListener('click', () => {
-        match.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        closePageSearch();
-      });
+      div.addEventListener("click", () => {
+        match.element.scrollIntoView({ block: "center", behavior: "smooth" })
+        closePageSearch()
+      })
 
-      pageSearchResults.appendChild(div);
-    });
+      pageSearchResults.appendChild(div)
+    })
   }
 
   function updatePageSearchSelection() {
-    const resultElements = pageSearchResults?.querySelectorAll('.search-result');
+    const resultElements = pageSearchResults?.querySelectorAll(".search-result")
     resultElements?.forEach((el, index) => {
       if (index === searchSelectedIndex) {
-        el.classList.add('selected-item');
-        el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        el.classList.add("selected-item")
+        el.scrollIntoView({ block: "nearest", behavior: "smooth" })
       } else {
-        el.classList.remove('selected-item');
+        el.classList.remove("selected-item")
       }
-    });
+    })
   }
 
   function openPageSearch() {
-    pageSearchActive = true;
-    pageSearchModal?.classList.add('active');
-    pageSearchInput?.focus();
-    searchSelectedIndex = 0;
-    searchInPage('');
+    pageSearchActive = true
+    pageSearchModal?.classList.add("active")
+    pageSearchInput?.focus()
+    searchSelectedIndex = 0
+    searchInPage("")
   }
 
   function closePageSearch() {
-    pageSearchActive = false;
-    pageSearchModal?.classList.remove('active');
-    if (pageSearchInput) pageSearchInput.value = '';
-    searchSelectedIndex = -1;
-    searchMatches = [];
+    pageSearchActive = false
+    pageSearchModal?.classList.remove("active")
+    if (pageSearchInput) pageSearchInput.value = ""
+    searchSelectedIndex = -1
+    searchMatches = []
   }
 
-  pageSearchInput?.addEventListener('input', () => {
-    searchSelectedIndex = 0;
-    searchInPage(pageSearchInput.value);
-  });
+  pageSearchInput?.addEventListener("input", () => {
+    searchSelectedIndex = 0
+    searchInPage(pageSearchInput.value)
+  })
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener("keydown", e => {
     if (pageSearchActive) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        closePageSearch();
+      if (e.key === "Escape") {
+        e.preventDefault()
+        closePageSearch()
       }
     }
-  });
-
-  (window as any).pageSearchHandlers = {
+  })
+  ;(window as any).pageSearchHandlers = {
     openPageSearch,
     closePageSearch,
-    isPageSearchActive: () => pageSearchActive
-  };
+    isPageSearchActive: () => pageSearchActive,
+  }
 </script>

@@ -11,7 +11,10 @@
     cursor: pointer;
     font-family: var(--font-mono);
     padding: 0.25rem 0.5rem;
-    transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease,
+      opacity 0.2s ease;
     opacity: 0.6;
   }
 
@@ -44,13 +47,13 @@
 </style>
 
 <script>
-  const button = document.getElementById('theme-toggle');
-  
-  button?.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
+  const button = document.getElementById("theme-toggle")
+
+  button?.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "dark"
+    const newTheme = currentTheme === "dark" ? "light" : "dark"
+
+    document.documentElement.setAttribute("data-theme", newTheme)
+    localStorage.setItem("theme", newTheme)
+  })
 </script>

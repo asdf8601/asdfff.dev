@@ -12,7 +12,7 @@ jobs:
       contents: write
       issues: write
       actions: write
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,20 +23,20 @@ jobs:
           script: |
             const comment = context.payload.comment.body.trim();
             const issue = context.payload.issue;
-            
+
             const commandMatch = comment.match(/^\/mkdir\s+([\w\-\.]+)$/);
-            
+
             if (!commandMatch) {
               console.log('Not a valid command, ignoring');
               return;
             }
-            
+
             const [, filename] = commandMatch;
             const labels = issue.labels.map(l => l.name);
-            
+
             let contentType = null;
             let directory = null;
-            
+
             if (labels.includes('post')) {
               contentType = 'post';
               directory = 'posts';
@@ -47,7 +47,7 @@ jobs:
               contentType = 'quote';
               directory = 'quotes';
             }
-            
+
             if (!contentType) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -57,11 +57,11 @@ jobs:
               });
               return;
             }
-            
+
             const filePath = `src/pages/${directory}/${filename}`;
-            
+
             console.log(`Processing /mkdir ${filename} (${contentType})`);
-            
+
             const parseIssueBody = (body) => {
               const contentMatch = body.match(/### (?:Post Content|TIL Content|Quote Content)[^\n]*\n\n([\s\S]*)/);
               if (contentMatch) {
@@ -69,9 +69,9 @@ jobs:
               }
               return body;
             };
-            
+
             const content = parseIssueBody(issue.body);
-            
+
             if (!content) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -81,24 +81,24 @@ jobs:
               });
               return;
             }
-            
+
             console.log(`Creating file: ${filePath}`);
-            
+
             const fs = require('fs');
             const path = require('path');
-            
+
             const fileDir = path.dirname(filePath);
             if (!fs.existsSync(fileDir)) {
               fs.mkdirSync(fileDir, { recursive: true });
             }
-            
+
             fs.writeFileSync(filePath, content);
             console.log(`File written successfully`);
-            
+
             await exec.exec('git', ['config', 'user.name', 'github-actions[bot]']);
             await exec.exec('git', ['config', 'user.email', 'github-actions[bot]@users.noreply.github.com']);
             await exec.exec('git', ['add', filePath]);
-            
+
             try {
               const fileName = path.basename(filePath, path.extname(filePath));
               await exec.exec('git', ['commit', '-m', `add content: ${fileName}`]);

@@ -1,26 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PageSearchModal from '../components/PageSearchModal.astro';
+import BaseLayout from "../layouts/BaseLayout.astro"
+import PageSearchModal from "../components/PageSearchModal.astro"
 
-const posts = await Astro.glob('./posts/*.mdx');
+const posts = await Astro.glob("./posts/*.mdx")
 
-const isDev = import.meta.env.DEV;
+const isDev = import.meta.env.DEV
 
 const sortedPosts = posts
   .filter(post => isDev || !post.frontmatter.draft)
   .sort((a, b) => {
-    const dateA = new Date(a.frontmatter.date || 0).getTime();
-    const dateB = new Date(b.frontmatter.date || 0).getTime();
-    return dateB - dateA;
-  });
+    const dateA = new Date(a.frontmatter.date || 0).getTime()
+    const dateB = new Date(b.frontmatter.date || 0).getTime()
+    return dateB - dateA
+  })
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
+  const date = new Date(dateString)
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
 }
 ---
 
@@ -31,27 +31,27 @@ function formatDate(dateString: string): string {
     <p>Longer thoughts on documentation, tools, and engineering.</p>
 
     <div class="post-list">
-      {sortedPosts.length > 0 ? (
-        sortedPosts.map(post => (
-          <div class="post-entry">
-            <h2><a href={post.url}>{post.frontmatter.title}</a></h2>
-            <div class="post-meta">
-              <time>{formatDate(post.frontmatter.date)}</time>
-              {post.frontmatter.category && (
-                <span class="category">{post.frontmatter.category}</span>
-              )}
-              {post.frontmatter.tag && (
-                <span class="tag">{post.frontmatter.tag}</span>
-              )}
+      {
+        sortedPosts.length > 0 ? (
+          sortedPosts.map(post => (
+            <div class="post-entry">
+              <h2>
+                <a href={post.url}>{post.frontmatter.title}</a>
+              </h2>
+              <div class="post-meta">
+                <time>{formatDate(post.frontmatter.date)}</time>
+                {post.frontmatter.category && (
+                  <span class="category">{post.frontmatter.category}</span>
+                )}
+                {post.frontmatter.tag && <span class="tag">{post.frontmatter.tag}</span>}
+              </div>
+              {post.frontmatter.description && <p>{post.frontmatter.description}</p>}
             </div>
-            {post.frontmatter.description && (
-              <p>{post.frontmatter.description}</p>
-            )}
-          </div>
-        ))
-      ) : (
-        <p class="empty-state">No posts yet. Add markdown files to src/pages/posts/</p>
-      )}
+          ))
+        ) : (
+          <p class="empty-state">No posts yet. Add markdown files to src/pages/posts/</p>
+        )
+      }
     </div>
   </article>
 
@@ -97,13 +97,13 @@ function formatDate(dateString: string): string {
   }
 
   .post-meta .category::before {
-    content: '•';
+    content: "•";
     margin-right: var(--spacing-xs);
     color: var(--color-text-muted);
   }
 
   .post-meta .tag::before {
-    content: '#';
+    content: "#";
   }
 
   .post-entry h2 a {
@@ -125,62 +125,62 @@ function formatDate(dateString: string): string {
 </style>
 
 <script>
-  let selectedIndex = -1;
-  const posts = Array.from(document.querySelectorAll('.post-entry'));
+  let selectedIndex = -1
+  const posts = Array.from(document.querySelectorAll(".post-entry"))
 
   function updateSelection() {
     posts.forEach((post, index) => {
       if (index === selectedIndex) {
-        post.classList.add('selected-item');
-        post.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        post.classList.add("selected-item")
+        post.scrollIntoView({ block: "center", behavior: "smooth" })
       } else {
-        post.classList.remove('selected-item');
+        post.classList.remove("selected-item")
       }
-    });
+    })
   }
 
-  document.addEventListener('keydown', (e) => {
-    const target = e.target as HTMLElement;
-    const pageSearchHandlers = (window as any).pageSearchHandlers;
+  document.addEventListener("keydown", e => {
+    const target = e.target as HTMLElement
+    const pageSearchHandlers = (window as any).pageSearchHandlers
 
     if (pageSearchHandlers?.isActive()) {
-      pageSearchHandlers.handleKeydown(e);
-      return;
+      pageSearchHandlers.handleKeydown(e)
+      return
     }
 
-    if (target instanceof HTMLInputElement) return;
+    if (target instanceof HTMLInputElement) return
 
-    if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
-      return;
+    if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+      return
     }
 
-    if (e.key === '/') {
-      e.preventDefault();
-      (window as any).pageSearchHandlers?.open();
-      return;
+    if (e.key === "/") {
+      e.preventDefault()
+      ;(window as any).pageSearchHandlers?.open()
+      return
     }
 
-    if (e.key === 'j') {
-      e.preventDefault();
+    if (e.key === "j") {
+      e.preventDefault()
       if (selectedIndex < posts.length - 1) {
-        selectedIndex++;
-        updateSelection();
+        selectedIndex++
+        updateSelection()
       }
-    } else if (e.key === 'k') {
-      e.preventDefault();
+    } else if (e.key === "k") {
+      e.preventDefault()
       if (selectedIndex > 0) {
-        selectedIndex--;
-        updateSelection();
+        selectedIndex--
+        updateSelection()
       } else if (selectedIndex === -1 && posts.length > 0) {
-        selectedIndex = 0;
-        updateSelection();
+        selectedIndex = 0
+        updateSelection()
       }
-    } else if (e.key === 'Enter' && selectedIndex >= 0) {
-      e.preventDefault();
-      const link = posts[selectedIndex].querySelector('a');
+    } else if (e.key === "Enter" && selectedIndex >= 0) {
+      e.preventDefault()
+      const link = posts[selectedIndex].querySelector("a")
       if (link) {
-        window.location.href = link.href;
+        window.location.href = link.href
       }
     }
-  });
+  })
 </script>

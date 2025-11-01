@@ -1,17 +1,18 @@
 ---
-import Search from '../components/Search.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import '../styles/global.css';
+import Search from "../components/Search.astro"
+import ThemeToggle from "../components/ThemeToggle.astro"
+import "../styles/global.css"
 
 interface Props {
-  title: string;
-  description?: string;
+  title: string
+  description?: string
 }
 
-const { title, description = "Write the Fucking Manual - A minimalist guide to documentation" } = Astro.props;
+const { title, description = "Write the Fucking Manual - A minimalist guide to documentation" } =
+  Astro.props
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -20,16 +21,27 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+      integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV"
+      crossorigin="anonymous"
+    />
     <script is:inline>
       const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-          return localStorage.getItem('theme');
+        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+          return localStorage.getItem("theme")
         }
-        return 'dark';
-      })();
-      document.documentElement.setAttribute('data-theme', theme);
+        return "dark"
+      })()
+      document.documentElement.setAttribute("data-theme", theme)
     </script>
   </head>
   <body>
@@ -37,7 +49,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
     <header role="banner">
       <nav role="navigation" aria-label="Main navigation">
-        <a href="/" aria-label="Home">wtfm</a>
+        <a href="/" aria-label="Home">wtfm!</a>
         <a href="/posts/">posts</a>
         <a href="/til/">til</a>
         <a href="/quotes/">quotes</a>
@@ -141,154 +153,160 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
     <script>
       function showNotification(message: string) {
-        const notification = document.getElementById('notification');
+        const notification = document.getElementById("notification")
         if (notification) {
-          notification.textContent = message;
-          notification.hidden = false;
+          notification.textContent = message
+          notification.hidden = false
           setTimeout(() => {
-            notification.hidden = true;
-          }, 2000);
+            notification.hidden = true
+          }, 2000)
         }
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const navLinks = document.querySelectorAll('nav a:not(:first-child)');
-        const currentPath = window.location.pathname;
+      document.addEventListener("DOMContentLoaded", () => {
+        const navLinks = document.querySelectorAll("nav a:not(:first-child)")
+        const currentPath = window.location.pathname
 
         navLinks.forEach((link, index) => {
-          link.setAttribute('data-nav-index', (index + 1).toString());
+          link.setAttribute("data-nav-index", (index + 1).toString())
 
-          const href = link.getAttribute('href');
+          const href = link.getAttribute("href")
           if (href && currentPath.startsWith(href)) {
-            link.classList.add('active-page');
+            link.classList.add("active-page")
           }
 
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const href = link.getAttribute('href');
+          link.addEventListener("click", e => {
+            e.preventDefault()
+            const href = link.getAttribute("href")
 
             if (href) {
-              window.location.href = href;
+              window.location.href = href
             }
-          });
-        });
-      });
+          })
+        })
+      })
 
-      document.addEventListener('keydown', (e) => {
-        const target = e.target as HTMLElement;
-        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-          return;
+      document.addEventListener("keydown", e => {
+        const target = e.target as HTMLElement
+        if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") {
+          return
         }
 
-        const helpModal = document.getElementById('help-modal');
+        const helpModal = document.getElementById("help-modal")
 
-        if (e.key === 'y') {
-          const lastYPress = (window as any).lastYPress || 0;
-          const now = Date.now();
+        if (e.key === "y") {
+          const lastYPress = (window as any).lastYPress || 0
+          const now = Date.now()
 
           if (now - lastYPress < 500) {
-            e.preventDefault();
-            const url = window.location.href;
-            navigator.clipboard.writeText(url).then(() => {
-              showNotification('url copied');
-            }).catch(err => {
-              console.error('Failed to copy URL:', err);
-            });
-            (window as any).lastYPress = 0;
+            e.preventDefault()
+            const url = window.location.href
+            navigator.clipboard
+              .writeText(url)
+              .then(() => {
+                showNotification("url copied")
+              })
+              .catch(err => {
+                console.error("Failed to copy URL:", err)
+              })
+            ;(window as any).lastYPress = 0
           } else {
-            (window as any).lastYPress = now;
+            ;(window as any).lastYPress = now
           }
         }
 
-        if (e.key === '?') {
-          e.preventDefault();
+        if (e.key === "?") {
+          e.preventDefault()
           if (helpModal) {
-            helpModal.hidden = !helpModal.hidden;
+            helpModal.hidden = !helpModal.hidden
           }
         }
 
-        if (e.key === 'Escape') {
-          e.preventDefault();
+        if (e.key === "Escape") {
+          e.preventDefault()
           if (helpModal) {
-            helpModal.hidden = true;
+            helpModal.hidden = true
           }
         }
 
-        const navLinks = Array.from(document.querySelectorAll('nav a:not(:first-child)')) as HTMLAnchorElement[];
-        const currentPath = window.location.pathname;
+        const navLinks = Array.from(
+          document.querySelectorAll("nav a:not(:first-child)")
+        ) as HTMLAnchorElement[]
+        const currentPath = window.location.pathname
         const currentIndex = navLinks.findIndex(link => {
-          const href = link.getAttribute('href');
-          return href && currentPath.startsWith(href);
-        });
+          const href = link.getAttribute("href")
+          return href && currentPath.startsWith(href)
+        })
 
-        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault();
-          const searchInput = document.getElementById('search-input') as HTMLInputElement;
+        if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          const searchInput = document.getElementById("search-input") as HTMLInputElement
           if (searchInput) {
-            searchInput.focus();
+            searchInput.focus()
           }
-          return;
+          return
         }
 
-        if (e.key === 'g') {
-          const lastGPress = (window as any).lastGPress || 0;
-          const now = Date.now();
+        if (e.key === "g") {
+          const lastGPress = (window as any).lastGPress || 0
+          const now = Date.now()
 
           if (now - lastGPress < 500) {
-            (window as any).lastGPress = 0;
+            ;(window as any).lastGPress = 0
           } else {
-            (window as any).lastGPress = now;
+            ;(window as any).lastGPress = now
           }
         }
 
-        if (e.key >= '0' && e.key <= '9') {
-          const lastGPress = (window as any).lastGPress || 0;
-          const now = Date.now();
+        if (e.key >= "0" && e.key <= "9") {
+          const lastGPress = (window as any).lastGPress || 0
+          const now = Date.now()
 
           if (now - lastGPress < 500 && now - lastGPress > 0) {
-            e.preventDefault();
-            const index = parseInt(e.key);
-            const homeLink = document.querySelector('nav a:first-child') as HTMLAnchorElement;
+            e.preventDefault()
+            const index = parseInt(e.key)
+            const homeLink = document.querySelector("nav a:first-child") as HTMLAnchorElement
 
             if (index === 0 && homeLink) {
-              const href = homeLink.getAttribute('href');
-              if (href) window.location.href = href;
+              const href = homeLink.getAttribute("href")
+              if (href) window.location.href = href
             } else if (index > 0 && index <= navLinks.length) {
-              const href = navLinks[index - 1].getAttribute('href');
-              if (href) window.location.href = href;
+              const href = navLinks[index - 1].getAttribute("href")
+              if (href) window.location.href = href
             }
 
-            (window as any).lastGPress = 0;
+            ;(window as any).lastGPress = 0
           }
         }
 
-        if ((e.key === 't' && e.shiftKey && currentIndex >= 0) ||
-            (e.key === 'T' && currentIndex >= 0)) {
-          e.preventDefault();
-          const prevIndex = currentIndex - 1;
-          const targetIndex = prevIndex < 0 ? navLinks.length - 1 : prevIndex;
-          const href = navLinks[targetIndex].getAttribute('href');
-          if (href) window.location.href = href;
+        if (
+          (e.key === "t" && e.shiftKey && currentIndex >= 0) ||
+          (e.key === "T" && currentIndex >= 0)
+        ) {
+          e.preventDefault()
+          const prevIndex = currentIndex - 1
+          const targetIndex = prevIndex < 0 ? navLinks.length - 1 : prevIndex
+          const href = navLinks[targetIndex].getAttribute("href")
+          if (href) window.location.href = href
         }
 
-        if (e.key === 't' && !e.shiftKey && currentIndex >= 0) {
-          e.preventDefault();
-          const nextIndex = currentIndex + 1;
-          const targetIndex = nextIndex >= navLinks.length ? 0 : nextIndex;
-          const href = navLinks[targetIndex].getAttribute('href');
-          if (href) window.location.href = href;
+        if (e.key === "t" && !e.shiftKey && currentIndex >= 0) {
+          e.preventDefault()
+          const nextIndex = currentIndex + 1
+          const targetIndex = nextIndex >= navLinks.length ? 0 : nextIndex
+          const href = navLinks[targetIndex].getAttribute("href")
+          if (href) window.location.href = href
         }
 
-        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault();
-          const searchInput = document.getElementById('search-input') as HTMLInputElement;
+        if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault()
+          const searchInput = document.getElementById("search-input") as HTMLInputElement
           if (searchInput) {
-            searchInput.focus();
+            searchInput.focus()
           }
         }
-      });
-
-      (window as any).showNotification = showNotification;
+      })
+      ;(window as any).showNotification = showNotification
     </script>
   </body>
 </html>
@@ -313,15 +331,15 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
       flex-wrap: wrap;
       gap: 0.6rem;
     }
-    
+
     nav a:not(:first-child)::after {
       display: none;
     }
-    
+
     header {
       padding: 1rem;
     }
-    
+
     nav > :last-child {
       margin-top: 0.5rem;
       flex-basis: 100%;
@@ -366,7 +384,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   }
 
   nav a:not(:first-child):hover::after {
-    content: '';
+    content: "";
     background-color: var(--color-accent);
     opacity: 1;
   }
@@ -375,12 +393,12 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     nav a:not(:first-child)::after {
       display: none;
     }
-    
+
     nav {
       flex-wrap: wrap;
       gap: 0.6rem;
     }
-    
+
     nav > :last-child {
       margin-top: 0.5rem;
       flex-basis: 100%;
@@ -403,7 +421,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   }
 
   nav a.active-page::after {
-    content: '';
+    content: "";
     background-color: var(--color-accent);
     opacity: 1;
   }
@@ -418,7 +436,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     color: var(--color-text-muted);
     font-size: 0.85rem;
   }
-  
+
   @media (max-width: 768px) {
     footer {
       padding: 0.75rem var(--spacing-sm);

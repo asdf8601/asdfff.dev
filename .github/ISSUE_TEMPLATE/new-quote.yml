@@ -9,9 +9,9 @@ body:
     attributes:
       value: |
         Write the complete markdown content below. When ready, comment `/mkdir filename.md` to create the file.
-        
+
         Example: `/mkdir borges-library.md` will create `src/pages/quotes/borges-library.md`
-  
+
   - type: textarea
     id: content
     attributes:
@@ -23,7 +23,7 @@ body:
         author: Jorge Luis Borges
         source: Labyrinths
         ---
-        
+
         I have always imagined that Paradise will be a kind of library.
       render: markdown
     validations:

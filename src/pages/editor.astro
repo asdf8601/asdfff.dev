@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro"
 ---
 
 <BaseLayout title="editor - wtfm">
@@ -23,38 +23,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </div>
 
-    <div id="settings-panel" class="settings-panel" hidden>
-      <h3>settings</h3>
-      <div class="setting-group">
-        <label for="tab-size">tab size:</label>
-        <input type="number" id="tab-size" min="2" max="8" value="2" />
+      <div id="settings-panel" class="settings-panel" hidden>
+        <h3>settings</h3>
+        <div class="setting-group">
+          <label for="tab-size">tab size:</label>
+          <input type="number" id="tab-size" min="2" max="8" value="2" />
+        </div>
+        <div class="setting-group">
+          <label for="line-numbers">line numbers:</label>
+          <input type="checkbox" id="line-numbers" checked />
+        </div>
+        <div class="setting-group">
+          <label for="syntax-lang">syntax:</label>
+          <select id="syntax-lang">
+            <option value="none">none</option>
+            <option value="markdown">markdown</option>
+            <option value="javascript">javascript</option>
+            <option value="python">python</option>
+          </select>
+        </div>
       </div>
-      <div class="setting-group">
-        <label for="line-numbers">line numbers:</label>
-        <input type="checkbox" id="line-numbers" checked />
-      </div>
-      <div class="setting-group">
-        <label for="syntax-lang">syntax:</label>
-        <select id="syntax-lang">
-          <option value="none">none</option>
-          <option value="markdown">markdown</option>
-          <option value="javascript">javascript</option>
-          <option value="python">python</option>
-        </select>
-      </div>
-    </div>
 
-    <div id="editor-container"></div>
+      <div id="editor-container"></div>
 
-    <div class="editor-footer">
-      <div class="vim-status">
-        <span id="vim-mode">NORMAL</span>
-        <span id="vim-command"></span>
+      <div class="editor-footer">
+        <div class="vim-status">
+          <span id="vim-mode">NORMAL</span>
+          <span id="vim-command"></span>
+        </div>
+        <div class="editor-info">
+          <span id="cursor-pos">1:1</span>
+        </div>
       </div>
-      <div class="editor-info">
-        <span id="cursor-pos">1:1</span>
-      </div>
-    </div>
     </div>
   </article>
 </BaseLayout>
@@ -263,21 +263,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </style>
 
 <script>
-  import { EditorView } from 'codemirror';
-  import { basicSetup } from 'codemirror';
-  import { EditorState } from '@codemirror/state';
-  import { vim, Vim } from '@replit/codemirror-vim';
-  import { markdown } from '@codemirror/lang-markdown';
-  import { javascript } from '@codemirror/lang-javascript';
-  import { python } from '@codemirror/lang-python';
+  import { EditorView } from "codemirror"
+  import { basicSetup } from "codemirror"
+  import { EditorState } from "@codemirror/state"
+  import { vim, Vim } from "@replit/codemirror-vim"
+  import { markdown } from "@codemirror/lang-markdown"
+  import { javascript } from "@codemirror/lang-javascript"
+  import { python } from "@codemirror/lang-python"
 
-  let editorView: EditorView;
-  let currentLanguage: any = null;
+  let editorView: EditorView
+  let currentLanguage: any = null
 
-  const vimModeElement = document.getElementById('vim-mode');
-  const vimCommandElement = document.getElementById('vim-command');
-  const cursorPosElement = document.getElementById('cursor-pos');
-  const settingsPanel = document.getElementById('settings-panel');
+  const vimModeElement = document.getElementById("vim-mode")
+  const vimCommandElement = document.getElementById("vim-command")
+  const cursorPosElement = document.getElementById("cursor-pos")
+  const settingsPanel = document.getElementById("settings-panel")
 
   const defaultText = `Welcome to vim editor
 
@@ -301,26 +301,28 @@ Visual modes:
 
 Use the buttons above or vim commands.
 Start typing to replace this text.
-`;
+`
 
   function createEditor() {
-    const container = document.getElementById('editor-container');
-    if (!container) return;
+    const container = document.getElementById("editor-container")
+    if (!container) return
 
-    const tabSize = parseInt((document.getElementById('tab-size') as HTMLInputElement)?.value || '2');
-    const showLineNumbers = (document.getElementById('line-numbers') as HTMLInputElement)?.checked;
-    const syntaxLang = (document.getElementById('syntax-lang') as HTMLSelectElement)?.value;
+    const tabSize = parseInt(
+      (document.getElementById("tab-size") as HTMLInputElement)?.value || "2"
+    )
+    const showLineNumbers = (document.getElementById("line-numbers") as HTMLInputElement)?.checked
+    const syntaxLang = (document.getElementById("syntax-lang") as HTMLSelectElement)?.value
 
-    let languageExtension: any[] = [];
-    if (syntaxLang === 'markdown') {
-      languageExtension = [markdown()];
-    } else if (syntaxLang === 'javascript') {
-      languageExtension = [javascript()];
-    } else if (syntaxLang === 'python') {
-      languageExtension = [python()];
+    let languageExtension: any[] = []
+    if (syntaxLang === "markdown") {
+      languageExtension = [markdown()]
+    } else if (syntaxLang === "javascript") {
+      languageExtension = [javascript()]
+    } else if (syntaxLang === "python") {
+      languageExtension = [python()]
     }
 
-    const savedContent = localStorage.getItem('vim-editor-content') || defaultText;
+    const savedContent = localStorage.getItem("vim-editor-content") || defaultText
 
     const startState = EditorState.create({
       doc: savedContent,
@@ -328,82 +330,82 @@ Start typing to replace this text.
         basicSetup,
         vim(),
         ...languageExtension,
-        EditorView.updateListener.of((update) => {
+        EditorView.updateListener.of(update => {
           if (update.selectionSet) {
-            const pos = update.state.selection.main.head;
-            const line = update.state.doc.lineAt(pos);
-            const col = pos - line.from + 1;
+            const pos = update.state.selection.main.head
+            const line = update.state.doc.lineAt(pos)
+            const col = pos - line.from + 1
             if (cursorPosElement) {
-              cursorPosElement.textContent = `${line.number}:${col}`;
+              cursorPosElement.textContent = `${line.number}:${col}`
             }
           }
         }),
         EditorView.theme({
-          '&': {
-            height: '100%',
-            backgroundColor: 'var(--color-pre-bg)',
+          "&": {
+            height: "100%",
+            backgroundColor: "var(--color-pre-bg)",
           },
-          '.cm-scroller': {
-            fontFamily: 'var(--font-mono)',
-            fontSize: '1rem',
-            lineHeight: '1.6',
+          ".cm-scroller": {
+            fontFamily: "var(--font-mono)",
+            fontSize: "1rem",
+            lineHeight: "1.6",
           },
-          '.cm-gutters': {
-            backgroundColor: 'var(--color-til-bg)',
-            borderRight: '1px solid var(--color-border)',
-            color: '#7c7c7c',
+          ".cm-gutters": {
+            backgroundColor: "var(--color-til-bg)",
+            borderRight: "1px solid var(--color-border)",
+            color: "#7c7c7c",
           },
         }),
       ],
-    });
+    })
 
     if (editorView) {
-      editorView.destroy();
+      editorView.destroy()
     }
 
     editorView = new EditorView({
       state: startState,
       parent: container,
-    });
+    })
 
-    Vim.defineEx('write', 'w', () => {
-      saveToLocalStorage();
-    });
+    Vim.defineEx("write", "w", () => {
+      saveToLocalStorage()
+    })
 
-    Vim.defineEx('quit', 'q', () => {
-      clearEditor();
-    });
+    Vim.defineEx("quit", "q", () => {
+      clearEditor()
+    })
 
-    Vim.defineEx('wq', 'wq', () => {
-      saveToLocalStorage();
-      clearEditor();
-    });
+    Vim.defineEx("wq", "wq", () => {
+      saveToLocalStorage()
+      clearEditor()
+    })
 
-    updateVimStatus();
-    editorView.focus();
+    updateVimStatus()
+    editorView.focus()
   }
 
   function updateVimStatus() {
-    if (!editorView) return;
+    if (!editorView) return
 
-    const vimState = (editorView as any).state.vim;
+    const vimState = (editorView as any).state.vim
     if (vimState && vimModeElement) {
-      const mode = vimState.mode.toUpperCase();
-      vimModeElement.textContent = mode;
+      const mode = vimState.mode.toUpperCase()
+      vimModeElement.textContent = mode
     }
   }
 
-  setInterval(updateVimStatus, 100);
+  setInterval(updateVimStatus, 100)
 
   function saveToLocalStorage() {
-    if (!editorView) return;
-    const content = editorView.state.doc.toString();
-    localStorage.setItem('vim-editor-content', content);
-    (window as any).showNotification?.('saved to localStorage');
+    if (!editorView) return
+    const content = editorView.state.doc.toString()
+    localStorage.setItem("vim-editor-content", content)
+    ;(window as any).showNotification?.("saved to localStorage")
   }
 
   function loadFromLocalStorage() {
-    const content = localStorage.getItem('vim-editor-content');
+    const content = localStorage.getItem("vim-editor-content")
     if (content && editorView) {
       editorView.dispatch({
         changes: {
@@ -411,70 +413,75 @@ Start typing to replace this text.
           to: editorView.state.doc.length,
           insert: content,
         },
-      });
-      (window as any).showNotification?.('loaded from localStorage');
+      })
+      ;(window as any).showNotification?.("loaded from localStorage")
     }
   }
 
   function clearEditor() {
-    if (!editorView) return;
+    if (!editorView) return
     editorView.dispatch({
       changes: {
         from: 0,
         to: editorView.state.doc.length,
-        insert: '',
+        insert: "",
       },
-    });
-    (window as any).showNotification?.('editor cleared');
+    })
+    ;(window as any).showNotification?.("editor cleared")
   }
 
   function copyToClipboard() {
-    if (!editorView) return;
-    const content = editorView.state.doc.toString();
-    navigator.clipboard.writeText(content).then(() => {
-      (window as any).showNotification?.('copied to clipboard');
-    }).catch(err => {
-      console.error('Failed to copy:', err);
-    });
+    if (!editorView) return
+    const content = editorView.state.doc.toString()
+    navigator.clipboard
+      .writeText(content)
+      .then(() => {
+        ;(window as any).showNotification?.("copied to clipboard")
+      })
+      .catch(err => {
+        console.error("Failed to copy:", err)
+      })
   }
 
-  document.getElementById('save-btn')?.addEventListener('click', saveToLocalStorage);
-  document.getElementById('load-btn')?.addEventListener('click', loadFromLocalStorage);
-  document.getElementById('clear-btn')?.addEventListener('click', clearEditor);
-  document.getElementById('copy-btn')?.addEventListener('click', copyToClipboard);
+  document.getElementById("save-btn")?.addEventListener("click", saveToLocalStorage)
+  document.getElementById("load-btn")?.addEventListener("click", loadFromLocalStorage)
+  document.getElementById("clear-btn")?.addEventListener("click", clearEditor)
+  document.getElementById("copy-btn")?.addEventListener("click", copyToClipboard)
 
-  document.getElementById('settings-btn')?.addEventListener('click', () => {
+  document.getElementById("settings-btn")?.addEventListener("click", () => {
     if (settingsPanel) {
-      settingsPanel.hidden = !settingsPanel.hidden;
+      settingsPanel.hidden = !settingsPanel.hidden
     }
-  });
+  })
 
-  document.getElementById('tab-size')?.addEventListener('change', () => {
-    createEditor();
-  });
+  document.getElementById("tab-size")?.addEventListener("change", () => {
+    createEditor()
+  })
 
-  document.getElementById('line-numbers')?.addEventListener('change', () => {
-    createEditor();
-  });
+  document.getElementById("line-numbers")?.addEventListener("change", () => {
+    createEditor()
+  })
 
-  document.getElementById('syntax-lang')?.addEventListener('change', () => {
-    createEditor();
-  });
+  document.getElementById("syntax-lang")?.addEventListener("change", () => {
+    createEditor()
+  })
 
   function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-      || (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
+    return (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      (window.matchMedia && window.matchMedia("(max-width: 768px)").matches)
+    )
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const mobileWarning = document.getElementById('mobile-warning');
-    const editorWrapper = document.getElementById('editor-wrapper');
+  document.addEventListener("DOMContentLoaded", () => {
+    const mobileWarning = document.getElementById("mobile-warning")
+    const editorWrapper = document.getElementById("editor-wrapper")
 
     if (isMobileDevice()) {
-      if (mobileWarning) mobileWarning.hidden = false;
-      if (editorWrapper) editorWrapper.hidden = true;
+      if (mobileWarning) mobileWarning.hidden = false
+      if (editorWrapper) editorWrapper.hidden = true
     } else {
-      createEditor();
+      createEditor()
     }
-  });
+  })
 </script>

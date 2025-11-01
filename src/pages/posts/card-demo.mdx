@@ -6,7 +6,7 @@ description: "Demonstration of the Card component with different types and style
 draft: true
 ---
 
-import Card from '../../components/Card.astro';
+import Card from "../../components/Card.astro"
 
 # Card Component Demo
 
@@ -15,37 +15,40 @@ This post demonstrates the Card component that can be used to create fancy callo
 ## Default Card
 
 <Card title="Default Card">
-This is a default card with the standard green accent color. Perfect for general notes and highlights.
+  This is a default card with the standard green accent color. Perfect for general notes and
+  highlights.
 </Card>
 
 ## Info Card
 
 <Card type="info" title="Information">
-This is an info card with blue accents. Use it for informational callouts and tips.
+  This is an info card with blue accents. Use it for informational callouts and tips.
 </Card>
 
 ## Warning Card
 
 <Card type="warning" title="Warning">
-This is a warning card with orange accents. Use it to highlight warnings or important notices.
+  This is a warning card with orange accents. Use it to highlight warnings or important notices.
 </Card>
 
 ## Success Card
 
 <Card type="success" title="Success">
-This is a success card with green accents. Use it to highlight successful operations or positive outcomes.
+  This is a success card with green accents. Use it to highlight successful operations or positive
+  outcomes.
 </Card>
 
 ## Error Card
 
 <Card type="error" title="Error">
-This is an error card with red accents. Use it to highlight errors or critical issues.
+  This is an error card with red accents. Use it to highlight errors or critical issues.
 </Card>
 
 ## Card Without Title
 
 <Card type="info">
-You can also create cards without titles. Just omit the title prop and the content will fill the entire card.
+  You can also create cards without titles. Just omit the title prop and the content will fill the
+  entire card.
 </Card>
 
 ## Complex Content
@@ -55,10 +58,11 @@ Cards support **markdown formatting** including:
 
 - Lists
 - **Bold text**
-- *Italic text*
+- _Italic text_
 - `Code blocks`
 
 You can put any markdown content inside the card.
+
 </Card>
 
 ## Code Example
@@ -73,8 +77,7 @@ import Card from '../../components/Card.astro';
 Then use it anywhere in your markdown:
 
 ```astro
-<Card type="info" title="My Card">
-  Your content here
-</Card>
+<Card type="info" title="My Card"> Your content here </Card>
 ```
+
 </Card>
