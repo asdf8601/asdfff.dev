@@ -2,18 +2,29 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 
 const postModules = import.meta.glob("./posts/*.mdx", { eager: true })
-const posts = Object.values(postModules)
+const posts = Object.values(postModules) as any[]
+
+const quoteModules = import.meta.glob("./quotes/*.md", { eager: true })
+const quotes = Object.values(quoteModules) as any[]
+
+const tilModules = import.meta.glob("./til/*.md", { eager: true })
+const tils = Object.values(tilModules) as any[]
 
 const isDev = import.meta.env.DEV
 
 const sortedPosts = posts
-  .filter(post => isDev || !post.frontmatter.draft)
-  .sort((a, b) => {
+  .filter((post: any) => isDev || !post.frontmatter.draft)
+  .sort((a: any, b: any) => {
     const dateA = new Date(a.frontmatter.date || 0)
     const dateB = new Date(b.frontmatter.date || 0)
     return dateB.getTime() - dateA.getTime()
   })
   .slice(0, 10)
+
+const allContent = [...quotes, ...tils]
+const randomContent =
+  allContent.length > 0 ? allContent[Math.floor(Math.random() * allContent.length)] : null
+const isQuote = randomContent && quotes.includes(randomContent)
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
@@ -29,18 +40,36 @@ function formatDate(dateStr: string): string {
   <article>
     <h1>wtfm</h1>
 
-    <p>Documentation is the bridge between your code and those who need to use it.</p>
+    <p>Like planting a tree, the best time was 30 years ago. The second best time is right now.</p>
 
-    <p>Yet we skip it. We assume it's obvious. We believe "the code is self-documenting."</p>
+    <p>I've always wanted to write this stuff down somewhere. This site is basically that.</p>
 
-    <p>It's not.</p>
+    {
+      randomContent && (
+        <section class="random-content">
+          <div class={isQuote ? "quote-box" : "til-box"}>
+            <div class="content-label">{isQuote ? "quote" : "til"}</div>
+            <div class="content-body" set:html={randomContent.compiledContent()} />
+            {isQuote && randomContent.frontmatter.author && (
+              <div class="quote-meta">
+                — {randomContent.frontmatter.author}
+                {randomContent.frontmatter.source && `, ${randomContent.frontmatter.source}`}
+              </div>
+            )}
+            <a href={isQuote ? "/quotes/" : "/til/"} class="content-link">
+              see more {isQuote ? "quotes" : "tils"} →
+            </a>
+          </div>
+        </section>
+      )
+    }
 
     {
       sortedPosts.length > 0 && (
         <section class="recent-posts">
           <h2>recent posts</h2>
           <div class="post-list">
-            {sortedPosts.map(post => (
+            {sortedPosts.map((post: any) => (
               <div class="post-entry">
                 <h3>
                   <a href={post.url}>{post.frontmatter.title}</a>
@@ -132,6 +161,75 @@ function formatDate(dateStr: string): string {
   }
 
   .read-more:hover {
+    text-decoration: underline;
+  }
+
+  .random-content {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .quote-box,
+  .til-box {
+    background-color: var(--color-til-bg);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--spacing-md);
+    position: relative;
+  }
+
+  .content-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .content-body {
+    margin: var(--spacing-sm) 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .content-body :global(p) {
+    margin: 0;
+  }
+
+  .content-body :global(code) {
+    background-color: var(--color-bg);
+    padding: 0.125rem 0.25rem;
+    border-radius: 2px;
+    font-size: 0.9em;
+  }
+
+  .content-body :global(pre) {
+    background-color: var(--color-bg);
+    padding: var(--spacing-sm);
+    border-radius: 2px;
+    overflow-x: auto;
+    margin: var(--spacing-xs) 0;
+  }
+
+  .quote-meta {
+    margin-top: var(--spacing-sm);
+    font-style: italic;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+
+  .content-link {
+    display: inline-block;
+    margin-top: var(--spacing-sm);
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .content-link:hover {
     text-decoration: underline;
   }
 </style>

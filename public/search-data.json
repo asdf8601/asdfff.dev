@@ -12,7 +12,7 @@
   {
     "url": "/",
     "title": "wtfm",
-    "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. { sortedPosts.length > 0 && ( recent posts {sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.description && {post.frontmatter.description} } ))} read more → ) }"
+    "content": "wtfm Like planting a tree, the best time was 30 years ago. The second best time is right now. I've always wanted to write this stuff down somewhere. This site is basically that. { randomContent && ( {isQuote ? \"quote\" : \"til\"} {isQuote && randomContent.frontmatter.author && ( — {randomContent.frontmatter.author} {randomContent.frontmatter.source && `, ${randomContent.frontmatter.source}`} )} see more {isQuote ? \"quotes\" : \"tils\"} → ) } { sortedPosts.length > 0 && ( recent posts {sortedPosts.map("
   },
   {
     "url": "/posts",
