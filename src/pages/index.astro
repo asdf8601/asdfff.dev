@@ -21,10 +21,18 @@ const sortedPosts = posts
   })
   .slice(0, 10)
 
-const allContent = [...quotes, ...tils]
-const randomContent =
-  allContent.length > 0 ? allContent[Math.floor(Math.random() * allContent.length)] : null
-const isQuote = randomContent && quotes.includes(randomContent)
+const contentData = await Promise.all([
+  ...quotes.map(async (q: any) => ({
+    type: "quote",
+    html: await q.compiledContent(),
+    author: q.frontmatter.author,
+    source: q.frontmatter.source,
+  })),
+  ...tils.map(async (t: any) => ({
+    type: "til",
+    html: await t.compiledContent(),
+  })),
+])
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
@@ -44,25 +52,7 @@ function formatDate(dateStr: string): string {
 
     <p>I've always wanted to write this stuff down somewhere. This site is basically that.</p>
 
-    {
-      randomContent && (
-        <section class="random-content">
-          <div class={isQuote ? "quote-box" : "til-box"}>
-            <div class="content-label">{isQuote ? "quote" : "til"}</div>
-            <div class="content-body" set:html={randomContent.compiledContent()} />
-            {isQuote && randomContent.frontmatter.author && (
-              <div class="quote-meta">
-                — {randomContent.frontmatter.author}
-                {randomContent.frontmatter.source && `, ${randomContent.frontmatter.source}`}
-              </div>
-            )}
-            <a href={isQuote ? "/quotes/" : "/til/"} class="content-link">
-              see more {isQuote ? "quotes" : "tils"} →
-            </a>
-          </div>
-        </section>
-      )
-    }
+    <section class="random-content" id="random-content"></section>
 
     {
       sortedPosts.length > 0 && (
@@ -232,4 +222,37 @@ function formatDate(dateStr: string): string {
   .content-link:hover {
     text-decoration: underline;
   }
+
+  .random-content.hidden {
+    display: none;
+  }
 </style>
+
+<script define:vars={{ contentData }}>
+  document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("random-content")
+    if (!container || contentData.length === 0) return
+
+    const randomItem = contentData[Math.floor(Math.random() * contentData.length)]
+    const isQuote = randomItem.type === "quote"
+
+    const boxClass = isQuote ? "quote-box" : "til-box"
+    const label = isQuote ? "quote" : "til"
+    const linkText = isQuote ? "quotes" : "tils"
+    const linkHref = isQuote ? "/quotes/" : "/til/"
+
+    let metaHtml = ""
+    if (isQuote && randomItem.author) {
+      metaHtml = `<div class="quote-meta">— ${randomItem.author}${randomItem.source ? `, ${randomItem.source}` : ""}</div>`
+    }
+
+    container.innerHTML = `
+      <div class="${boxClass}">
+        <div class="content-label">${label}</div>
+        <div class="content-body">${randomItem.html}</div>
+        ${metaHtml}
+        <a href="${linkHref}" class="content-link">see more ${linkText} →</a>
+      </div>
+    `
+  })
+</script>
