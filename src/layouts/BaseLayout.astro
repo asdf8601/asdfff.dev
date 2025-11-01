@@ -92,20 +92,20 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
               <span>go to bottom</span>
             </div>
             <div class="help-item">
-              <kbd>gt</kbd>
-              <span>next page</span>
-            </div>
-            <div class="help-item">
-              <kbd>gT</kbd>
-              <span>previous page</span>
-            </div>
-            <div class="help-item">
               <kbd>g0</kbd>
               <span>go home</span>
             </div>
             <div class="help-item">
               <kbd>g1-g5</kbd>
               <span>go to page 1-5</span>
+            </div>
+            <div class="help-item">
+              <kbd>gt</kbd>
+              <span>next page</span>
+            </div>
+            <div class="help-item">
+              <kbd>gT</kbd>
+              <span>previous page</span>
             </div>
             <div class="help-item">
               <kbd>Esc Esc</kbd>
@@ -262,6 +262,26 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
           }
         }
 
+        if (e.key === "t" || e.key === "T") {
+          const lastGPress = (window as any).lastGPress || 0
+          const now = Date.now()
+
+          if (now - lastGPress < 500 && now - lastGPress > 0) {
+            e.preventDefault()
+
+            if (currentIndex !== -1) {
+              const nextIndex = e.key === "t" ? currentIndex + 1 : currentIndex - 1
+
+              if (nextIndex >= 0 && nextIndex < navLinks.length) {
+                const href = navLinks[nextIndex].getAttribute("href")
+                if (href) window.location.href = href
+              }
+            }
+
+            ;(window as any).lastGPress = 0
+          }
+        }
+
         if (e.key >= "0" && e.key <= "9") {
           const lastGPress = (window as any).lastGPress || 0
           const now = Date.now()
@@ -281,25 +301,6 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
             ;(window as any).lastGPress = 0
           }
-        }
-
-        if (
-          (e.key === "t" && e.shiftKey && currentIndex >= 0) ||
-          (e.key === "T" && currentIndex >= 0)
-        ) {
-          e.preventDefault()
-          const prevIndex = currentIndex - 1
-          const targetIndex = prevIndex < 0 ? navLinks.length - 1 : prevIndex
-          const href = navLinks[targetIndex].getAttribute("href")
-          if (href) window.location.href = href
-        }
-
-        if (e.key === "t" && !e.shiftKey && currentIndex >= 0) {
-          e.preventDefault()
-          const nextIndex = currentIndex + 1
-          const targetIndex = nextIndex >= navLinks.length ? 0 : nextIndex
-          const href = navLinks[targetIndex].getAttribute("href")
-          if (href) window.location.href = href
         }
 
         if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
