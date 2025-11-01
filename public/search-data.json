@@ -10,14 +10,19 @@
     "content": "about This site exists for one reason: to remind you that documentation matters. Source: github.com/asdf8601/asdfff.dev"
   },
   {
+    "url": "/editor",
+    "title": "vim editor",
+    "content": "vim editor this editor requires a desktop browser with a physical keyboard. vim keybindings need proper keyboard input to work correctly. please visit this page from a computer to use the editor. vim editor save load clear copy settings settings tab size: line numbers: syntax: none markdown javascript python NORMAL 1:1"
+  },
+  {
     "url": "/",
     "title": "wtfm",
-    "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. {sortedPosts.length > 0 && ( recent posts {sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.description && ( {post.frontmatter.description} )} ))} read more → )}"
+    "content": "wtfm Documentation is the bridge between your code and those who need to use it. Yet we skip it. We assume it's obvious. We believe \"the code is self-documenting.\" It's not. { sortedPosts.length > 0 && ( recent posts {sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.description && {post.frontmatter.description} } ))} read more → ) }"
   },
   {
     "url": "/posts",
     "title": "posts",
-    "content": "posts Longer thoughts on documentation, tools, and engineering. {sortedPosts.length > 0 ? ( sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.category && ( {post.frontmatter.category} )} {post.frontmatter.tag && ( {post.frontmatter.tag} )} {post.frontmatter.description && ( {post.frontmatter.description} )} )) ) : ( No posts yet. Add markdown files to src/pages/posts/ )}"
+    "content": "posts Longer thoughts on documentation, tools, and engineering. { sortedPosts.length > 0 ? ( sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.category && ( {post.frontmatter.category} )} {post.frontmatter.tag && {post.frontmatter.tag} } {post.frontmatter.description && {post.frontmatter.description} } )) ) : ( No posts yet. Add markdown files to src/pages/posts/ ) }"
   },
   {
     "url": "/projects",
@@ -27,12 +32,12 @@
   {
     "url": "/quotes",
     "title": "quotes",
-    "content": "quotes Words worth keeping. A curated collection of literary wisdom. {sortedQuotes.length > 0 ? ( sortedQuotes.map((quote, index) => { const quoteNumber = sortedQuotes.length - index; const date = new Date(quote.frontmatter.date); const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); return ( #{quoteNumber} {formattedDate} {quote.frontmatter.author && ( — {quote.frontmatter.author} )} {quote.frontmatter.source && ( {quote.frontmatter.source}"
+    "content": "quotes Words worth keeping. A curated collection of literary wisdom. { sortedQuotes.length > 0 ? ( sortedQuotes.map((quote, index) => { const quoteNumber = sortedQuotes.length - index const date = new Date(quote.frontmatter.date) const formattedDate = date.toLocaleDateString(\"en-US\", { year: \"numeric\", month: \"short\", day: \"numeric\", }) return ( #{quoteNumber} {formattedDate} {quote.frontmatter.author && ( — {quote.frontmatter.author} )} {quote.frontmatter.source && ( {quote.frontmatter.source} "
   },
   {
     "url": "/til",
     "title": "til",
-    "content": "til Today I learned. Short notes. No fluff. {sortedTils.length > 0 ? ( sortedTils.map((til, index) => { const tilNumber = sortedTils.length - index; const date = new Date(til.frontmatter.date); const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); return ( #{tilNumber} {formattedDate} ); }) ) : ( No TILs yet. Add markdown files to src/pages/til/ )}"
+    "content": "til Today I learned. Short notes. No fluff. { sortedTils.length > 0 ? ( sortedTils.map((til, index) => { const tilNumber = sortedTils.length - index const date = new Date(til.frontmatter.date) const formattedDate = date.toLocaleDateString(\"en-US\", { year: \"numeric\", month: \"short\", day: \"numeric\", }) return ( #{tilNumber} {formattedDate} ) }) ) : ( No TILs yet. Add markdown files to src/pages/til/ ) }"
   },
   {
     "url": "/quotes/example",
