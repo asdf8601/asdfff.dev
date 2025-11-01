@@ -89,7 +89,7 @@ function formatDate(dateStr: string): string {
     text-align: center;
     margin-top: calc(var(--spacing-xl) * 0.75);
     margin-bottom: var(--spacing-lg);
-    font-size: 0.9rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--color-text);
   }
@@ -102,7 +102,6 @@ function formatDate(dateStr: string): string {
   .recent-posts {
     margin-top: var(--spacing-sm);
     padding-top: var(--spacing-sm);
-    border-top: 1px solid var(--color-border);
   }
 
   .post-list {
@@ -118,8 +117,9 @@ function formatDate(dateStr: string): string {
 
   .post-entry h3 {
     margin: 0 0 var(--spacing-xs) 0;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
   }
 
   .post-entry h3 a {
@@ -145,17 +145,19 @@ function formatDate(dateStr: string): string {
 
   .read-more {
     display: inline-block;
-    color: var(--color-accent);
+    color: var(--color-text-muted);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 400;
+    font-size: 0.85rem;
   }
 
   .read-more:hover {
+    color: var(--color-accent);
     text-decoration: underline;
   }
 
   .random-content {
-    margin: var(--spacing-lg) 0;
+    margin: var(--spacing-lg) 0 var(--spacing-sm) 0;
     padding: var(--spacing-md) 0;
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
@@ -167,6 +169,15 @@ function formatDate(dateStr: string): string {
     border-left: 3px solid var(--color-accent);
     padding: var(--spacing-md);
     position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid var(--color-border);
+  }
+
+  .quote-box:hover,
+  .til-box:hover {
+    background-color: var(--color-til-hover);
+    border-color: var(--color-accent);
   }
 
   .content-label {
@@ -213,13 +224,17 @@ function formatDate(dateStr: string): string {
   .content-link {
     display: inline-block;
     margin-top: var(--spacing-sm);
-    color: var(--color-accent);
     text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 400;
   }
 
-  .content-link:hover {
+  :global(.random-content .content-link) {
+    color: var(--color-text-muted) !important;
+  }
+
+  :global(.random-content .content-link:hover) {
+    color: var(--color-accent) !important;
     text-decoration: underline;
   }
 
@@ -247,12 +262,21 @@ function formatDate(dateStr: string): string {
     }
 
     container.innerHTML = `
-      <div class="${boxClass}">
+      <div class="${boxClass}" data-href="${linkHref}">
         <div class="content-label">${label}</div>
         <div class="content-body">${randomItem.html}</div>
         ${metaHtml}
         <a href="${linkHref}" class="content-link">see more ${linkText} →</a>
       </div>
     `
+
+    const box = container.querySelector(`.${boxClass}`)
+    if (box) {
+      box.addEventListener("click", e => {
+        if (e.target.tagName !== "A") {
+          window.location.href = linkHref
+        }
+      })
+    }
   })
 </script>

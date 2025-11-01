@@ -17,7 +17,7 @@
   {
     "url": "/posts",
     "title": "posts",
-    "content": "posts Longer thoughts on documentation, tools, and engineering. { sortedPosts.length > 0 ? ( sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.category && ( {post.frontmatter.category} )} {post.frontmatter.tags && post.frontmatter.tags.length > 0 && ( {post.frontmatter.tags.map((tag: string) => ( {tag} ))} )} {post.frontmatter.description && {post.frontmatter.description} } )) ) : ( No posts yet. Add markdown files to src/pages/posts/ ) }"
+    "content": "posts Longer thoughts on documentation, tools, and engineering. { sortedPosts.length > 0 ? ( sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.category && ( {post.frontmatter.category} )} {post.frontmatter.tags && post.frontmatter.tags.length > 0 && ( {post.frontmatter.tags.map((tag: string) => ( #{tag} ))} )} {post.frontmatter.description && {post.frontmatter.description} } )) ) : ( No posts yet. Add markdown files to src/pages/posts/ ) }"
   },
   {
     "url": "/projects",

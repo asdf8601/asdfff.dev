@@ -59,11 +59,11 @@ function formatDate(dateString: string): string {
                   <span class="category">{post.frontmatter.category}</span>
                 )}
                 {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
-                  <span class="tags">
+                  <div class="tags-line">
                     {post.frontmatter.tags.map((tag: string) => (
-                      <span class="tag">{tag}</span>
+                      <span class="tag">#{tag}</span>
                     ))}
-                  </span>
+                  </div>
                 )}
               </div>
               {post.frontmatter.description && <p>{post.frontmatter.description}</p>}
@@ -97,46 +97,36 @@ function formatDate(dateString: string): string {
 
   .post-entry h2 {
     margin: 0 0 var(--spacing-xs) 0;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
+    font-weight: 500;
   }
 
   .post-meta {
     display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-    margin-bottom: var(--spacing-xs);
-    font-size: 0.85rem;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
   }
 
   .post-meta time {
     color: var(--color-text-muted);
   }
 
-  .post-meta .category,
-  .post-meta .tag {
-    color: var(--color-accent);
-  }
-
-  .post-meta .category::before {
-    content: "•";
-    margin-right: var(--spacing-xs);
+  .post-meta .category {
     color: var(--color-text-muted);
   }
 
-  .post-meta .tags {
+  .tags-line {
     display: flex;
-    gap: var(--spacing-xs);
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
-  .post-meta .tags::before {
-    content: "•";
-    margin-right: var(--spacing-xs);
+  .tags-line .tag {
     color: var(--color-text-muted);
-  }
-
-  .post-meta .tag::before {
-    content: "#";
+    white-space: nowrap;
+    font-size: 0.85rem;
   }
 
   .post-entry h2 a {
@@ -150,6 +140,9 @@ function formatDate(dateString: string): string {
   .post-entry p {
     margin: 0;
     color: var(--color-text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    opacity: 0.9;
   }
 
   .post-entry.selected-item {

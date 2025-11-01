@@ -146,6 +146,7 @@ const sortedQuotes = quotes.sort((a, b) => {
 
   .quote-number-date {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--spacing-xs);
     align-items: center;
   }
@@ -198,6 +199,10 @@ const sortedQuotes = quotes.sort((a, b) => {
 
   .quote-entry p {
     margin-bottom: 0;
+  }
+
+  .quote-entry blockquote::before {
+    display: none;
   }
 </style>
 
