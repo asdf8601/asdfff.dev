@@ -2,8 +2,22 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageSearchModal from "../components/PageSearchModal.astro"
 
+interface Frontmatter {
+  title: string
+  date: string
+  description?: string
+  category?: string
+  tags?: string[]
+  draft?: boolean
+}
+
+interface Post {
+  url?: string
+  frontmatter: Frontmatter
+}
+
 const postModules = import.meta.glob("./posts/*.mdx", { eager: true })
-const posts = Object.values(postModules)
+const posts = Object.values(postModules) as Post[]
 
 const isDev = import.meta.env.DEV
 
@@ -44,7 +58,13 @@ function formatDate(dateString: string): string {
                 {post.frontmatter.category && (
                   <span class="category">{post.frontmatter.category}</span>
                 )}
-                {post.frontmatter.tag && <span class="tag">{post.frontmatter.tag}</span>}
+                {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
+                  <span class="tags">
+                    {post.frontmatter.tags.map((tag: string) => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </span>
+                )}
               </div>
               {post.frontmatter.description && <p>{post.frontmatter.description}</p>}
             </div>
@@ -98,6 +118,18 @@ function formatDate(dateString: string): string {
   }
 
   .post-meta .category::before {
+    content: "•";
+    margin-right: var(--spacing-xs);
+    color: var(--color-text-muted);
+  }
+
+  .post-meta .tags {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+  }
+
+  .post-meta .tags::before {
     content: "•";
     margin-right: var(--spacing-xs);
     color: var(--color-text-muted);

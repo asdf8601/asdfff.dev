@@ -1,0 +1,21 @@
+---
+interface Props {
+  cols?: number
+}
+
+const { cols = 1 } = Astro.props
+---
+
+<div class="grid-item" data-span={cols} style={`--span: ${cols}`}>
+  <slot />
+</div>
+
+<style>
+  .grid-item {
+    display: contents;
+  }
+
+  .grid-item > :global(*) {
+    grid-column: span var(--span);
+  }
+</style>

@@ -4,10 +4,12 @@ title: Grid Component Demo
 date: 2025-01-26
 description: Examples of using the Grid component in MDX posts
 tags: [demo, components, grid]
+category: demo
 draft: true
 ---
 
 import Grid from "../../components/Grid.astro"
+import GridItem from "../../components/GridItem.astro"
 import Card from "../../components/Card.astro"
 
 # Grid Component Demo
@@ -52,4 +54,36 @@ import Card from "../../components/Card.astro"
   <Card type="success" title="Another Full Width Card">
     Grid components are responsive and stack on mobile.
   </Card>
+</Grid>
+
+## Custom Span Grid (2/3 + 1/3)
+
+<Grid cols={3}>
+  <GridItem cols={2}>
+    <Card type="info" title="Wide Card (2/3)">
+      This card spans 2 columns in a 3-column grid, taking up 2/3 of the width.
+    </Card>
+  </GridItem>
+
+  <GridItem cols={1}>
+    <Card type="warning" title="Narrow (1/3)">
+      This card spans 1 column, taking 1/3 of the width.
+    </Card>
+  </GridItem>
+</Grid>
+
+## Another Custom Layout (1/3 + 2/3)
+
+<Grid cols={3}>
+  <GridItem cols={1}>
+    <Card title="Sidebar">
+      Narrow sidebar content (1/3)
+    </Card>
+  </GridItem>
+
+  <GridItem cols={2}>
+    <Card type="success" title="Main Content">
+      Main content area taking up 2/3 of the space. You can put longer content here.
+    </Card>
+  </GridItem>
 </Grid>

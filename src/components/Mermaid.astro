@@ -1,6 +1,46 @@
 ---
+interface Props {
+  width?: string
+  height?: string
+}
+
+const { width, height } = Astro.props
+
 let content = await Astro.slots.render("default")
 content = content.replace(/<[^>]*>/g, "").trim()
+
+const style = [width ? `width: ${width}` : "", height ? `height: ${height}` : ""]
+  .filter(Boolean)
+  .join("; ")
 ---
 
-<pre class="mermaid" set:html={content} />
+<div class="mermaid-container" style={style || undefined}>
+  <pre class="mermaid" set:html={content} />
+</div>
+
+<style>
+  .mermaid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .mermaid-container pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+  .mermaid-container pre.mermaid svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .mermaid-container[style*="height"] pre.mermaid svg {
+    height: 100%;
+  }
+</style>

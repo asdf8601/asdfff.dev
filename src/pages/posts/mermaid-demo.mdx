@@ -3,6 +3,7 @@ title: Mermaid Diagrams Demo
 date: 2025-01-26
 description: Examples of rendering diagrams using Mermaid
 tags: [diagrams, demo, mermaid]
+category: demo
 draft: true
 ---
 
@@ -93,5 +94,30 @@ pie title Programming Languages Usage
     "Go" : 20
     "Rust" : 12
     "Other" : 8
+`}
+</Mermaid>
+
+## Custom Dimensions
+
+### Fixed Height
+
+<Mermaid height="300px">
+  {`
+flowchart LR
+    A[Small] --> B[Diagram]
+    B --> C[Fixed]
+    C --> D[Height]
+`}
+</Mermaid>
+
+### Fixed Width and Height
+
+<Mermaid width="500px" height="400px">
+  {`
+graph TB
+    A[Custom Size] --> B[500px wide]
+    A --> C[400px tall]
+    B --> D[Centered]
+    C --> D
 `}
 </Mermaid>
