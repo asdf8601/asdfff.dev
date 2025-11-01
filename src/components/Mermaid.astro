@@ -7,11 +7,7 @@ interface Props {
 const { width, height } = Astro.props
 
 let content = await Astro.slots.render("default")
-content = content
-  .replace(/<[^>]*>/g, "\n")
-  .replace(/```mermaid/g, "")
-  .replace(/```/g, "")
-  .trim()
+content = content.replace(/<[^>]*>/g, "").trim()
 
 const style = [width ? `width: ${width}` : "", height ? `height: ${height}` : ""]
   .filter(Boolean)
