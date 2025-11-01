@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "prepare": "husky",
+    "clean": "rm -rf node_modules/.vite dist .astro",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint --fix . && prettier --write .",
     "spell": "cspell '**/*.{js,ts,astro,json,md,mdx,css}'",
