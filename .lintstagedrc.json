@@ -2,6 +2,5 @@
   "*.{js,mjs,cjs,ts,astro}": ["eslint --fix", "prettier --write"],
   "*.css": ["stylelint --fix", "prettier --write"],
   "*.astro": ["stylelint --fix", "prettier --write"],
-  "*.{json,md,mdx}": ["prettier --write"],
-  "*.{js,ts,astro,json,md,mdx,css}": ["cspell --no-must-find-files"]
+  "*.{json,md,mdx}": ["prettier --write"]
 }

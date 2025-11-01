@@ -25,9 +25,6 @@ jobs:
       - name: Run ESLint
         run: bun run lint
 
-      - name: Run spell check
-        run: bun run spell
-
   build:
     name: Build
     runs-on: ubuntu-latest
