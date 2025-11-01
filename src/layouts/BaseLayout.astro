@@ -192,7 +192,13 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
           return
         }
 
-        if (target.closest(".cm-editor") || target.classList.contains("cm-content")) {
+        const inEditor = target.closest(".cm-editor") || target.classList.contains("cm-content")
+        const lastGPress = (window as any).lastGPress || 0
+        const now = Date.now()
+        const isGSequence = now - lastGPress < 500 && now - lastGPress > 0
+        const isNavigationKey = e.key === "t" || e.key === "T" || (e.key >= "0" && e.key <= "9")
+
+        if (inEditor && !(e.key === "g" || (isGSequence && isNavigationKey))) {
           return
         }
 
@@ -252,10 +258,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
         }
 
         if (e.key === "g") {
-          const lastGPress = (window as any).lastGPress || 0
-          const now = Date.now()
-
-          if (now - lastGPress < 500) {
+          if (isGSequence) {
             ;(window as any).lastGPress = 0
           } else {
             ;(window as any).lastGPress = now
@@ -263,10 +266,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
         }
 
         if (e.key === "t" || e.key === "T") {
-          const lastGPress = (window as any).lastGPress || 0
-          const now = Date.now()
-
-          if (now - lastGPress < 500 && now - lastGPress > 0) {
+          if (isGSequence) {
             e.preventDefault()
 
             if (currentIndex !== -1) {
@@ -283,10 +283,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
         }
 
         if (e.key >= "0" && e.key <= "9") {
-          const lastGPress = (window as any).lastGPress || 0
-          const now = Date.now()
-
-          if (now - lastGPress < 500 && now - lastGPress > 0) {
+          if (isGSequence) {
             e.preventDefault()
             const index = parseInt(e.key)
             const homeLink = document.querySelector("nav a:first-child") as HTMLAnchorElement
