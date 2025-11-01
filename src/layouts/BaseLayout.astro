@@ -192,6 +192,10 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
           return
         }
 
+        if (target.closest(".cm-editor") || target.classList.contains("cm-content")) {
+          return
+        }
+
         const helpModal = document.getElementById("help-modal")
 
         if (e.key === "y") {
