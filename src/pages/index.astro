@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro"
 
-const posts = await Astro.glob("./posts/*.mdx")
+const postModules = import.meta.glob("./posts/*.mdx", { eager: true })
+const posts = Object.values(postModules)
 
 const isDev = import.meta.env.DEV
 

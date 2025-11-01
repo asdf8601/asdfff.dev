@@ -2,7 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageSearchModal from "../components/PageSearchModal.astro"
 
-const tils = await Astro.glob("./til/*.md")
+const tilModules = import.meta.glob("./til/*.md", { eager: true })
+const tils = Object.values(tilModules)
 
 const sortedTils = tils.sort((a, b) => {
   const dateA = new Date(a.frontmatter.date || 0)
