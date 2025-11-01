@@ -2,7 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageSearchModal from "../components/PageSearchModal.astro"
 
-const quoteModules = import.meta.glob("./quotes/*.md", { eager: true })
+const quoteModules = import.meta.glob("./quotes/*.{md,mdx}", { eager: true })
 const quotes = Object.values(quoteModules)
 
 const sortedQuotes = quotes.sort((a, b) => {
