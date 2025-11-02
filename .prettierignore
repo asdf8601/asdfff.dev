@@ -4,3 +4,6 @@ node_modules/
 package-lock.json
 bun.lock
 public/search-data.json
+src/pages/posts/
+src/pages/quotes/
+src/pages/til/
