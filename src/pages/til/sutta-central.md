@@ -2,7 +2,7 @@
 date: 2025-11-03
 ---
 
-# sutta central
+**sutta central**
 
 
 Collection of Buddhist scriptures:
