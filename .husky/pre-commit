@@ -1,1 +1,3 @@
+node generate-search-data.js
+git add public/search-data.json
 bunx lint-staged
