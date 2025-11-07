@@ -45,6 +45,11 @@
     "content": "`grep -b` shows byte offset of matches ```sh grep ```"
   },
   {
+    "url": "/til/mfussenegger",
+    "title": "Untitled",
+    "content": "Veeery nice Neovim-related blog by Michael Fussenegger: - https://zignar.net/ - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔 - https://zignar.net/2022/11/06/structuring-neovim-lua-plugins/ ❤️"
+  },
+  {
     "url": "/til/neovim-opt-exrc",
     "title": "Untitled",
     "content": "Load local `.nvim.lua` `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` ```lua .nvim.lua vim.print(\"hello from local rc\") ```"
