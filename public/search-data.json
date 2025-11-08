@@ -52,7 +52,7 @@
   {
     "url": "/til/neovim-opt-exrc",
     "title": "Untitled",
-    "content": "Load local `.nvim.lua` `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` ```lua .nvim.lua vim.print(\"hello from local rc\") ```"
+    "content": "Load local nvim config from local files: `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
   },
   {
     "url": "/til/sutta-central",
