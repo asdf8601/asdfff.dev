@@ -4,15 +4,27 @@ import { join } from "path"
 const PAGES_DIR = "./src/pages"
 const OUTPUT_FILE = "./public/search-data.json"
 
+function removeNestedBraces(str) {
+  let result = str
+  let prev = ""
+  while (result !== prev) {
+    prev = result
+    result = result.replace(/\{[^{}]*\}/g, " ")
+  }
+  return result
+}
+
 async function extractTextContent(html) {
   const text = html
+    .replace(/---[\s\S]*?---/g, "")
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
     .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
     .replace(/<[^>]+>/g, " ")
-    .replace(/---[\s\S]*?---/g, "")
+  const withoutBraces = removeNestedBraces(text)
+  return withoutBraces
+    .replace(/[()=>:?]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
-  return text
 }
 
 async function getTitle(content) {

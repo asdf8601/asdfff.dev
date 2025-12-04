@@ -7,17 +7,17 @@
   {
     "url": "/about",
     "title": "about",
-    "content": "about This site exists for one reason: to help me move faster in life. Source: github.com/asdf8601/asdfff.dev"
+    "content": "about This site exists for one reason to help me move faster in life. Source github.com/asdf8601/asdfff.dev"
   },
   {
     "url": "/",
     "title": "wtfm",
-    "content": "wtfm Like planting a tree, the best time was 30 years ago. The second best time is right now. I've always wanted to write this stuff down somewhere. This site is basically that. { sortedPosts.length > 0 && ( recent posts {sortedPosts.map((post: any) => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.description && {post.frontmatter.description} } ))} read more → ) }"
+    "content": "wtfm Like planting a tree, the best time was 30 years ago. The second best time is right now. I've always wanted to write this stuff down somewhere. This site is basically that."
   },
   {
     "url": "/posts",
     "title": "posts",
-    "content": "posts Longer thoughts on documentation, tools, and engineering. { sortedPosts.length > 0 ? ( sortedPosts.map(post => ( {post.frontmatter.title} {formatDate(post.frontmatter.date)} {post.frontmatter.category && ( {post.frontmatter.category} )} {post.frontmatter.tags && post.frontmatter.tags.length > 0 && ( {post.frontmatter.tags.map((tag: string) => ( #{tag} ))} )} {post.frontmatter.description && {post.frontmatter.description} } )) ) : ( No posts yet. Add markdown files to src/pages/posts/ ) }"
+    "content": "posts Longer thoughts on documentation, tools, and engineering."
   },
   {
     "url": "/projects",
@@ -27,12 +27,12 @@
   {
     "url": "/quotes",
     "title": "quotes",
-    "content": "quotes Words worth keeping. A curated collection of literary wisdom. { sortedQuotes.length > 0 ? ( sortedQuotes.map((quote, index) => { const quoteNumber = sortedQuotes.length - index const date = new Date(quote.frontmatter.date) const formattedDate = date.toLocaleDateString(\"en-US\", { year: \"numeric\", month: \"short\", day: \"numeric\", }) return ( #{quoteNumber} {formattedDate} {quote.frontmatter.author && ( — {quote.frontmatter.author} )} {quote.frontmatter.source && ( {quote.frontmatter.source} "
+    "content": "quotes Words worth keeping. A curated collection of literary wisdom."
   },
   {
     "url": "/til",
     "title": "til",
-    "content": "til Today I learned. Short notes. No fluff. { sortedTils.length > 0 ? ( sortedTils.map((til, index) => { const tilNumber = sortedTils.length - index const date = new Date(til.frontmatter.date) const formattedDate = date.toLocaleDateString(\"en-US\", { year: \"numeric\", month: \"short\", day: \"numeric\", }) return ( #{tilNumber} {formattedDate} ) }) ) : ( No TILs yet. Add markdown files to src/pages/til/ ) }"
+    "content": "til Today I learned. Short notes. No fluff."
   },
   {
     "url": "/quotes/example",
