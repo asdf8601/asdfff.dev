@@ -1,0 +1,74 @@
+---
+title: yaml indentless arrays
+date: 2025-12-17
+tag: [yamlfmt, go, neovim, conform]
+category: programming
+---
+
+# yaml indentless arrays
+
+How to use `indentless_arrays` on yaml files to avoid this:
+
+```diff
+      - env:
+-         - name: RESERVE_PRICE_CACHE_ENABLED
+-           value: 'false'
+-         - name: SPP_GO_HTTP_PORT
+-           value: '8080'
++           - name: RESERVE_PRICE_CACHE_ENABLED
++             value: 'false'
++           - name: SPP_GO_HTTP_PORT
++             value: '8080'
+```
+
+## Install `yamlfmt`
+
+```bash
+go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+```
+
+File: `~/.config/yamlfmt/.yamlfmt.yaml`
+
+```yaml
+formatter:
+  type: basic
+  indentless_arrays: true
+```
+
+
+## `conform.nvim`:
+
+```lua
+{
+  'stevearc/conform.nvim',
+  event = { 'BufWritePre' },
+  cmd = { 'ConformInfo' },
+  keys = {
+    {
+      '<leader>f',
+      function()
+        require('conform').format { async = true, lsp_format = 'fallback' }
+      end,
+      mode = '',
+      desc = '[F]ormat buffer',
+    },
+  },
+  opts = {
+    formatters_by_ft = {
+      -- others
+      yaml = { 'yamlfmt' },
+    },
+    default_format_opts = {
+      lsp_format = 'fallback',
+    },
+    notify_on_error = true,
+    format_on_save = {
+      lsp_format = 'fallback',
+      timeout_ms = 500,
+    },
+  },
+}
+
+```
+
+
