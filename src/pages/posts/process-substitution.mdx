@@ -1,0 +1,59 @@
+---
+title: Bash Process Substitution
+description: Practical examples of bash process substitution for everyday tasks.
+date: 2026-01-17
+tags: [bash]
+category: programming
+---
+
+
+I saw this and definitely wanted to share it.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2A4bs40scSo?si=Q_q8gWxEuxs9_4YC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+### diff two variables
+
+```bash
+VAR1="hello"
+VAR2="helllo"
+diff -u <(echo "$VAR1") <(echo "$VAR2")
+
+# output:
+--- /dev/fd/11	2026-01-17 20:03:59
++++ /dev/fd/12	2026-01-17 20:03:59
+@@ -1 +1 @@
+-hello
++helllo
+```
+
+### print two sequences side by side
+
+```bash
+paste <(seq 1 5) <(seq 6 10)
+
+# output:
+1	6
+2	7
+3	8
+4	9
+5	10
+
+```
+
+
+### read in temp file
+
+```bash
+less < <(curl -s https://raw.githubusercontent.com/asdf8601/asdfff.dev/main/README.md)
+
+```
+
+### redirect output to a process
+
+```bash
+echo "hello world" > >(tr a-z A-Z)
+
+# output:
+HELLO WORLD
+```
