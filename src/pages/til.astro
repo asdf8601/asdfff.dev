@@ -20,29 +20,35 @@ const sortedTils = tils.sort((a, b) => {
 
     {
       sortedTils.length > 0 ? (
-        sortedTils.map((til, index) => {
-          const tilNumber = sortedTils.length - index
-          const date = new Date(til.frontmatter.date)
-          const formattedDate = date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
-          return (
-            <div class="til-entry" id={`til-${tilNumber}`}>
-              <div class="til-header">
-                <div class="til-number-date">
-                  <span class="til-number">#{tilNumber}</span>
-                  <time>{formattedDate}</time>
+        <div class="timeline">
+          {sortedTils.map((til, index) => {
+            const tilNumber = sortedTils.length - index
+            const date = new Date(til.frontmatter.date)
+            const dateKey = date.toISOString().slice(0, 10)
+            const prevDateKey =
+              index > 0
+                ? new Date(sortedTils[index - 1].frontmatter.date).toISOString().slice(0, 10)
+                : null
+            const isFirstOfDay = dateKey !== prevDateKey
+            const formattedDate = date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })
+            return (
+              <div class="tl-entry" id={`til-${tilNumber}`}>
+                <div class="tl-date">
+                  {isFirstOfDay ? <time>{formattedDate}</time> : <span class="tl-same-day" />}
+                  <span class="tl-number">#{tilNumber}</span>
                 </div>
-                <a href={`#til-${tilNumber}`} class="til-link" aria-label="Link to this TIL">
-                  <i class="fa-solid fa-link" />
-                </a>
+                <a href={`#til-${tilNumber}`} class="tl-pipe" aria-label="Link to this TIL" />
+                <div class="tl-content">
+                  <til.Content />
+                </div>
               </div>
-              <til.Content />
-            </div>
-          )
-        })
+            )
+          })}
+        </div>
       ) : (
         <p class="empty-state">No TILs yet. Add markdown files to src/pages/til/</p>
       )
@@ -58,64 +64,155 @@ const sortedTils = tils.sort((a, b) => {
     text-transform: lowercase;
   }
 
-  .til-entry {
-    margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-sm) var(--spacing-md);
+  .timeline {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tl-entry {
+    display: grid;
+    grid-template-columns: 7rem 2rem 1fr;
     scroll-margin-top: var(--spacing-md);
-    transition: all 0.2s ease;
-    border-left: 2px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.2s ease;
   }
 
-  .til-entry:target {
-    background-color: var(--color-til-hover);
-    border-left-color: var(--color-accent);
-  }
-
-  .til-header {
+  .tl-date {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-xs);
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: var(--spacing-md);
+    padding-right: var(--spacing-sm);
+    gap: 0.125rem;
   }
 
-  .til-number-date {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    align-items: center;
+  .tl-date time {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 
-  .til-number {
+  .tl-number {
     color: var(--color-accent);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 600;
   }
 
-  .til-entry time {
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
+  .tl-pipe {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
   }
 
-  .til-link {
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-size: 0.85rem;
-    padding: 0 0.5rem;
+  .tl-pipe::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--color-border);
   }
 
-  .til-entry:hover .til-link,
-  .til-link:focus {
-    opacity: 1;
+  .tl-pipe::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--spacing-md) + 0.1rem);
+    width: 13px;
+    height: 13px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    border-radius: 50%;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
   }
 
-  .til-entry p {
+  .tl-pipe:hover::after {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+  }
+
+  .tl-entry:first-child .tl-pipe::before {
+    top: var(--spacing-md);
+  }
+
+  .tl-entry:last-child .tl-pipe::before {
+    bottom: 50%;
+  }
+
+  .tl-content {
+    padding: var(--spacing-md) 0 var(--spacing-xl) var(--spacing-md);
+    position: relative;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .tl-entry:last-child .tl-content {
+    border-bottom: none;
+  }
+
+  .tl-content :global(p) {
     margin-bottom: 0;
   }
 
-  .til-entry:hover {
-    background-color: var(--color-til-hover);
-    border-left-color: var(--color-accent);
+  .tl-content :global(p + p) {
+    margin-top: var(--spacing-sm);
+  }
+
+  .tl-content :global(ul) {
+    margin-bottom: 0;
+  }
+
+  .tl-entry:hover .tl-pipe::after {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+  }
+
+  .tl-entry:target .tl-pipe::after {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+  }
+
+  .tl-entry:target .tl-date time {
+    color: var(--color-accent);
+  }
+
+  .tl-entry.selected-item .tl-pipe::after {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+  }
+
+  .tl-entry.selected-item .tl-date time {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .tl-entry {
+      grid-template-columns: 1fr;
+    }
+
+    .tl-date {
+      flex-direction: row;
+      align-items: center;
+      padding: var(--spacing-sm) 0 0 0;
+      gap: var(--spacing-sm);
+    }
+
+    .tl-pipe {
+      display: none;
+    }
+
+    .tl-content {
+      padding: var(--spacing-sm) 0 var(--spacing-md) 0;
+      border-left: 2px solid var(--color-border);
+      padding-left: var(--spacing-md);
+    }
+
+    .tl-entry:hover .tl-content,
+    .tl-entry:target .tl-content,
+    .tl-entry.selected-item .tl-content {
+      border-left-color: var(--color-accent);
+    }
   }
 </style>
 
@@ -123,7 +220,7 @@ const sortedTils = tils.sort((a, b) => {
   const { openPageSearch, isPageSearchActive } = (window as any).pageSearchHandlers
 
   document.addEventListener("DOMContentLoaded", () => {
-    const tilLinks = document.querySelectorAll(".til-link")
+    const tilLinks = document.querySelectorAll(".tl-pipe")
 
     tilLinks.forEach(link => {
       link.addEventListener("click", async e => {
@@ -143,7 +240,7 @@ const sortedTils = tils.sort((a, b) => {
       })
     })
 
-    const tilEntries = Array.from(document.querySelectorAll(".til-entry"))
+    const tilEntries = Array.from(document.querySelectorAll(".tl-entry"))
     let selectedIndex = -1
 
     function selectItem(index: number) {
@@ -186,7 +283,7 @@ const sortedTils = tils.sort((a, b) => {
         }
       } else if (e.key === "Enter" && selectedIndex >= 0) {
         e.preventDefault()
-        const link = tilEntries[selectedIndex].querySelector(".til-link") as HTMLAnchorElement
+        const link = tilEntries[selectedIndex].querySelector(".tl-pipe") as HTMLAnchorElement
         if (link) {
           link.click()
         }
