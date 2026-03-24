@@ -35,28 +35,93 @@
     "content": "til Today I learned. Short notes. No fluff."
   },
   {
+    "url": "/posts/card-demo",
+    "title": "Card Component Demo",
+    "content": "This post demonstrates the Card component that can be used to create fancy callouts. Default Card This is a default card with the standard green accent color. Perfect for general notes and highlights. Info Card This is an info card with blue accents. Use it for informational callouts and tips. Warning Card This is a warning card with orange accents. Use it to highlight warnings or important notices. Success Card This is a success card with green accents. Use it to highlight successful operations or positive outcomes. Error Card This is an error card with red accents. Use it to highlight errors or critical issues. Card Without Title You can also create cards without titles. Just omit the title prop and the content will fill the entire card. Complex Content Cards support markdown formatting including: - Lists - Bold text - Italic text - `Code blocks` You can put any markdown content inside the card. Code Example Import the Card component in your markdown frontmatter: ```astro ``` Then us"
+  },
+  {
+    "url": "/posts/grid-demo",
+    "title": "Grid Component Demo",
+    "content": "Two Column Grid (Default) This is the first item in a two-column grid layout. This is the second item in the grid. This is the third item. The grid wraps to a new row. This is the fourth item, completing the second row. Three Column Grid First column content Second column content Third column content Single Column Grid This card takes up the full width of the container. Grid components are responsive and stack on mobile. Custom Span Grid (2/3 + 1/3) This card spans 2 columns in a 3-column grid, taking up 2/3 of the width. This card spans 1 column, taking 1/3 of the width. Another Custom Layout (1/3 + 2/3) Narrow sidebar content (1/3) Main content area taking up 2/3 of the space. You can put longer content here."
+  },
+  {
+    "url": "/posts/k-debug",
+    "title": "How to debug a pod",
+    "content": "```sh kubectl debug -ti --image=nicolaka/netshoot --target= --profile=sysadmin ``` Check list 1. Check open connections (signs of saturation) ```bash ss -s quick summary (states: ESTAB, TIME-WAIT, SYN-RECV) ss -tuna | grep 8080 | wc -l total connections to the app port ss -tuna | grep SYNRECV half-open connections (possible overload) ss -tuna | grep TIMEWAIT | wc -l connections closing slowly ``` 2. Check for socket leaks or system limits ```bash cat /proc/sys/net/ipv4/iplocalportrange cat /proc/sys/net/ipv4/tcpfintimeout cat /proc/sys/net/ipv4/tcptwreuse ulimit -n file descriptor limit ``` 3. Test local endpoint (no network involved) ```bash If this is slow, the issue is inside the container, not the network. time curl -v http://127.0.0.1:8080/health time curl -v http://127.0.0.1:8080/predict ``` 4. Test access from another service (within the cluster) ```bash If this is slow but the local one isn’t, it’s a network or connection bottleneck. time curl -v http:// : /status ``` 5. Monito"
+  },
+  {
+    "url": "/posts/math-demo",
+    "title": "Mathematical Formulas and Matrices",
+    "content": "Inline Math The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ and Euler's identity is $e^{i\\pi} + 1 = 0$. Display Math The Pythagorean theorem: $$ a^2 + b^2 = c^2 $$ Summation and Integration Sum of first $n$ natural numbers: $$ \\sum{i=1}^{n} i = \\frac{n(n+1)}{2} $$ Fundamental theorem of calculus: $$ \\int{a}^{b} f(x) \\, dx = F(b) - F(a) $$ Matrices Identity matrix: $$ I = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix} $$ Matrix multiplication: $$ \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix} $$ Determinant $$ \\det(A) = \\begin{vmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{vmatrix} = a\\begin{vmatrix} e & f \\\\ h & i \\end{vmatrix} - b\\begin{vmatrix} d & f \\\\ g & i \\end{vmatrix} + c\\begin{vmatrix} d & e \\\\ g & h \\end{vmatrix} $$ Systems of Linear Equations $$ \\begin{cases} 2x + 3y = 7 \\\\ x - y = 1 \\end{cases} $$ Greek Letters and Symbols Common symbols: $\\alpha, \\be"
+  },
+  {
+    "url": "/posts/mermaid-demo",
+    "title": "Mermaid Diagrams Demo",
+    "content": "Flowchart ``` flowchart TD AStart --> B{Is it working?} B -->|Yes| CGreat! B -->|No| DDebug D --> EFix bugs E --> B C --> FDeploy F --> GEnd ``` Sequence Diagram {` sequenceDiagram participant User participant Browser participant Server participant Database User->>Browser: Enter URL Browser->>Server: HTTP Request Server->>Database: Query data Database-->>Server: Return results Server-->>Browser: HTTP Response Browser-->>User: Display page `} Class Diagram {` classDiagram class Animal { +String name +int age +makeSound() } class Dog { +String breed +bark() } class Cat { +String color +meow() } Animal State Diagram {` stateDiagram-v2 --> Idle Idle --> Processing : Start Processing --> Success : Complete Processing --> Error : Fail Success --> Error --> Retry : Retry Retry --> Processing Error --> : Give up `} Pie Chart {` pie title Programming Languages Usage \"Python\" : 35 \"JavaScript\" : 25 \"Go\" : 20 \"Rust\" : 12 \"Other\" : 8 `} Custom Dimensions Fixed Height {` flowchart LR ASmall --> BDi"
+  },
+  {
+    "url": "/posts/podman-compose-up-credentials-error",
+    "title": "podman compose up credentials error",
+    "content": "If you, like me, have run into this error: ```bash $ podman compose up --build WARN0000 Docker Compose is configured to build using Bake, but buildkit isn't enabled + Running 0/1 ⠋ Service web Building 0.1s error listing credentials - err: exec: \"docker-credential-desktop\": executable file not found in $PATH, out: `` Error: executing /usr/local/bin/docker-compose up --build: exit status 1 ``` The fix is to correct a typo in `/.docker/config.json`: ```diff { - \"credsStore\": \"desktop\", + \"credStore\": \"desktop\", } ```"
+  },
+  {
+    "url": "/posts/process-substitution",
+    "title": "Bash Process Substitution",
+    "content": "I saw this and definitely wanted to share it. diff two variables ```bash VAR1=\"hello\" VAR2=\"helllo\" diff -u >(tr a-z A-Z) output: HELLO WORLD ```"
+  },
+  {
+    "url": "/posts/python-314",
+    "title": "New Python 3.14",
+    "content": "Here's a list of my favorite new features in Python 3.14: 1. https://docs.python.org/3.14/whatsnew/3.14.htmla-new-type-of-interpreter 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-incremental-gc 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-asyncio-introspection 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-deferred-annotations 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-zstandard 1. https://docs.python.org/3/whatsnew/3.13.htmlan-experimental-just-in-time-jit-compiler 1. https://docs.python.org/3/whatsnew/3.13.htmlfree-threaded-cpython Performance: TL;DR; This version is the fastest python version. Python 3.14 Is Here. How Fast Is It?(https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it)"
+  },
+  {
+    "url": "/posts/reading-emotions-an-indian-perspective",
+    "title": "[NOTES] Emotions: An Indian Perspective",
+    "content": "source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/ > This view of emotions lays emphasis on desires as the root cause of emotional > upheavals. > They are seen as modification of desire and attachment. > The desires are seen as arising from the contact and attachment of the ego or > ahamkara with the external world and are caused by a sense of imperfection, > incompleteness or non-fulfillment. ```mermaid graph TD ADesires --> BEmotions B --> CDesires Attachments C --> DAhamkara with External World D --> EImperfection Incompleteness Non-fulfillment E --> A ``` > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “self” (avidya). ```mermaid graph LR AEmotions --> BCognitive A --> CPhysiological ``` ```mermaid graph LR AFeeling/Affect --> BExperience ``` ```mermaid graph LR AExternal World BEgo B -.-> CEmotions/Experience C --> DAction ``` > All emotions spring from desires and desire is caused by a sense of > imperfection, incompleteness or non"
+  },
+  {
+    "url": "/posts/start-stop-jobs-in-background",
+    "title": "start/stop jobs in background",
+    "content": "```bash PIDFILE=\"/tmp/my-process.pid\" LOGFILE=\"/tmp/my-process.log\" function start() { if -f \"$PIDFILE\" ; then local pid=$(cat \"$PIDFILE\" 2>/dev/null) if -n \"$pid\" && kill -0 \"$pid\" 2>/dev/null; then echo \"Already running (PID: $pid)\" return 0 fi rm -f \"$PIDFILE\" fi nohup bash -c 'while true; do your-command; sleep 2; done' > \"$LOGFILE\" 2>&1 & echo $! > \"$PIDFILE\" noti --title MyTunnel --message \"Started (PID: $(cat \"$PIDFILE\"))\" } function stop() { if ! -f \"$PIDFILE\" ; then echo \"Not running\" return 1 fi local pid=$(cat \"$PIDFILE\" 2>/dev/null) if kill -0 \"$pid\" 2>/dev/null; then kill \"$pid\" rm -f \"$PIDFILE\" echo \"Stopped (PID: $pid)\" noti --title MyTunnel --message \"Stopped (PID: $(cat \"$PIDFILE\"))\" else rm -f \"$PIDFILE\" echo \"Process not found\" fi } start ```"
+  },
+  {
+    "url": "/posts/train-on-servers",
+    "title": "Kubernetes resources to train on servers",
+    "content": "Train on servers - https://labs.iximiuz.com/ - https://sadservers.com/ - https://kodekloud.com/learning-path/kubernetes/ Challenges - https://cloudresumechallenge.dev/docs/extensions/kubernetes-challenge/ Courses - https://kubernetes.io/training/ Videos - https://www.youtube.com/watch?v=BE77h7dmoQU - https://github.com/sidpalas/devops-directive-kubernetes-course - https://www.youtube.com/watch?v=2T86xAtR6Fo Sources - https://www.reddit.com/r/kubernetes/comments/1h49nmt/bestcoursetolearnkubernetesin2024/"
+  },
+  {
+    "url": "/posts/yaml-indentless-arrays",
+    "title": "yaml indentless arrays",
+    "content": "How to use `indentlessarrays` on yaml files to avoid this: ```diff - env: - - name: RESERVEPRICECACHEENABLED - value: 'false' - - name: SPPGOHTTPPORT - value: '8080' + - name: RESERVEPRICECACHEENABLED + value: 'false' + - name: SPPGOHTTPPORT + value: '8080' ``` Install `yamlfmt` ```bash go install github.com/google/yamlfmt/cmd/yamlfmt@latest ``` File: `/.config/yamlfmt/.yamlfmt.yaml` ```yaml formatter: type: basic indentlessarrays: true ``` `conform.nvim`: ```lua { 'stevearc/conform.nvim', event = { 'BufWritePre' }, cmd = { 'ConformInfo' }, keys = { { ' f', function() require('conform').format { async = true, lspformat = 'fallback' } end, mode = '', desc = 'Format buffer', }, }, opts = { formattersbyft = { -- others yaml = { 'yamlfmt' }, }, defaultformatopts = { lspformat = 'fallback', }, notifyonerror = true, formatonsave = { lspformat = 'fallback', timeoutms = 500, }, }, } ```"
+  },
+  {
     "url": "/quotes/example",
-    "title": "Untitled",
+    "title": "Jorge Luis Borges",
     "content": "I have always imagined that Paradise will be a kind of library."
   },
   {
+    "url": "/quotes/gautama-buda-dhammapada-los-sabios-se-dirigen-a-si-mismos",
+    "title": "Gautama Buda",
+    "content": "Los que cavan acequias conducen el agua; los arqueros orientas con precisión sus flechas; los carpinteros domeñan la madera; y los sabios se dirigen a sí mismos."
+  },
+  {
     "url": "/til/grep",
-    "title": "Untitled",
+    "title": "`grep -b` shows byte offset of matches",
     "content": "`grep -b` shows byte offset of matches ```sh grep ```"
   },
   {
     "url": "/til/mfussenegger",
-    "title": "Untitled",
+    "title": "Veeery nice Neovim-related blog by Michael Fussenegger:",
     "content": "Veeery nice Neovim-related blog by Michael Fussenegger: - https://zignar.net/ - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔 - https://zignar.net/2022/11/06/structuring-neovim-lua-plugins/ ❤️"
   },
   {
     "url": "/til/neovim-opt-exrc",
-    "title": "Untitled",
+    "title": "Load local nvim config from local files:",
     "content": "Load local nvim config from local files: `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
   },
   {
     "url": "/til/sutta-central",
-    "title": "Untitled",
+    "title": "sutta central",
     "content": "sutta central Collection of Buddhist scriptures: - https://suttacentral.net/?lang=en I liked this sutta: - https://suttacentral.net/dn16/en/sujato?lang=en&layout=plain&reference=none&notes=sidenotes&highlight=false&script=latin1.6.2"
   }
 ]

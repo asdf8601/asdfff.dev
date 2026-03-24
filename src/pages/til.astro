@@ -60,53 +60,16 @@ const sortedTils = tils.sort((a, b) => {
 
   .til-entry {
     margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-sm);
-    background-color: var(--color-til-bg);
+    padding: var(--spacing-sm) var(--spacing-md);
     scroll-margin-top: var(--spacing-md);
     transition: all 0.2s ease;
-    position: relative;
-    border: 1px solid var(--color-border);
-    clip-path: var(--clip-path-angled);
-  }
-
-  .til-entry::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: var(--angled-corner);
-    background-color: var(--color-border);
-    transition: background-color 0.2s ease;
-    z-index: 0;
-  }
-
-  .til-entry::after {
-    content: "";
-    position: absolute;
-    left: var(--angled-corner);
-    bottom: 0;
-    right: 0;
-    height: var(--angled-corner);
-    background-color: var(--color-border);
-    transition: background-color 0.2s ease;
-    z-index: 0;
-  }
-
-  .til-header,
-  .til-entry > * {
-    position: relative;
-    z-index: 1;
-  }
-
-  .til-entry:target::before,
-  .til-entry:target::after {
-    background-color: var(--color-accent);
+    border-left: 2px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .til-entry:target {
     background-color: var(--color-til-hover);
-    border-color: var(--color-accent);
+    border-left-color: var(--color-accent);
   }
 
   .til-header {
@@ -152,12 +115,7 @@ const sortedTils = tils.sort((a, b) => {
 
   .til-entry:hover {
     background-color: var(--color-til-hover);
-    border-color: var(--color-accent);
-  }
-
-  .til-entry:hover::before,
-  .til-entry:hover::after {
-    background-color: var(--color-accent);
+    border-left-color: var(--color-accent);
   }
 </style>
 

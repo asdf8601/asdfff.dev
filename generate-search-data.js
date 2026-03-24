@@ -60,18 +60,34 @@ async function processMarkdownFile(filePath, relativePath) {
   if (frontmatterMatch) {
     const frontmatter = frontmatterMatch[1]
     const titleMatch = frontmatter.match(/title:\s*["']?([^"'\n]+)["']?/)
+    const authorMatch = frontmatter.match(/author:\s*["']?([^"'\n]+)["']?/)
 
-    if (titleMatch) title = titleMatch[1].trim()
+    if (titleMatch) {
+      title = titleMatch[1].trim()
+    } else if (authorMatch) {
+      title = authorMatch[1].trim()
+    } else {
+      const body = content.replace(/^---[\s\S]*?---/, "").trim()
+      const firstLine = body.split("\n").find(l => l.trim().length > 0)
+      if (firstLine) {
+        title = firstLine
+          .replace(/[#*_~[\]<>]/g, "")
+          .trim()
+          .slice(0, 60)
+      }
+    }
   }
 
   const text = content
     .replace(/^---[\s\S]*?---/, "")
+    .replace(/^import\s+.*$/gm, "")
+    .replace(/<[^>]+>/g, " ")
     .replace(/[#*_~[\]]/g, "")
     .replace(/\s+/g, " ")
     .trim()
 
   return {
-    url: relativePath.replace(".md", "").replace("src/pages", ""),
+    url: relativePath.replace(/\.mdx?$/, "").replace("src/pages", ""),
     title,
     content: text.slice(0, 1000),
   }
@@ -87,7 +103,7 @@ async function processDirectory(dir, baseDir = PAGES_DIR) {
 
     if (stats.isDirectory()) {
       results.push(...(await processDirectory(fullPath, baseDir)))
-    } else if (entry.endsWith(".md")) {
+    } else if (entry.endsWith(".md") || entry.endsWith(".mdx")) {
       const relativePath = fullPath.replace(baseDir, "").replace(/\\/g, "/")
       results.push(await processMarkdownFile(fullPath, relativePath))
     }

@@ -297,14 +297,6 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
             ;(window as any).lastGPress = 0
           }
         }
-
-        if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault()
-          const searchInput = document.getElementById("search-input") as HTMLInputElement
-          if (searchInput) {
-            searchInput.focus()
-          }
-        }
       })
       ;(window as any).showNotification = showNotification
     </script>
@@ -314,7 +306,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 <style>
   header {
     width: 100%;
-    padding: var(--spacing-sm);
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -430,7 +422,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   footer {
     width: 100%;
     border-top: 1px solid var(--color-border);
-    padding: var(--spacing-sm);
+    padding: 0.75rem 1rem;
     text-align: left;
     max-width: var(--max-width);
     margin: 0 auto;
@@ -463,8 +455,8 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
   .help-content {
     background-color: var(--color-bg);
-    border: 2px solid var(--color-accent);
-    padding: var(--spacing-md);
+    border: 1px solid var(--color-accent);
+    padding: 1.5rem;
     max-width: 600px;
     width: 90%;
     max-height: 80vh;
@@ -501,11 +493,10 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   .help-item {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: 1rem;
   }
 
   .help-item kbd {
-    background-color: var(--color-til-bg);
     border: 1px solid var(--color-border);
     padding: 0.25rem 0.5rem;
     font-family: var(--font-mono);
@@ -522,12 +513,11 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
   .notification {
     position: fixed;
-    top: var(--spacing-sm);
-    right: var(--spacing-sm);
+    top: 1rem;
+    right: 1rem;
     background-color: var(--color-accent);
     color: var(--color-bg);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: 2px;
+    padding: 0.5rem 1rem;
     font-size: 0.85rem;
     z-index: 2000;
     animation: slideIn 0.3s ease-out;
