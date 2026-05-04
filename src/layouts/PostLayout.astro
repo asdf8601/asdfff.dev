@@ -24,13 +24,53 @@ const description = frontmatter?.description
     <slot />
   </article>
 
-  <script is:inline src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <script is:inline>
-    if (typeof mermaid !== "undefined") {
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "default",
-      })
+    if (document.querySelector("pre.mermaid")) {
+      const s = document.createElement("script")
+      s.src = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"
+      s.onload = () => {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark"
+        const palette = isDark
+          ? {
+              background: "#282828",
+              primaryColor: "#3c3836",
+              primaryTextColor: "#ebdbb2",
+              primaryBorderColor: "#665c54",
+              lineColor: "#a89984",
+              secondaryColor: "#504945",
+              tertiaryColor: "#32302f",
+              mainBkg: "#3c3836",
+              nodeBorder: "#665c54",
+              clusterBkg: "#32302f",
+              clusterBorder: "#665c54",
+              titleColor: "#b8bb26",
+              edgeLabelBackground: "#282828",
+              textColor: "#ebdbb2",
+            }
+          : {
+              background: "#f1f1f1",
+              primaryColor: "#fafafa",
+              primaryTextColor: "#2a2a2a",
+              primaryBorderColor: "#bcbcbc",
+              lineColor: "#6a6a6a",
+              secondaryColor: "#e6e6e6",
+              tertiaryColor: "#f5f5f5",
+              mainBkg: "#fafafa",
+              nodeBorder: "#bcbcbc",
+              clusterBkg: "#f5f5f5",
+              clusterBorder: "#bcbcbc",
+              titleColor: "#79740e",
+              edgeLabelBackground: "#f1f1f1",
+              textColor: "#2a2a2a",
+            }
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "base",
+          themeVariables: palette,
+        })
+        mermaid.run({ querySelector: "pre.mermaid" }).catch(err => console.error("mermaid:", err))
+      }
+      document.head.appendChild(s)
     }
   </script>
 

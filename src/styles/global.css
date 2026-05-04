@@ -7,24 +7,24 @@
 }
 
 :root {
-  --color-bg: #161616;
-  --color-bg-secondary: rgba(40, 40, 40, 0.5);
-  --color-text: #e0e0e0;
-  --color-text-muted: #909090;
+  --color-bg: #1d2021;
+  --color-bg-secondary: rgba(60, 56, 54, 0.5);
+  --color-text: #ebdbb2;
+  --color-text-muted: #a89984;
   --color-accent: #b8bb26;
   --color-accent-hover: #d6d960;
-  --color-border: #2e2e2e;
-  --color-pre-bg: #1d1d1d;
+  --color-border: #3c3836;
+  --color-pre-bg: #282828;
   --color-pre-border: #b8bb26;
-  --color-pre-text: #e0e0e0;
-  --color-til-bg: rgba(40, 40, 40, 0.3);
+  --color-pre-text: #ebdbb2;
+  --color-til-bg: rgba(60, 56, 54, 0.3);
   --color-til-hover: rgba(184, 187, 38, 0.06);
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2.5rem;
-  --max-width: 70ch;
+  --max-width: 72ch;
   --font-mono:
     "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
   --z-index-skip-link: 100;
@@ -38,16 +38,16 @@
 
 [data-theme="light"] {
   --color-bg: #fafafa;
-  --color-bg-secondary: rgba(220, 220, 220, 0.5);
+  --color-bg-secondary: rgba(225, 225, 225, 0.5);
   --color-text: #2a2a2a;
   --color-text-muted: #6a6a6a;
   --color-accent: #79740e;
   --color-accent-hover: #5c570a;
-  --color-border: #e0e0e0;
+  --color-border: #dcdcdc;
   --color-pre-bg: #f1f1f1;
   --color-pre-border: #79740e;
   --color-pre-text: #2a2a2a;
-  --color-til-bg: transparent;
+  --color-til-bg: rgba(240, 240, 240, 0.6);
   --color-til-hover: rgba(121, 116, 14, 0.08);
 }
 
@@ -209,18 +209,20 @@ pre {
   position: absolute;
   top: 0.4rem;
   right: 0.4rem;
-  background: transparent;
+  background: var(--color-bg);
   color: var(--color-text-muted);
   border: 1px solid var(--color-border);
   font-family: var(--font-mono);
   font-size: 0.7rem;
   padding: 0.15rem 0.5rem;
   cursor: pointer;
-  opacity: 0;
+  opacity: 0.6;
+  border-radius: 3px;
   transition:
     opacity 0.2s ease,
     color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 pre:hover .copy-button {
@@ -231,6 +233,7 @@ pre:hover .copy-button {
 .copy-button:focus-visible {
   color: var(--color-accent);
   border-color: var(--color-accent);
+  background: var(--color-bg-secondary);
   outline: none;
 }
 
