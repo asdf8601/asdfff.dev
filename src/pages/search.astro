@@ -1,0 +1,188 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro"
+---
+
+<BaseLayout title="search - wtfm">
+  <article>
+    <h1>search</h1>
+
+    <form id="search-form" action="/search" method="get" role="search" class="search-page-form">
+      <input
+        type="search"
+        id="search-page-input"
+        name="q"
+        placeholder="type and press enter..."
+        aria-label="Search"
+        autofocus
+      />
+    </form>
+
+    <p id="search-summary" class="summary"></p>
+    <div id="search-results" class="results"></div>
+  </article>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: var(--spacing-md);
+    text-transform: lowercase;
+  }
+
+  .search-page-form {
+    margin-bottom: var(--spacing-md);
+  }
+
+  #search-page-input {
+    width: 100%;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    padding: 0.6rem 0.85rem;
+    outline: none;
+  }
+
+  #search-page-input:focus {
+    border-color: var(--color-accent);
+  }
+
+  .summary {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .result-item {
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--spacing-md);
+  }
+
+  .result-item:last-child {
+    border-bottom: none;
+  }
+
+  .result-item a {
+    text-decoration: none;
+  }
+
+  .result-item a:hover .result-title {
+    text-decoration: underline;
+  }
+
+  .result-title {
+    color: var(--color-accent);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .result-url {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-mono);
+  }
+
+  .result-excerpt {
+    color: var(--color-text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .result-excerpt :global(mark) {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+    padding: 0 2px;
+  }
+</style>
+
+<script>
+  interface PageData {
+    url: string
+    title: string
+    content: string
+  }
+
+  const params = new URLSearchParams(window.location.search)
+  const query = (params.get("q") || "").trim()
+  const input = document.getElementById("search-page-input") as HTMLInputElement
+  const summary = document.getElementById("search-summary") as HTMLParagraphElement
+  const resultsEl = document.getElementById("search-results") as HTMLDivElement
+
+  if (input && query) input.value = query
+
+  function escapeHtml(s: string): string {
+    return s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;")
+  }
+
+  function highlight(text: string, q: string): string {
+    const safe = escapeHtml(text)
+    if (!q) return safe
+    const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig")
+    return safe.replace(re, m => `<mark>${m}</mark>`)
+  }
+
+  function getExcerpt(content: string, q: string): string {
+    const lc = content.toLowerCase()
+    const lq = q.toLowerCase()
+    const i = lc.indexOf(lq)
+    if (i === -1) return content.slice(0, 200) + "..."
+    const start = Math.max(0, i - 100)
+    const end = Math.min(content.length, i + q.length + 100)
+    let ex = content.slice(start, end)
+    if (start > 0) ex = "..." + ex
+    if (end < content.length) ex = ex + "..."
+    return ex
+  }
+
+  async function run() {
+    if (!query || query.length < 2) {
+      summary.textContent = query ? "type at least 2 characters." : "enter a query above."
+      return
+    }
+
+    let pages: PageData[] = []
+    try {
+      const res = await fetch("/search-data.json")
+      pages = await res.json()
+    } catch (e) {
+      summary.textContent = "failed to load search index."
+      return
+    }
+
+    const lq = query.toLowerCase()
+    const results = pages.filter(
+      p => p.title.toLowerCase().includes(lq) || p.content.toLowerCase().includes(lq)
+    )
+
+    summary.textContent = `${results.length} result${results.length === 1 ? "" : "s"} for "${query}"`
+
+    resultsEl.innerHTML = results
+      .map(
+        p => `
+        <div class="result-item">
+          <a href="${p.url}">
+            <div class="result-title">${highlight(p.title, query)}</div>
+            <div class="result-url">${p.url}</div>
+            <div class="result-excerpt">${highlight(getExcerpt(p.content, query), query)}</div>
+          </a>
+        </div>
+      `
+      )
+      .join("")
+  }
+
+  run()
+</script>
