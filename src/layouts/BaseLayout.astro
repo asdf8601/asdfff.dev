@@ -299,6 +299,40 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
         }
       })
       ;(window as any).showNotification = showNotification
+
+      function addCopyButtons() {
+        document.querySelectorAll<HTMLElement>("pre").forEach(pre => {
+          if (pre.querySelector(".copy-button")) return
+          const btn = document.createElement("button")
+          btn.type = "button"
+          btn.className = "copy-button"
+          btn.textContent = "copy"
+          btn.setAttribute("aria-label", "copy code to clipboard")
+          btn.addEventListener("click", async e => {
+            e.preventDefault()
+            const code = pre.querySelector("code")
+            const text = (code?.innerText ?? pre.innerText).replace(/copy$/, "").trimEnd()
+            try {
+              await navigator.clipboard.writeText(text)
+              btn.textContent = "copied"
+              btn.classList.add("copied")
+              setTimeout(() => {
+                btn.textContent = "copy"
+                btn.classList.remove("copied")
+              }, 1500)
+            } catch (err) {
+              console.error("copy failed", err)
+            }
+          })
+          pre.appendChild(btn)
+        })
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", addCopyButtons)
+      } else {
+        addCopyButtons()
+      }
     </script>
   </body>
 </html>
