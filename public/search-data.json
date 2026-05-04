@@ -42,321 +42,756 @@
   {
     "url": "/posts/apologia-competencia-ia",
     "title": "Una apología sobre la competencia en la era de la IA",
-    "content": "¿Quién creéis que tiene más experiencia vital, una persona que ha afrontado muchas dificultades o una persona de la misma edad que haya tenido una vida fácil? ¿Quién será más competente? Nosotros tenemos el control, la agencia de tomar el camino difícil o el fácil, pero lo más complicado es detectarlos y tener el valor, fuerza, convencimiento de tomarlo, porque es bueno para nosotros. ¿Qué tipo de persona quieres ser? ¿Tomarás la píldora roja o la píldora azul?pills Socrates sobre la IA En el diálogo Fedrofedro de Platón (274c-275b), Sócrates narra el mito de Theuth y Thamus, donde el rey egipcio Thamus critica la invención de la escritura argumentando que: 1. Debilitará la memoria al depender de fuentes externas 2. Proporcionará una apariencia de sabiduría sin verdadero conocimiento 3. Los textos no pueden responder preguntas ni defenderse Te propongo que leas siguientes citas pensando en la IA: > ... No es, pues, un fármaco de la memoria lo que has hallado, sino un > simple recordato"
+    "date": "2025-04-05",
+    "category": "ai",
+    "tags": [
+      "philosophy",
+      "spanish"
+    ],
+    "content": "¿Quién creéis que tiene más experiencia vital, una persona que ha afrontado muchas dificultades o una persona de la misma edad que haya tenido una vida fácil? ¿Quién será más competente? Nosotros tenemos el control, la agencia de tomar el camino difícil o el fácil, pero lo más complicado es detectarlos y tener el valor, fuerza, convencimiento de tomarlo, porque es bueno para nosotros. ¿Qué tipo de persona quieres ser? ¿Tomarás la píldora roja o la píldora azul?pills Socrates sobre la IA En el diálogo Fedrofedro de Platón (274c-275b), Sócrates narra el mito de Theuth y Thamus, donde el rey egipcio Thamus critica la invención de la escritura argumentando que: 1. Debilitará la memoria al depender de fuentes externas 2. Proporcionará una apariencia de sabiduría sin verdadero conocimiento 3. Los textos no pueden responder preguntas ni defenderse Te propongo que leas siguientes citas pensando en la IA: > ... No es, pues, un fármaco de la memoria lo que has hallado, sino un > simple recordatorio. Apariencia de sabiduría es lo que proporcionas a tus > alumnos, que no verdad. Porque habiendo oído muchas cosas sin aprenderlas, > parecerá que tienen muchos conocimientos, siendo, al contrario, en la mayoría > de los casos, totalmente ignorantes, y difíciles, además, de tratar porque han > acabado por convertirse en sabios aparentes en lugar de sabios de verdad. > > Sócrates a Fedro, en \"Fedro\" de Platón, 275a Y más adelante continúa Sócrates: > Porque es que es impresionante, Fedro, lo que pasa con la escritura, y por lo > que tanto se parece a la pintura. En efecto, sus vástagos están ante nosotros > como si tuvieran vida; pero, si se les pregunta algo, responden con el más > altivo de los silencios. Lo mismo pasa con las palabras. > > Sócrates a Fedro, en \"Fedro\" de Platón, 275e Son, sin duda, interesantes las ideas de Platón. Creo que estaríamos todos de acuerdo en que sin la escritura, el conocimiento no avanzaría igual de rápido. Hay tanto contenido ahí fuera, tantas perso"
   },
   {
     "url": "/posts/bash-calculator",
     "title": "I Wish I Had a Simple Calculator in My Bash",
-    "content": "I'm sure you've found yourself needing to do quick calculations in the terminal. Sure, you could use a calculator app or a fancy spotlight bar, but sometimes the calculation is so simple that typing it directly would be easier. Wouldn't it be nice if you could just type `math \"200 2 / 200\"` and get your answer right away? Context Here's a \"real\" example. Let's say you're checking some logs: ``` INFO combinations trained: 245 INFO documents written: 71 ``` and you want to figure out roughly how many combinations each document has - in other words, you need to calculate `245 / 71`. Option B2 Probably the most general (and awesome) solution would be to write a super-duper Bash function that can be summoned at any time in your terminal, like a magical math genie: ```bash put this in your bashrc / zshrc calcpy { python -c \"from math import ; print($@)\" } ``` Run this in your terminal—because why not? ``` $ calcpy \"245 / 71\" 3.4507042253521125 ``` Option C1 If you're in Neovim (like 90% of t"
+    "date": "2024-11-25",
+    "category": "programming",
+    "tags": [
+      "bash",
+      "functions"
+    ],
+    "content": "I'm sure you've found yourself needing to do quick calculations in the terminal. Sure, you could use a calculator app or a fancy spotlight bar, but sometimes the calculation is so simple that typing it directly would be easier. Wouldn't it be nice if you could just type `math \"200 2 / 200\"` and get your answer right away? Context Here's a \"real\" example. Let's say you're checking some logs: ``` INFO combinations trained: 245 INFO documents written: 71 ``` and you want to figure out roughly how many combinations each document has - in other words, you need to calculate `245 / 71`. Option B2 Probably the most general (and awesome) solution would be to write a super-duper Bash function that can be summoned at any time in your terminal, like a magical math genie: ```bash put this in your bashrc / zshrc calcpy { python -c \"from math import ; print($@)\" } ``` Run this in your terminal—because why not? ``` $ calcpy \"245 / 71\" 3.4507042253521125 ``` Option C1 If you're in Neovim (like 90% of the time), you can conjure a Vim command for this: ```vim command! -nargs=+ Calc :execute '!python -c \"from math import ; print( )\"' ``` Or use the Lua interface, because who doesn't love a bit of Lua magic in their life? 🌙 ```lua vim.api.nvimcreateusercommand('Calc', function(opts) vim.cmd('!python -c \"from math import ; print(' .. opts.args .. ')\"') end, { nargs = '+' }) ``` In both cases, you can summon your mathematical powers like this: ```vim :Calc 245 / 71 3.4027777777777777 ```"
   },
   {
     "url": "/posts/breathing-exercises",
     "title": "Respira!",
-    "content": "Según un estudio publicado en Cell Reports Medicineart, practicar ejercicios de respiración durante solo cinco minutos al día durante un mes puede mejorar el estado de ánimo y reducir la ansiedad. El estudio encontró que el suspiro cíclico, en particular, fue efectivo para mejorar el estado de ánimo en comparación con la meditación de atención plena. Los ejercicios de respiración también pueden afectar la fisiología al inducir un estado físico más relajado y desplazar el equilibrio hacia el sistema parasimpático de descanso y digestión. Los efectos positivos de la respiración tardaron en aparecer, pero cuanto más días pasaron los participantes haciendo sus ejercicios de respiración, mejor se sintieron cada día sucesivo. - Suspiro cíclico: Este ejercicio es bueno para mejorar el estado de ánimo y reducir la ansiedad. - inhale lentamente por la nariz para expandir los pulmones, - inhale nuevamente para llenar los pulmones al máximo. - exhale lentamente y completamente el aliento por la b"
+    "date": "2023-03-24",
+    "category": "health",
+    "tags": [
+      "spanish",
+      "breath",
+      "science"
+    ],
+    "content": "Según un estudio publicado en Cell Reports Medicineart, practicar ejercicios de respiración durante solo cinco minutos al día durante un mes puede mejorar el estado de ánimo y reducir la ansiedad. El estudio encontró que el suspiro cíclico, en particular, fue efectivo para mejorar el estado de ánimo en comparación con la meditación de atención plena. Los ejercicios de respiración también pueden afectar la fisiología al inducir un estado físico más relajado y desplazar el equilibrio hacia el sistema parasimpático de descanso y digestión. Los efectos positivos de la respiración tardaron en aparecer, pero cuanto más días pasaron los participantes haciendo sus ejercicios de respiración, mejor se sintieron cada día sucesivo. - Suspiro cíclico: Este ejercicio es bueno para mejorar el estado de ánimo y reducir la ansiedad. - inhale lentamente por la nariz para expandir los pulmones, - inhale nuevamente para llenar los pulmones al máximo. - exhale lentamente y completamente el aliento por la boca. - Respiración en caja: Este ejercicio es bueno para inducir un estado físico más relajado y desplazar el equilibrio hacia el sistema parasimpático de descanso y digestión. Pasa la misma cantidad de tiempo inhalando lentamente, conteniendo la respiración, exhalando y conteniendo la respiración antes de repetir la secuencia. - inhala 4 segundos - aguanta la respiracion 4 segundos - exhala 4 segundos - aguanta sin aire 4 segundos - Hiperventilación cíclica: Este ejercicio es bueno para inducir actividad parasimpática de autoconsuelo y mejorar el estado de ánimo. - Toma una inhalación profunda por la nariz, - Exhale pasivamente - y luego deje que el aire \"caiga fuera de la boca\". - Cada 30 ciclos, - Mantenga la respiración después de la exhalación pasiva durante 15 segundos. - Meditación de atención plena: Este ejercicio es bueno para inducir un estado físico más relajado y mejorar el estado de ánimo. - Enfatiza la conciencia de la respiración y el cuerpo, en lugar de controlar activa"
   },
   {
     "url": "/posts/card-demo",
     "title": "Card Component Demo",
-    "content": "This post demonstrates the Card component that can be used to create fancy callouts. Default Card This is a default card with the standard green accent color. Perfect for general notes and highlights. Info Card This is an info card with blue accents. Use it for informational callouts and tips. Warning Card This is a warning card with orange accents. Use it to highlight warnings or important notices. Success Card This is a success card with green accents. Use it to highlight successful operations or positive outcomes. Error Card This is an error card with red accents. Use it to highlight errors or critical issues. Card Without Title You can also create cards without titles. Just omit the title prop and the content will fill the entire card. Complex Content Cards support markdown formatting including: - Lists - Bold text - Italic text - `Code blocks` You can put any markdown content inside the card. Code Example Import the Card component in your markdown frontmatter: ```astro ``` Then us"
+    "date": "2025-01-26",
+    "category": "demo",
+    "tags": [
+      "demo",
+      "components"
+    ],
+    "content": "This post demonstrates the Card component that can be used to create fancy callouts. Default Card This is a default card with the standard green accent color. Perfect for general notes and highlights. Info Card This is an info card with blue accents. Use it for informational callouts and tips. Warning Card This is a warning card with orange accents. Use it to highlight warnings or important notices. Success Card This is a success card with green accents. Use it to highlight successful operations or positive outcomes. Error Card This is an error card with red accents. Use it to highlight errors or critical issues. Card Without Title You can also create cards without titles. Just omit the title prop and the content will fill the entire card. Complex Content Cards support markdown formatting including: - Lists - Bold text - Italic text - `Code blocks` You can put any markdown content inside the card. Code Example Import the Card component in your markdown frontmatter: ```astro ``` Then use it anywhere in your markdown: ```astro Your content here ```"
   },
   {
     "url": "/posts/clean-code-es-lento",
     "title": "Clean code es horriblemente lento",
-    "content": "{/ Title: Clean code es lento /} {/ Date: 2023-03-07 /} {/ Modified: 2023-03-07 /} {/ Category: Hacking /} {/ Tags: hacking, programming, theory /} {/ Slug: clean-code-lento /} {/ Authors: Maximiliano Greco /} Me topé con este video en YT cuya tesis principal es que aplicar las reglas de clean code hace que el código sea lento. Aquí el link 👇 - LINK ARTICULO + VIDEO(https://www.computerenhance.com/p/clean-code-horrible-performance) Summary - Clean code hace que el codigo sea mas lento. - Las reglas de polimorfismo y no acoplamiento hace que perdamos 20 años de avances de hardware. Mi opinion - Me parece obvio que lo haga mas lento. Se añaden capas de abastracción y esto no es gratis. - Ojo, también podría ser mas rápido si el codigo estuviera desorganizado y hecho por muchas personas a la vez buscando incluir su propia funcionalidad sin coherencia. (dependende de la deuda tecnica). - Existe un trade off entre mantenibilidad/readability vs performance y encontrar el equilibrio es lo qu"
+    "date": "2023-03-24",
+    "category": "programming",
+    "tags": [
+      "good-practices",
+      "patterns",
+      "spanish"
+    ],
+    "content": "{/ Title: Clean code es lento /} {/ Date: 2023-03-07 /} {/ Modified: 2023-03-07 /} {/ Category: Hacking /} {/ Tags: hacking, programming, theory /} {/ Slug: clean-code-lento /} {/ Authors: Maximiliano Greco /} Me topé con este video en YT cuya tesis principal es que aplicar las reglas de clean code hace que el código sea lento. Aquí el link 👇 - LINK ARTICULO + VIDEO(https://www.computerenhance.com/p/clean-code-horrible-performance) Summary - Clean code hace que el codigo sea mas lento. - Las reglas de polimorfismo y no acoplamiento hace que perdamos 20 años de avances de hardware. Mi opinion - Me parece obvio que lo haga mas lento. Se añaden capas de abastracción y esto no es gratis. - Ojo, también podría ser mas rápido si el codigo estuviera desorganizado y hecho por muchas personas a la vez buscando incluir su propia funcionalidad sin coherencia. (dependende de la deuda tecnica). - Existe un trade off entre mantenibilidad/readability vs performance y encontrar el equilibrio es lo que te hace senior. - Clean code son unos principios que tienen mas o menos sentido aplicar dependiendo del proyecto. - No todos los proyectos estan bien definidos y no sabes que es lo que va a contener. El ejemplo esta sesgado a que a priori sabes lo que busca y como hacerlo de forma eficiente (veo un cierto sesgo de confirmacion). Luego sí que veo la ventaja de iterar sobre el mismo código muchas veces. - Cada vez me parece que la respuesta correcta es depende. Qué vas a construir? Es un proyecto grande o pequeño? Lo tienes claro o no?"
   },
   {
     "url": "/posts/config-red-mesh",
     "title": "Configurando red mesh usando 2 routers AX3600",
-    "content": "No se cuantas horas he desper... invertido en tratar de configurar la red mesh pero hoy por fin lo he conseguido. Aqui dejo los pasos que he seguido para abrazar el exito en esta empresa. La receta > Fuente original: https://xiaomi.eu/community/threads/ax-3600-mesh-not-detected.58886/post-611886 1. Todo desconectado 2. Enchufa solo la electricidad y Reseteo de fabrica del router (ambos). 3. Cuando este listo enchufa el ethernet 4. Configura el router usando la red 5g (siempre 5g) 1. Conectarse al wifi 2. Esperar a que salga el dialogo de configuracion. 3. Desconectar del wifi y desactivar wifi del dispositivo usado durante 30seg 1. Conectar el router reset de fabrica a la electricidad 1. Cuando las luces indican que esta iniciado enchufa el ethernet (luces naranjas y azules) 1. Busca la red del router Xioami con el nombre 5G 1. Espera a que aparezca una ventana emergente en el navegador de MiWifi. 1. Configura el WIFI añadiendo contraseña. 1. Contraseña: `12345678` 1. Usa la misma cont"
+    "date": "2023-08-15",
+    "category": "programming",
+    "tags": [
+      "hacking",
+      "network",
+      "xiaomi",
+      "router",
+      "mesh",
+      "ax3600"
+    ],
+    "content": "No se cuantas horas he desper... invertido en tratar de configurar la red mesh pero hoy por fin lo he conseguido. Aqui dejo los pasos que he seguido para abrazar el exito en esta empresa. La receta > Fuente original: https://xiaomi.eu/community/threads/ax-3600-mesh-not-detected.58886/post-611886 1. Todo desconectado 2. Enchufa solo la electricidad y Reseteo de fabrica del router (ambos). 3. Cuando este listo enchufa el ethernet 4. Configura el router usando la red 5g (siempre 5g) 1. Conectarse al wifi 2. Esperar a que salga el dialogo de configuracion. 3. Desconectar del wifi y desactivar wifi del dispositivo usado durante 30seg 1. Conectar el router reset de fabrica a la electricidad 1. Cuando las luces indican que esta iniciado enchufa el ethernet (luces naranjas y azules) 1. Busca la red del router Xioami con el nombre 5G 1. Espera a que aparezca una ventana emergente en el navegador de MiWifi. 1. Configura el WIFI añadiendo contraseña. 1. Contraseña: `12345678` 1. Usa la misma contraseña de Wifi para la contraseña del router. Esto es asi por defecto, asi que no cambies nada. 1. Apaga el wifi en el ordenador durante 30 segundos. ¯\\\\ (ツ) \\/¯ 1. Selecciona la nueva red `123456785G` (!!!) ¡Siempre usa la red 5G! 1. Asegúrate de que el segundo router esté restablecido de fábrica y cerca del Nodo Maestro (el primer AX3600) y conectado por ethernet al nodo principal. 1. Usa el script proporcionado por ShotokanZH. ¡Gracias de nuevo! 2. Terminal: 1. `git clone https://github.com/ShotokanZH/MiWiFiMeshNodeAdder` 2. `python3 -m venv venv` 3. `source venv/bin/activate` 4. `python3 -m pip install -r requirements.txt` 5. `python3 addmesh.py` 1. Introduce `192.168.31.1` (IP del AX3600 Maestro) 1. Contraseña: `12345678` 1. El script te mostrará la dirección MAC correcta, asegúrate de copiar la de 5G y pegarla donde se pida. ¡Presiona enter, espera al reinicio! Notas: 1. La conseña es de ejemplo. 1. No uses la dirección MAC que aparece en la etiqueta del router. Links - https://x"
   },
   {
     "url": "/posts/convertir-archivo-unix-dos",
     "title": "Cambiando el formato de un arhivo.",
+    "date": "2024-04-13",
+    "category": "programming",
+    "tags": [
+      "unix",
+      "neovim",
+      "bash",
+      "scp"
+    ],
     "content": "Me encontraba trabajando tranquilamente cuando tuve la necesidad de copiar un archivo de un servidor a mi maquina local para continuar trabajando, asi que me dispuse a ejecutar `scp /file.sh` y al ejecutarlo me encuentro con este error: ```bash $ bash ./file.sh ./file.sh: line 2: $'\\r': command not found \")60)) 5rror: invalid arithmetic operator (error token is \" ./file.sh: line 6: $'\\r': command not found ./file.sh: line 7: syntax error near unexpected token `$'{\\r'' '/file.sh: line 7: `showprogress() { ``` Solución Me llevo unos minutos darme cuenta de que el problema venia por el formato del archivo `file.sh` y no por la sintaxis. En Neovim, es muy fácil cambiar el formato. Basta con ejecutar `:set ff=unix`, guardar, y voilá."
   },
   {
     "url": "/posts/crea-proyecto-python-comando",
     "title": "Crea projectos python minimalistas con un comando",
-    "content": "Basándome en mi anterior postprev-post sobre cómo crear proyectos Python minimalistas, me encontré copiando y pegando con bastante frecuencia. Echaba de menos algo que me permitiera hacer este trabajo (que ya de por sí es bastante sencillo) aún más sencillo. prev-post: https://asdf0x2199.dev/posts/python-project-scratch/ Punto de entrada He comenzado a trabajar en una prueba de concepto para ver si funciona. Lo primero que debo hacer es definir el punto de entrada, que en mi caso será este: ```bash Usage: $ py-here name py-here() { mkdir -p $1/{tests,docs} touch $1/{Makefile,pyproject.toml,$1.py} TODO add more } ``` pyproject Ya tenemos un mínimo bastante aceptable con eso, pero podemos mejorarlo si incluimos el `pyproject.toml` a partir de una plantilla. Tomé el del post anterior y lo modifiqué para incluir la variable `$name`, permitiendo así convertirlo en una plantilla de uso común. ```bash build-system requires = \"setuptools>=60\", \"setuptools-scm>=8.0\" build-backend = \"setuptools."
+    "date": "2024-02-25",
+    "category": "programming",
+    "tags": [
+      "python",
+      "programming",
+      "spanish"
+    ],
+    "content": "Basándome en mi anterior postprev-post sobre cómo crear proyectos Python minimalistas, me encontré copiando y pegando con bastante frecuencia. Echaba de menos algo que me permitiera hacer este trabajo (que ya de por sí es bastante sencillo) aún más sencillo. prev-post: https://asdf0x2199.dev/posts/python-project-scratch/ Punto de entrada He comenzado a trabajar en una prueba de concepto para ver si funciona. Lo primero que debo hacer es definir el punto de entrada, que en mi caso será este: ```bash Usage: $ py-here name py-here() { mkdir -p $1/{tests,docs} touch $1/{Makefile,pyproject.toml,$1.py} TODO add more } ``` pyproject Ya tenemos un mínimo bastante aceptable con eso, pero podemos mejorarlo si incluimos el `pyproject.toml` a partir de una plantilla. Tomé el del post anterior y lo modifiqué para incluir la variable `$name`, permitiendo así convertirlo en una plantilla de uso común. ```bash build-system requires = \"setuptools>=60\", \"setuptools-scm>=8.0\" build-backend = \"setuptools.buildmeta\" project name = \"${name}\" dynamic = \"version\" authors = {name=\"Max Greco\", email=\"asdf0x2199@gmail.com\"} readme = \"README.md\" requires-python = \">=3.6\" dependencies = \"rich\", \"typer\", \"pandas\" license = {file = \"LICENSE\"} description = \"${name} is a CLI tool for tracking time.\" project.scripts ${name} = \"${name}:app\" tool.setuptoolsscm ``` Voy a guardar esto en un gistgist para poder accederlo desde cualquier lugar y mantenerlo actualizado. Después, haré lo mismo con el Makefilemake. Haciendo pruebas Aquí una prueba de concepto. La idea es probar que el `curl` funciona y consigo reemplazar la variable con `sed`. ```bash $ name=yayay && curl -sSL https://gist.githubusercontent.com/asdf0x2199/2a371093fcb704fbff771e39479e75dc/raw/pyproject.toml | sed \"s/\\${name}/${name}/g\" build-system requires = \"setuptools>=60\", \"setuptools-scm>=8.0\" build-backend = \"setuptools.buildmeta\" project name = \"yayay\" dynamic = \"version\" authors = {name=\"Max Greco\", email=\"asdf0x2199@gmail.com\"} read"
   },
   {
     "url": "/posts/dbee-nvim",
     "title": "I wrote my first vim plugin",
-    "content": "{/ Title: My first vim plugin: dbee.nvim /} {/ Date: 2021-08-22 /} {/ Modified: 2021-08-22 /} {/ Category: Python /} {/ Tags: devolopment, vim, database /} {/ Slug: first-plugin-dbee /} {/ Authors: Maximiliano Greco /} My first vim plugin! Have you ever had the necessity to check a query while you are writing a python wrapper? If so, this post is for you. Many times I have had the necessity of checking a query while I'm writing , debugging or testing a function. That's why I wrote my first vim (well, actually a nvim) plugin called `dbee.nvim`(https://github.com/asdf0x2199/dbee.nvim). My use case I have a virtual environment with `SQLAlchemy` and others Python dependencies, and then I want to check a query from my project. So, I have to open `DBeaver`, or another SQL client, copy-paste the query there and see the result. This process can be very annoying. Why do I have to open an external program when I already have all that I need in my virtual environment? The idea is to define an `en"
+    "date": "2023-03-24",
+    "category": "misc",
+    "tags": [
+      "misc"
+    ],
+    "content": "{/ Title: My first vim plugin: dbee.nvim /} {/ Date: 2021-08-22 /} {/ Modified: 2021-08-22 /} {/ Category: Python /} {/ Tags: devolopment, vim, database /} {/ Slug: first-plugin-dbee /} {/ Authors: Maximiliano Greco /} My first vim plugin! Have you ever had the necessity to check a query while you are writing a python wrapper? If so, this post is for you. Many times I have had the necessity of checking a query while I'm writing , debugging or testing a function. That's why I wrote my first vim (well, actually a nvim) plugin called `dbee.nvim`(https://github.com/asdf0x2199/dbee.nvim). My use case I have a virtual environment with `SQLAlchemy` and others Python dependencies, and then I want to check a query from my project. So, I have to open `DBeaver`, or another SQL client, copy-paste the query there and see the result. This process can be very annoying. Why do I have to open an external program when I already have all that I need in my virtual environment? The idea is to define an `engine` using `SQLAlchemy` with a connection string, and then through `pandas` fetch the data using that engine. Pretty simple, isn't it? Installation If you want to use it, add the following in your vimrc: ``` Plug 'asdf0x2199/dbee.nvim' ``` I'm using the following maps: ``` vnoremap :DBeeQuery vnoremap :DBeeSetConnection ``` Example Let's suppose that we are writing the following python function: ```python def gettitles(): cnstr = \"sqlite:////home/mgreco/gitlab/asdf0x2199/dbee.nvim/tests/chinook.db\" engine = sa.createengine(cnstr) conn = engine.connect() qry = \"\"\" SELECT title FROM albums; \"\"\" out = pd.readsql(qry, conn) return out ``` We can setup our connection by going to the line where `cnstr` is and select the content inside the quotes and executing `:' DBeeSetConnection`. This will print out the following message: `Configurated sqlite:////home/mgreco/gitlab/asdf0x2199/dbee.nvim/tests/chinook.db`, after that we are ready to make queries to that database. Now, we are ready to selec"
   },
   {
     "url": "/posts/diagrams-neovim",
     "title": "Diagramas en NeoVim made easy",
-    "content": "Contexto Siempre he buscado una manera simple de incorporar diagramas directamente desde Neovim, pero nunca había encontrado una solución sencilla hasta hoy. Hasta ahora, no tenía un método sencillo para incluir diagramas, así que delegaba ese trabajo a documentación externa al código, usando Mermaid. Aunque estaba satisfecho con los resultados, me preguntaba cómo podría hacerlo más simple. La respuesta vino justamente de mi experiencia con Mermaid. Anteriormente, había probado soluciones como `asciiflow` o `venn.nvim`, pero implican más tiempo del que me gustaría y tomar muchas decisiones. ¿Cuánto espacio dejo entre cajas? ¿Cuánto texto debo dividir en varias líneas? ¿Cómo de largas deben ser las flechas? etc. Usando mermaid me di cuenta que lo que es potente es que no tengo que tomar ninguna desicion estetica (aunque es posible) sobre el diagram simplemente escribir el contenido y mermaid se encarga de darme un output excelente. Con este concepto en mente, inicié la exploración para "
+    "date": "2024-03-30",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "diagrams",
+      "neovim",
+      "dot",
+      "ascii",
+      "python"
+    ],
+    "content": "Contexto Siempre he buscado una manera simple de incorporar diagramas directamente desde Neovim, pero nunca había encontrado una solución sencilla hasta hoy. Hasta ahora, no tenía un método sencillo para incluir diagramas, así que delegaba ese trabajo a documentación externa al código, usando Mermaid. Aunque estaba satisfecho con los resultados, me preguntaba cómo podría hacerlo más simple. La respuesta vino justamente de mi experiencia con Mermaid. Anteriormente, había probado soluciones como `asciiflow` o `venn.nvim`, pero implican más tiempo del que me gustaría y tomar muchas decisiones. ¿Cuánto espacio dejo entre cajas? ¿Cuánto texto debo dividir en varias líneas? ¿Cómo de largas deben ser las flechas? etc. Usando mermaid me di cuenta que lo que es potente es que no tengo que tomar ninguna desicion estetica (aunque es posible) sobre el diagram simplemente escribir el contenido y mermaid se encarga de darme un output excelente. Con este concepto en mente, inicié la exploración para crear un convertidor de Mermaid a ASCII, pero rápidamente me decanté por esta solución: 👉 https://github.com/ggerganov/dot-to-ascii Basicamente esta solución implica escribir el diagrama en `dot` y convertirlo a ASCII. Realiza exactamente la misma función, está implementada y tiene API, ¿qué más se puede pedir? Implementación Por lo tanto, empecé a implementar una solución para poder usarla desde Neovim: Tan solo necesitamos un script simple en Python que realice la solicitud por nosotros (en el propio proyecto nos dan uno script) y un comando Lua que haga uso de este script para convertir el diagrama a ASCII. ```python !python3 \"\"\" Examples -------- $ pipx run https://gist.githubusercontent.com/asdf0x2199/2d3bc321405b1991277fd6001060df0d/raw/dot2ascii.py help $ pipx run https://gist.githubusercontent.com/asdf0x2199/2d3bc321405b1991277fd6001060df0d/raw/dot2ascii.py \"graph {a -- b -- c}\" $ echo \"graph {rankdir=LR; a -- b -- c }\" | pipx run https://gist.githubusercontent.com/asdf0x2199/"
   },
   {
     "url": "/posts/docker-compose-envvars",
     "title": "Docker Compose Env Var Adventures",
-    "content": "Let's dive into the world of Docker Compose and environment variables, where hilarity ensues and variables come alive (or do they?). We've all been there. Playing hide and seek with environment variables in Docker Compose. Let's see how our dear friend `MYVAR` enjoys this grand game of Peekaboo! Round 1: The Invisible Variable You think you're smart. You declare it confidently... ```bash $ cat compose.yml && docker compose run test 2> /dev/null && docker compose down &> /dev/null services: test: image: alpine command: echo MYVAR=$MYVAR environment: MYVAR: \"asfd\" MYVAR= ``` Well, MYVAR decided to stay invisible. Maybe it's hiding under a digital rock? Round 2: Double Dollar Dilemma \"Ah, I'll catch you with $$MYVAR!,\" you exclaim. ```bash $ cat compose.yml && docker compose run test 2> /dev/null && docker compose down &> /dev/null services: test: image: alpine command: echo MYVAR=$$MYVAR environment: MYVAR: \"asfd\" MYVAR=$MYVAR ``` Wait, now we've just given MYVAR an identity crisis. It's"
+    "date": "2024-09-19",
+    "category": "programming",
+    "tags": [
+      "english",
+      "docker",
+      "envvars"
+    ],
+    "content": "Let's dive into the world of Docker Compose and environment variables, where hilarity ensues and variables come alive (or do they?). We've all been there. Playing hide and seek with environment variables in Docker Compose. Let's see how our dear friend `MYVAR` enjoys this grand game of Peekaboo! Round 1: The Invisible Variable You think you're smart. You declare it confidently... ```bash $ cat compose.yml && docker compose run test 2> /dev/null && docker compose down &> /dev/null services: test: image: alpine command: echo MYVAR=$MYVAR environment: MYVAR: \"asfd\" MYVAR= ``` Well, MYVAR decided to stay invisible. Maybe it's hiding under a digital rock? Round 2: Double Dollar Dilemma \"Ah, I'll catch you with $$MYVAR!,\" you exclaim. ```bash $ cat compose.yml && docker compose run test 2> /dev/null && docker compose down &> /dev/null services: test: image: alpine command: echo MYVAR=$$MYVAR environment: MYVAR: \"asfd\" MYVAR=$MYVAR ``` Wait, now we've just given MYVAR an identity crisis. It's still playing hard to get! Round 3: Command-Wrapper Shenanigans “I got this! Let’s add a `sh -c` wrapper…” ```bash $ cat compose.yml && docker compose run test 2> /dev/null && docker compose down &> /dev/null services: test: image: alpine command: sh -c 'echo MYVAR=$MYVAR' environment: MYVAR: \"asfd\" MYVAR= ``` Nope. Still hiding. MYVAR seems to be a master of disguise. Round 4: The Grande Reveal “$MYVAR, you can run but you can't hide from $$ and a `sh -c` wrapper!” ```bash $ cat compose.yml && docker compose run test 2> /dev/null && docker compose down &> /dev/null services: test: image: alpine command: sh -c 'echo MYVAR=$$MYVAR' environment: MYVAR: \"asfd\" MYVAR=asfd ``` Victory at last! 🎉 The sneaky MYVAR is finally revealed!"
   },
   {
     "url": "/posts/docstrings-examples",
     "title": "Y si empezamos documentando los ejemplos",
-    "content": "Comienza con Ejemplos Cuando se trata de documentar código, he descubierto que documentar los ejemplos primero es de gran ayuda. Esto podria llamarse perfectamente algo como Desarrollo Dirigido por Ejemplos o Example Driven Development, que suena mucho mejor en inglés, que se note que ahora trabajo en Publi ;-) Iteraciones fluidas A veces comienzas a escribir el código sin saber cómo será el resultado final (no es TDD). En esos casos, escribir un ejemplo de lo que hace tu código me ha ahorrado mucho tiempo. Evita tener que escribir una y otra vez un fragmento de código para probar lo que estoy haciendo. No todo es TDD No siempre se puede aplicar TDD, y si lo aplicas siempre, en algún momento te encontrarás en la situación de tener que reescribir el test una y otra vez, o incluso tener que desecharlos por haberlos escrito apresuradamente antes de tener clara la lógica final. Esto es un punto medio entre no tener nada y tener tests. De hecho, si en tus ejemplos tambien incluyes los resul"
+    "date": "2023-09-23",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "docstring"
+    ],
+    "content": "Comienza con Ejemplos Cuando se trata de documentar código, he descubierto que documentar los ejemplos primero es de gran ayuda. Esto podria llamarse perfectamente algo como Desarrollo Dirigido por Ejemplos o Example Driven Development, que suena mucho mejor en inglés, que se note que ahora trabajo en Publi ;-) Iteraciones fluidas A veces comienzas a escribir el código sin saber cómo será el resultado final (no es TDD). En esos casos, escribir un ejemplo de lo que hace tu código me ha ahorrado mucho tiempo. Evita tener que escribir una y otra vez un fragmento de código para probar lo que estoy haciendo. No todo es TDD No siempre se puede aplicar TDD, y si lo aplicas siempre, en algún momento te encontrarás en la situación de tener que reescribir el test una y otra vez, o incluso tener que desecharlos por haberlos escrito apresuradamente antes de tener clara la lógica final. Esto es un punto medio entre no tener nada y tener tests. De hecho, si en tus ejemplos tambien incluyes los resultados, boom! se convierten en doctestsdoctest. Documentación útil Lo que más me entusiasma de este enfoque es cómo reduce la brecha entre la teoría y la práctica. Poner ejemplos permiten a cualquier desarrollador entender rápidamente cómo usar mi código. Además, resaltan casos especiales que a menudo se pasan por alto en explicaciones teóricas. He visto mucha documentación que carece de ejemplos, lo que para mi es un fallo. A menudo encuentro toda la explicación que motiva la existencia de esa joya de software, pero no sé cómo usarla. Otras veces se documentan los parámetros que resultan obvios (`arr`, `percent`, `threshold`, ...), pero no se proporciona un ejemplo de uso que permita reducir la brecha entre la teoría y la práctica. Conclusión Comenzar con ejemplos en mis docstrings ha mejorado significativamente la usabilidad y la mantenibilidad de mi código. Te animo a probar esta técnica y descubrirás cómo facilita la vida de quienes trabajan con tu código. doctest: https://docs.pyth"
   },
   {
     "url": "/posts/eterno-retorno",
     "title": "Reflexiones sobre el Eterno retorno",
-    "content": "Conociendo al Eterno Retorno He estado pensando mucho en el 'Eterno Retorno' de Nietzsche. Este concepto es algo así como un faro que ilumina nuestro camino moral y nos ayuda a tomar decisiones conscientes. Además, también puede darnos una idea muy clara de quiénes somos y de si estamos a gusto con lo que vemos cuando nos miramos al espejo. El Eterno Retorno plantea lo siguiente: si un demonio apareciera y revelara que tu vida, tal y como la conoces hoy, se repetirá siempre, una y otra vez, con todos los acontecimientos sucediendo en el mismo orden exacto - tus decisiones, miedos, aciertos, equivocaciones y emociones - ¿cómo te sentirías? Si este concepto te produce aburrimiento o miedo, eso podría ser una señal de que te sientes atrapado en tu vida y que solo estás observándola desde los costados sin realmente participar. ¿No sería mejor estar atento, ser consciente de cada paso y estar presente en cada desafío que se presenta ante ti y que seguramente se repetirá indefinidamente? El "
+    "date": "2024-04-07",
+    "category": "philosophy",
+    "tags": [
+      "spanish",
+      "nietzsche",
+      "amor-fati",
+      "sartre",
+      "moral"
+    ],
+    "content": "Conociendo al Eterno Retorno He estado pensando mucho en el 'Eterno Retorno' de Nietzsche. Este concepto es algo así como un faro que ilumina nuestro camino moral y nos ayuda a tomar decisiones conscientes. Además, también puede darnos una idea muy clara de quiénes somos y de si estamos a gusto con lo que vemos cuando nos miramos al espejo. El Eterno Retorno plantea lo siguiente: si un demonio apareciera y revelara que tu vida, tal y como la conoces hoy, se repetirá siempre, una y otra vez, con todos los acontecimientos sucediendo en el mismo orden exacto - tus decisiones, miedos, aciertos, equivocaciones y emociones - ¿cómo te sentirías? Si este concepto te produce aburrimiento o miedo, eso podría ser una señal de que te sientes atrapado en tu vida y que solo estás observándola desde los costados sin realmente participar. ¿No sería mejor estar atento, ser consciente de cada paso y estar presente en cada desafío que se presenta ante ti y que seguramente se repetirá indefinidamente? El Eterno Retorno nos muestra que: - Si has lastimado a un ser querido en el pasado, lo repetirás. - Si has tenido un día terrible en tu trabajo, lo volverás a tener. Amor Fati La filosofía del Eterno Retorno nos empuja a enfrentar el futuro de manera activa y a la vez nos enseña a dejar los errores del pasado en el pasado. Pues son esas experiencias y errores previos los que nos han llevado al lugar en el que estamos hoy y los que forman parte de nuestra identidad. En esta línea de pensamiento, Nietzsche nos invita a amar nuestro destino (Amor Fati). Si no logramos encontrar ese amor a nuestro destino, podría ser porque en nuestro interior hay algo que no encaja. No nos reconocemos a nosotros mismos y deseamos que todo termine pronto. Pero si somos capaces de amar nuestro destino es porque hemos comprendido que nuestros errores son oportunidades para crecer. Relaciones con otras corrientes filosóficas Al pensar en el Eterno Retorno y el Amor Fati se hace inevitable la comparación con el "
   },
   {
     "url": "/posts/explorando-pdbpp",
     "title": "Explorando pdb++",
-    "content": "PDB++ es una joya! `pdbpp`repo es una alternativa avanzada al depurador `pdb` incorporado en Python. Es una extensión de `pdb` que agrega varias características útiles para la depuración de código Python, como el resaltado de sintaxis, autocompletado, modo interactivo (`sticky`) y mucho mas. ```bash pip install pdbpp ``` Breakpoints Codigo Pon una de estas lineas donde quieras parar la ejecución: ```python foo.py def main(): avar = 100 bvar = 200 import pdb; pdb.settrace() or breakpoint() out = avar + bvar return out ``` Para depurar, ejeucta:`python foo.py` Interactivamente Puedes usar el modulo `pdb` directamente: `python -m pdb foo.py` ``` (Pdb++) b / / : , (Pdb++) b foo:6 (Pdb++) h or help (Pdb++) c or continue ``` Usando `.pdbrc` `pdbpp` lee automaticamente el archivo `.pdbrc` si existe lo que es muy comodo para tener tus `breakpoints` explicitos en un fichero y evitar modificar el codigo o tener que escribirlos cada vez en la consola: `nvim .pdbrc`: ``` .pdbrc print(\"Hello from {"
+    "date": "2023-09-03",
+    "category": "programming",
+    "tags": [
+      "python",
+      "pdbpp",
+      "debugging",
+      "spanish",
+      "hacking"
+    ],
+    "content": "PDB++ es una joya! `pdbpp`repo es una alternativa avanzada al depurador `pdb` incorporado en Python. Es una extensión de `pdb` que agrega varias características útiles para la depuración de código Python, como el resaltado de sintaxis, autocompletado, modo interactivo (`sticky`) y mucho mas. ```bash pip install pdbpp ``` Breakpoints Codigo Pon una de estas lineas donde quieras parar la ejecución: ```python foo.py def main(): avar = 100 bvar = 200 import pdb; pdb.settrace() or breakpoint() out = avar + bvar return out ``` Para depurar, ejeucta:`python foo.py` Interactivamente Puedes usar el modulo `pdb` directamente: `python -m pdb foo.py` ``` (Pdb++) b / / : , (Pdb++) b foo:6 (Pdb++) h or help (Pdb++) c or continue ``` Usando `.pdbrc` `pdbpp` lee automaticamente el archivo `.pdbrc` si existe lo que es muy comodo para tener tus `breakpoints` explicitos en un fichero y evitar modificar el codigo o tener que escribirlos cada vez en la consola: `nvim .pdbrc`: ``` .pdbrc print(\"Hello from {file}\") ``` Ejecuta: `python foo.py` Esto permite tener un fichero por proyecto estandarizando el debugging, evitando por ejemplo modificar el codigo si no quieres. Compartiendo ese fichero otros pueden debuggear siguiendo el mismo patrón, etc. > También es posible definir un `.pdbrc` global creando un `/.pdbrc`. Todos > los proyectos. Configuración Es posible cambiar la configuracion por defecto de pdbppconfig: > default `.pdbrc.py`pdbrc.py `nvim /.pdbrc.py` ```python class Config(pdb.DefaultConfig): default stdinpaste = 'epaste' filenamecolor = pdb.Color.lightgray useterminal256formatter = False custom prompt = \">>> \" Ready to copy as an example editor = 'nvim' I love it, btw stickybydefault = True Always shows the current long line first linenumbercolor = pdb.Color.darkred Use red line numbers truncatelonglines = True Avoid ugly line wraps... enablehiddenframes = True Show hidden frames by default execifunfocused = None TODO: this is broken, open a issue. def setup(self, pdb): Pdb ="
   },
   {
     "url": "/posts/graphic-tablets",
     "title": "Graphic Tablets",
-    "content": "Using xsetwacom Here you will find anything you need to know about Graphics tablet: - https://wiki.archlinux.org/title/Graphicstablet What I'm using is: ```bash apt install xsetwacom xsetwacom -h ``` Common usages ```bash $ xsetwacom set MapToOutput $ the smart version $ xsetwacom set $(xsetwacom list | grep \"stylus\" | awk '{print $8}') MapToOutput $(xrandr | grep connected | grep -v dis | awk '{print $1}' | fzf --height 10% --reverse) ``` Use always the stylus' PID with: ```bash $(xsetwacom list | grep \"stylus\" | awk '{print $8}') ``` Choose a connected display with this code: > Note: using fzf as selector. ```bash $(xrandr | grep connected | grep -v dis | awk '{print $1}' | fzf --height 10% --reverse) ``` Change the default buttons behaviour > Notes > - stylus indexes start from 2 (the first one is when the pen touching the pad) > - pad indexes stars from 1 ```bash $ xsetwacom set 28 Button 2 \"key +ControlL z -ControlL\" $ the smart version $ xsetwacom set $(xsetwacom list | grep \"sty"
+    "date": "2023-04-16",
+    "category": "programming",
+    "tags": [
+      "hacking",
+      "hardware",
+      "graphic-tablets",
+      "display",
+      "monitor",
+      "fzf"
+    ],
+    "content": "Using xsetwacom Here you will find anything you need to know about Graphics tablet: - https://wiki.archlinux.org/title/Graphicstablet What I'm using is: ```bash apt install xsetwacom xsetwacom -h ``` Common usages ```bash $ xsetwacom set MapToOutput $ the smart version $ xsetwacom set $(xsetwacom list | grep \"stylus\" | awk '{print $8}') MapToOutput $(xrandr | grep connected | grep -v dis | awk '{print $1}' | fzf --height 10% --reverse) ``` Use always the stylus' PID with: ```bash $(xsetwacom list | grep \"stylus\" | awk '{print $8}') ``` Choose a connected display with this code: > Note: using fzf as selector. ```bash $(xrandr | grep connected | grep -v dis | awk '{print $1}' | fzf --height 10% --reverse) ``` Change the default buttons behaviour > Notes > - stylus indexes start from 2 (the first one is when the pen touching the pad) > - pad indexes stars from 1 ```bash $ xsetwacom set 28 Button 2 \"key +ControlL z -ControlL\" $ the smart version $ xsetwacom set $(xsetwacom list | grep \"stylus\" | awk '{print $8}') Button 2 \"key +ControlL z -ControlL\" ```"
   },
   {
     "url": "/posts/grid-demo",
     "title": "Grid Component Demo",
+    "date": "2025-01-26",
+    "category": "demo",
+    "tags": [
+      "demo",
+      "components",
+      "grid"
+    ],
     "content": "Two Column Grid (Default) This is the first item in a two-column grid layout. This is the second item in the grid. This is the third item. The grid wraps to a new row. This is the fourth item, completing the second row. Three Column Grid First column content Second column content Third column content Single Column Grid This card takes up the full width of the container. Grid components are responsive and stack on mobile. Custom Span Grid (2/3 + 1/3) This card spans 2 columns in a 3-column grid, taking up 2/3 of the width. This card spans 1 column, taking 1/3 of the width. Another Custom Layout (1/3 + 2/3) Narrow sidebar content (1/3) Main content area taking up 2/3 of the space. You can put longer content here."
   },
   {
     "url": "/posts/hotelling",
     "title": "La ley de hotelling",
-    "content": "{/ jupyter: /} {/ jupytext: /} {/ textrepresentation: /} {/ extension: .md /} {/ formatname: markdown /} {/ formatversion: '1.3' /} {/ jupytextversion: 1.11.4 /} {/ kernelspec: /} {/ displayname: Python 3 /} {/ language: python /} {/ name: python3 /} La ley de Hotelling ```python from IPython.display import IFrame ``` ```python IFrame(\"https://en.m.wikipedia.org/wiki/Hotelling%27slaw\", width=600, height=300) ``` ```python IFrame(\"https://en.m.wikipedia.org/wiki/Locationmodel\", width=600, height=300) ``` Hotelling con 4 jugadores ```python %matplotlib inline ``` ```python def calcprofits(df, space): \"\"\"Calcula el beneficio\"\"\" try: lastcol = df.columns-1 last game df = dflastcol.copy() change dataframe to serie except: df = df.copy() IF EACH FACTORY ARE ALONE if len(df.rank().unique()) == 4: Each player on different space df = df.sortvalues() Values ordered, so index get useful profits = df.copy() make profits variable as a copy, modify after profits.iloc0 = (df.iloc0 + df.iloc1) / 2 pro"
+    "date": "2023-03-24",
+    "category": "misc",
+    "tags": [
+      "misc"
+    ],
+    "content": "{/ jupyter: /} {/ jupytext: /} {/ textrepresentation: /} {/ extension: .md /} {/ formatname: markdown /} {/ formatversion: '1.3' /} {/ jupytextversion: 1.11.4 /} {/ kernelspec: /} {/ displayname: Python 3 /} {/ language: python /} {/ name: python3 /} La ley de Hotelling ```python from IPython.display import IFrame ``` ```python IFrame(\"https://en.m.wikipedia.org/wiki/Hotelling%27slaw\", width=600, height=300) ``` ```python IFrame(\"https://en.m.wikipedia.org/wiki/Locationmodel\", width=600, height=300) ``` Hotelling con 4 jugadores ```python %matplotlib inline ``` ```python def calcprofits(df, space): \"\"\"Calcula el beneficio\"\"\" try: lastcol = df.columns-1 last game df = dflastcol.copy() change dataframe to serie except: df = df.copy() IF EACH FACTORY ARE ALONE if len(df.rank().unique()) == 4: Each player on different space df = df.sortvalues() Values ordered, so index get useful profits = df.copy() make profits variable as a copy, modify after profits.iloc0 = (df.iloc0 + df.iloc1) / 2 profits.iloc1 = (df.iloc2 - df.iloc0) / 2 profits.iloc2 = (df.iloc3 - df.iloc1) / 2 profits.iloc3 = (2 space - df.iloc3 - df.iloc2) / 2 return profits IF TWO FACTORY ARE TOGETHER elif len(df.rank().unique()) == 3: Only two players on the same space df = df.sortvalues() profits = df.copy() uniques = df.unique() get unique values ns = 2 len(dfdf == v) for v in uniques number of factories at the same place n1, n2, n3 = dfdf == v.index for v in uniques name of one factory for each group profits.locn1 = (df.locn1.values0 + df.locn2.values0) / ns0 profits.locn2 = (df.locn3.values0 - df.locn1.values0) / ns1 profits.locn3 = (2 space - df.locn3.values0 - df.locn2.values0) / ns2 return profits IF TWO FACTORY ARE IN TWO GROUPS elif len(df.rank().unique()) == 2: df = df.sortvalues() profits = df.copy() uniques = df.unique() get unique values n1, n2 = dfdf == v.index for v in uniques name of one factory for each group profits.locn1 = (df.locn1.values0 + df.locn2.values0) / 4 profits.locn2 = (2 space -"
   },
   {
     "url": "/posts/huberman-salt",
     "title": "Huberman Sobre la Sal",
-    "content": "Cómo la Sal Afecta Nuestra Salud y Rendimiento - La sal se relaciona con la presión arterial y regula el apetito por sal y azúcar. - El \"sistema de la Sal\" influye en salud, rendimiento atlético y cognitivo, envejecimiento y demencia. - Más o menos sal beneficia a diferentes personas según parámetros. - Directrices médicas ayudan a optimizar la ingesta de sal para la salud y el rendimiento. - El intestino distingue entre dulces con y sin calorías; efectos a largo plazo desconocidos. - Edulcorantes artificiales son polémicos; pueden alterar la microbiota intestinal y la insulina. - Es clave entender cómo el intestino y cerebro procesan los edulcorantes. Importancia de la Sal y su Regulación - Muchos consumen Stevia, un edulcorante vegetal. - Edulcorantes artificiales controlan calorías pero su efecto en antojos es incierto. - El laboratorio Bohorquez investiga cómo los alimentos afectan nuestro sistema nervioso. - La sal regula el equilibrio de líquidos y el apetito por otros nutrientes"
+    "date": "2023-04-14",
+    "category": "health",
+    "tags": [
+      "huberman",
+      "salt"
+    ],
+    "content": "Cómo la Sal Afecta Nuestra Salud y Rendimiento - La sal se relaciona con la presión arterial y regula el apetito por sal y azúcar. - El \"sistema de la Sal\" influye en salud, rendimiento atlético y cognitivo, envejecimiento y demencia. - Más o menos sal beneficia a diferentes personas según parámetros. - Directrices médicas ayudan a optimizar la ingesta de sal para la salud y el rendimiento. - El intestino distingue entre dulces con y sin calorías; efectos a largo plazo desconocidos. - Edulcorantes artificiales son polémicos; pueden alterar la microbiota intestinal y la insulina. - Es clave entender cómo el intestino y cerebro procesan los edulcorantes. Importancia de la Sal y su Regulación - Muchos consumen Stevia, un edulcorante vegetal. - Edulcorantes artificiales controlan calorías pero su efecto en antojos es incierto. - El laboratorio Bohorquez investiga cómo los alimentos afectan nuestro sistema nervioso. - La sal regula el equilibrio de líquidos y el apetito por otros nutrientes. - Neuronas detectan niveles de sal en el cerebro. - Riñones y sistemas hormonales regulan sal y presión arterial. Barrera Hematoencefálica y OVLT - Poca renovación neuronal en humanos. - La barrera hematoencefálica protege al cerebro. - OVLT detecta cambios en el torrente sanguíneo y líquido cefalorraquídeo. - Tipos de sed: osmótica (sal) e hipovolémica (volumen de sangre). Entendiendo la Sed y Equilibrio de Líquidos - Tipos de sed: osmótica y hipovolémica. - La sed osmótica se desencadena cuando hay demasiada sal o solutos en la sangre, indicando la necesidad de beber agua para equilibrarla. - La sed hipovolémica ocurre cuando se pierde mucho líquido corporal, como en una hemorragia, y señala que se necesitan tanto agua como electrolitos. - Ambas formas de sed son vitales para mantener el equilibrio de fluidos y el buen funcionamiento del cuerpo, incluido el sistema nervioso. - OVLT (órgano vascular de la lámina terminal) y núcleo supraóptico regulan vasopresina, afectando la orina."
   },
   {
     "url": "/posts/hugo",
     "title": "Using Hugo for my website",
+    "date": "2023-03-26",
+    "category": "programming",
+    "tags": [
+      "web",
+      "hugo",
+      "blogging"
+    ],
     "content": "Resources used to build this blog: - https://github.com/reuixiy/hugo-theme-meme/ - https://digitaldrummerj.me/hugo-add-additional-pages/ - https://github.com/luizdepra/hugo-coder/blob/main/layouts/shortcodes/notice.html"
   },
   {
     "url": "/posts/i3-chatgpt-keybind",
     "title": "Creating Custom Keybindings in i3 for ChatGPT CLI",
+    "date": "2023-08-24",
+    "category": "programming",
+    "tags": [
+      "hacking",
+      "i3",
+      "keybindings",
+      "chatgpt",
+      "cli",
+      "linux"
+    ],
     "content": "Context I've recently discovered an impressive CLI tool called ChatGPTchatgpt, which has replaced about 80% of my browser interactions. Now, I want to share how to create a custom keybinding in i3 to open ChatGPT with a simple `Win+g` command. Setting Up the Keybinding To create this keybinding, you need to add the following lines to your `i3/config` file: ``` bindsym $mod+g exec st -T \"st:ChatGPT\" -f \"Caskaydia Cove Nerd Font:pixelsize=14\" -e chatgpt forwindow title=\"st:ChatGPT\" floating enable, resize set 600 px 600 px, move position center ``` After adding these lines, restart i3. Now, you can press `Win+g` to open your ChatGPT CLI, ready for use. For more information about ChatGPT, visit the ChatGPT GitHub pagechatgpt. {/ ===================================================================== /} chatgpt: https://github.com/j178/chatgpt"
   },
   {
     "url": "/posts/i3-graphics-monitor-issues",
     "title": "Display issues on i3",
+    "date": "2023-03-24",
+    "category": "programming",
+    "tags": [
+      "screen",
+      "hacking",
+      "hardware"
+    ],
     "content": "Context I've had a weird issues in my laptop (carbon x1) which suddenly started to hanging processes and the laptop's monitor got laggy (e.g not showing in real time what I typed). I'm using i3 in a Pop!OS. Solution I've ended up in system76 article where they mention issues with external monitor and I've found the following command which solved my problems: ```bash $ gsettings set com.system76.hidpi enable false ``` > source: https://support.system76.com/articles/hidpi-multi-monitor/(https://support.system76.com/articles/hidpi-multi-monitor/)"
   },
   {
     "url": "/posts/i3-on-macos-with-yabai",
     "title": "Using i3 WM on MacOS with Yabai and Skhd",
-    "content": "Transitioning from Linux to MacOS Having used Ubuntu/PopOS for several years both personally and professionally, I've become well-versed in the Linux ecosystem. I have numerous scripts and a comprehensive list of programs, along with my `dotfiles` for easy configuration. However, upon switching companies, I was required to use a Mac. This transition was challenging, especially since I missed the efficiency of a good window manager. On Linux, I used i3, which significantly boosted my productivity. Implementing i3 on MacOS with Yabai and Skhd After researching \"i3 on macOS\", I discovered several alternatives, with `yabai`yabai emerging as the best option. It, along with `skhd`skhd, effectively replicates the i3 experience on MacOS. Installation of `yabai` and `skhd` ```bash install brew install koekeishiya/formulae/skhd brew install koekeishiya/formulae/yabai start service skhd --start-service yabai --start-service if you change your yabairc yabai --restart-service ``` To ensure everythi"
+    "date": "2023-08-25",
+    "category": "programming",
+    "tags": [
+      "macos",
+      "wm"
+    ],
+    "content": "Transitioning from Linux to MacOS Having used Ubuntu/PopOS for several years both personally and professionally, I've become well-versed in the Linux ecosystem. I have numerous scripts and a comprehensive list of programs, along with my `dotfiles` for easy configuration. However, upon switching companies, I was required to use a Mac. This transition was challenging, especially since I missed the efficiency of a good window manager. On Linux, I used i3, which significantly boosted my productivity. Implementing i3 on MacOS with Yabai and Skhd After researching \"i3 on macOS\", I discovered several alternatives, with `yabai`yabai emerging as the best option. It, along with `skhd`skhd, effectively replicates the i3 experience on MacOS. Installation of `yabai` and `skhd` ```bash install brew install koekeishiya/formulae/skhd brew install koekeishiya/formulae/yabai start service skhd --start-service yabai --start-service if you change your yabairc yabai --restart-service ``` To ensure everything works correctly, you need to grant access to `skhd` and `yabai` on MacOS. After a restart, everything should function as expected. Useful Links - yabai's wikiwiki - How To Use A Tiling Window Manager On MacOs | Yabai Ultimate Guideyt - using-i3-like-tiling-window-managers-in-macos-with-yabaimedium - `yabairc`yabairc {/ Links /} yt:https://www.youtube.com/watch?v=k94qImbFKWE skhd: https://github.com/koekeishiya/skhd yabai: https://github.com/koekeishiya/yabai wiki: https://github.com/koekeishiya/yabai/wiki yabairc: https://github.com/asdf0x2199/dotfiles/blob/master/macos/home/.config/yabai/yabairc medium: https://anuj-chandra.medium.com/using-i3-like-tiling-window-managers-in-macos-with-yabai-ebf0e002b992"
   },
   {
     "url": "/posts/introducing-takt",
     "title": "Takt: A Simple and User-Friendly Time Tracker",
-    "content": "Context The concept behind Takttakt is to track time in a simple and human-readable manner that is easy to edit. I have used time management tools like Factorial and Kenjo, and while they have beautiful front-end interfaces, they often neglect the back-end. We, on the other hand, prefer to do everything from the console. Wouldn't it be cool to be able to execute `curl .https://awesome-tm/check?time=now` and automatically have a check in/out as appropriate? Or to be able to run `curl https://awesome-tm/summary` and see a summary of your worked time? This seems basic, simple, and anyone can use it. If you get up for a coffee and don't want to lose track of time, you can simply launch a `tm-check` from the console. You can even have a shortcut that does this! > Idea: `alias tm-check='curl .https://awesome-tm/check?time=now'` If anyone knows a reason why this can't be the case, I would love to hear it. Takt With this in mind, I began to write something that does exactly that, but locally. "
+    "date": "2023-08-27",
+    "category": "programming",
+    "tags": [
+      "hacking",
+      "time-tracker",
+      "cli",
+      "takt",
+      "hacking",
+      "time",
+      "terminal",
+      "productivity",
+      "time-management"
+    ],
+    "content": "Context The concept behind Takttakt is to track time in a simple and human-readable manner that is easy to edit. I have used time management tools like Factorial and Kenjo, and while they have beautiful front-end interfaces, they often neglect the back-end. We, on the other hand, prefer to do everything from the console. Wouldn't it be cool to be able to execute `curl .https://awesome-tm/check?time=now` and automatically have a check in/out as appropriate? Or to be able to run `curl https://awesome-tm/summary` and see a summary of your worked time? This seems basic, simple, and anyone can use it. If you get up for a coffee and don't want to lose track of time, you can simply launch a `tm-check` from the console. You can even have a shortcut that does this! > Idea: `alias tm-check='curl .https://awesome-tm/check?time=now'` If anyone knows a reason why this can't be the case, I would love to hear it. Takt With this in mind, I began to write something that does exactly that, but locally. I named it `takt`takt (derived from the German word Taktzeit, meaning cycle time). At the moment, it's very simple but does exactly what it's supposed to. Over time, I would like to have integrations with other applications and be able to do `pull`/`push` as if it were a git repository. We'll see how it evolves. !screenshot(https://media.hachyderm.io/mediaattachments/files/110/963/065/168/213/242/original/b431a99f64c70415.png) {/ Links /} takt: https://github.com/asdf0x2199/takt"
   },
   {
     "url": "/posts/k-debug",
     "title": "How to debug a pod",
-    "content": "```sh kubectl debug -ti --image=nicolaka/netshoot --target= --profile=sysadmin ``` Check list 1. Check open connections (signs of saturation) ```bash ss -s quick summary (states: ESTAB, TIME-WAIT, SYN-RECV) ss -tuna | grep 8080 | wc -l total connections to the app port ss -tuna | grep SYNRECV half-open connections (possible overload) ss -tuna | grep TIMEWAIT | wc -l connections closing slowly ``` 2. Check for socket leaks or system limits ```bash cat /proc/sys/net/ipv4/iplocalportrange cat /proc/sys/net/ipv4/tcpfintimeout cat /proc/sys/net/ipv4/tcptwreuse ulimit -n file descriptor limit ``` 3. Test local endpoint (no network involved) ```bash If this is slow, the issue is inside the container, not the network. time curl -v http://127.0.0.1:8080/health time curl -v http://127.0.0.1:8080/predict ``` 4. Test access from another service (within the cluster) ```bash If this is slow but the local one isn’t, it’s a network or connection bottleneck. time curl -v http:// : /status ``` 5. Monito"
+    "date": "2025-10-26",
+    "category": "programming",
+    "tags": [
+      "python"
+    ],
+    "content": "```sh kubectl debug -ti --image=nicolaka/netshoot --target= --profile=sysadmin ``` Check list 1. Check open connections (signs of saturation) ```bash ss -s quick summary (states: ESTAB, TIME-WAIT, SYN-RECV) ss -tuna | grep 8080 | wc -l total connections to the app port ss -tuna | grep SYNRECV half-open connections (possible overload) ss -tuna | grep TIMEWAIT | wc -l connections closing slowly ``` 2. Check for socket leaks or system limits ```bash cat /proc/sys/net/ipv4/iplocalportrange cat /proc/sys/net/ipv4/tcpfintimeout cat /proc/sys/net/ipv4/tcptwreuse ulimit -n file descriptor limit ``` 3. Test local endpoint (no network involved) ```bash If this is slow, the issue is inside the container, not the network. time curl -v http://127.0.0.1:8080/health time curl -v http://127.0.0.1:8080/predict ``` 4. Test access from another service (within the cluster) ```bash If this is slow but the local one isn’t, it’s a network or connection bottleneck. time curl -v http:// : /status ``` 5. Monitor process usage (signs of CPU/memory saturation) ```bash ps auxf | grep python top -p cat /proc/ /status | egrep 'Threads|VmRSS' ``` 6. If you suspect too many client connections ```bash lsof -p | grep TCP | wc -l netstat -anp | grep 8080 | grep ESTAB | wc -l ``` 7. Check if real traffic is reaching and its volume ```bash Measures if requests are actually arriving when latency increases. tcpdump -i any -nn port 8080 -c 100 ``` 8. (optional) Inspect specific connections ```bash ss -tp state established | grep ``` 9. Bonus: use watch ```bash watch -n1 ss -s ```"
   },
   {
     "url": "/posts/ley-hofstadter",
     "title": "La Ley de Hofstadter: ¿Por qué los Programadores Nunca Terminan a Tiempo?",
-    "content": "Contexto ¿Cuántas veces, como programador, has afirmado \"Estoy a punto de terminar!\"? Sin embargo, ese \"casi\" parece extenderse hasta el infinito. La explicación a esto podría residir en un concepto conocido como la Ley de Hofstadterlaw. La Ley de Hofstadter La Ley de Hofstadter es mas un dicho/hipótesis que una Ley (aunque se experimente mucho) propuesta por el doctor Douglas Hofstadterman. Esta ley sostiene que las tareas siempre requieren más tiempo del previsto, incluso cuando somos conscientes de nuestra tendencia a subestimar el tiempo necesario. Dicho de otra forma, las personas somos malísimas estimando tiempos y por eso creo que no deberíamos hacerlo. La Ley de Hofstadter y la Programación En el ámbito de la programación, la Ley de Hofstadter se manifiesta de formas peculiares y a veces humorísticas. ¿Alguna vez has estimado que un error te llevaría 10 minutos para solucionarlo y terminaste invirtiendo toda la tarde en él? ¡Eso es la Ley de Hofstadter en pleno apogeo! Causas P"
+    "date": "2023-08-31",
+    "category": "programming",
+    "tags": [
+      "hofstadter's law",
+      "time",
+      "programming",
+      "spanish"
+    ],
+    "content": "Contexto ¿Cuántas veces, como programador, has afirmado \"Estoy a punto de terminar!\"? Sin embargo, ese \"casi\" parece extenderse hasta el infinito. La explicación a esto podría residir en un concepto conocido como la Ley de Hofstadterlaw. La Ley de Hofstadter La Ley de Hofstadter es mas un dicho/hipótesis que una Ley (aunque se experimente mucho) propuesta por el doctor Douglas Hofstadterman. Esta ley sostiene que las tareas siempre requieren más tiempo del previsto, incluso cuando somos conscientes de nuestra tendencia a subestimar el tiempo necesario. Dicho de otra forma, las personas somos malísimas estimando tiempos y por eso creo que no deberíamos hacerlo. La Ley de Hofstadter y la Programación En el ámbito de la programación, la Ley de Hofstadter se manifiesta de formas peculiares y a veces humorísticas. ¿Alguna vez has estimado que un error te llevaría 10 minutos para solucionarlo y terminaste invirtiendo toda la tarde en él? ¡Eso es la Ley de Hofstadter en pleno apogeo! Causas Primero, la programación no es nada sencilla. Es como un rompecabezas gigante que tienes que armar, pero sin tener la imagen de la caja para guiarte. A veces, te encuentras con problemas que no esperabas. Imagina que estás armando tu rompecabezas y de repente te das cuenta de que algunas piezas no encajan o incluso faltan. Eso es lo que pasa cuando programas. Además, a veces lo que necesitas hacer cambia en medio del camino. Es como si, mientras estás armando tu rompecabezas, alguien viene y te dice que la imagen ha cambiado y ahora tienes que hacer un paisaje en lugar de un retrato y lo que parecia la pieza correcta ya no lo es. Otra cosa que complica la programación es la incertidumbre. No siempre sabes cómo se ve el problema, cómo se ve la solución, o incluso cuál es el verdadero problema que estás tratando de resolver. Es como tratar de armar un rompecabezas en la oscuridad. Por tanto cuanto menos oscuro menos incertidumbre. Y por último, pero no menos importante, está el tiempo que"
   },
   {
     "url": "/posts/linux-default-applications",
     "title": "Cambiando el Explorador Predeterminado en Linux",
+    "date": "2024-01-29",
+    "category": "programming",
+    "tags": [
+      "file-manager",
+      "thunar",
+      "linux",
+      "ubuntu",
+      "howto",
+      "spanish"
+    ],
     "content": "Usando el archivo `.desktop` Lo primero: ubicar el correspondiente archivo `.desktop`: ```bash ls /usr/share/applications/.desktop | grep -I thunar ls /.local/share/applications/.desktop | grep -I thunar ``` Si no aparece, hay que crearlo: ```bash Desktop Entry Name=Open Folder TryExec=thunar Exec=thunar %U NoDisplay=true Terminal=false Icon=folder-open StartupNotify=true Type=Application MimeType=x-directory/gnome-default-handler;x-directory/normal;inode/directory;application/x-gnome-saved-search; ``` Aplicación predeterminada Luego, cambia el mimetype predeterminado: ```bash nvim /.local/share/applications/defaults.list ``` Ahora, agrega esta línea (según el resultado anterior): ```ini inode/directory=thunar.desktop x-directory/normal=thunar.desktop ``` Comprobación Compueba que funciona correctamente: ```bash xdg-open . ``` Referencias - https://help.ubuntu.com/community/DefaultFileManager"
   },
   {
     "url": "/posts/list-gha-actions",
     "title": "Some useful github actions",
-    "content": "Hey there! Here's a collection of GitHub Actions I've found handy for automation. I'll keep adding to this list as I discover more useful ones. Feel free to grab what you need for your CI/CD workflows! List of Github action - https://github.com/astral-sh/setup-uv - https://github.com/googleapis/release-please - https://github.com/ncipollo/release-action - https://github.com/PaulHatch/semantic-version - https://github.com/mathieudutour/github-tag-action - https://github.com/slackapi/slack-github-action - https://github.com/mshick/add-pr-comment - https://github.com/xt0rted/slash-command-action Automatic Release ```yaml name: Publish release on: push: branches: - \"main\" jobs: prepare-github-release: name: GitHub Release runs-on: ubuntu-latest outputs: versiontag: ${{ steps.calculatetagversion.outputs.versiontag }} steps: - name: Checkout repository uses: actions/checkout@v4 with: fetch-depth: 0 - name: Manage semantic versioning uses: paulhatch/semantic-version@v5.4.0 id: calculatetagver"
+    "date": "2024-11-18",
+    "category": "misc",
+    "tags": [
+      "misc"
+    ],
+    "content": "Hey there! Here's a collection of GitHub Actions I've found handy for automation. I'll keep adding to this list as I discover more useful ones. Feel free to grab what you need for your CI/CD workflows! List of Github action - https://github.com/astral-sh/setup-uv - https://github.com/googleapis/release-please - https://github.com/ncipollo/release-action - https://github.com/PaulHatch/semantic-version - https://github.com/mathieudutour/github-tag-action - https://github.com/slackapi/slack-github-action - https://github.com/mshick/add-pr-comment - https://github.com/xt0rted/slash-command-action Automatic Release ```yaml name: Publish release on: push: branches: - \"main\" jobs: prepare-github-release: name: GitHub Release runs-on: ubuntu-latest outputs: versiontag: ${{ steps.calculatetagversion.outputs.versiontag }} steps: - name: Checkout repository uses: actions/checkout@v4 with: fetch-depth: 0 - name: Manage semantic versioning uses: paulhatch/semantic-version@v5.4.0 id: calculatetagversion with: tagprefix: \"\" majorpattern: \"MAJOR\" minorpattern: \"MINOR\" versionformat: \"${major}.${minor}.${patch}\" bumpeachcommit: false searchcommitbody: true debug: true - name: Bump version and push tag id: tagversion uses: mathieudutour/github-tag-action@v6.1 with: githubtoken: ${{ secrets.GHTOKEN }} customtag: ${{ steps.calculatetagversion.outputs.versiontag }} tagprefix: \"\" - name: Create a GitHub release uses: ncipollo/release-action@v1.14.0 with: tag: ${{ steps.calculatetagversion.outputs.versiontag }} name: Release ${{ steps.calculatetagversion.outputs.versiontag }} body: ${{ steps.tagversion.outputs.changelog }} ```"
   },
   {
     "url": "/posts/macos-incrase-key-freq",
     "title": "Acelerando la repeticion de teclas en MacOS",
+    "date": "2024-02-03",
+    "category": "programming",
+    "tags": [
+      "macos",
+      "hacking",
+      "spanish",
+      "keyboard",
+      "keys"
+    ],
     "content": "Aumentar la frecuencia de repetición de las teclas puede mejorar la eficiencia al introducir largas secuencias de caracteres repetidos. Buscando, he conseguido encontrar cómo aumentar la frecuencia de repetición de teclas manteniendo pulsada una tecla, esto es útil para introducir espacios o moverse con las flechas. ```bash !/bin/bash Define los ajustes de repetición de tecla defaults write -g InitialKeyRepeat -int 16 defaults write -g KeyRepeat -int 1 Deshabilita la función de presionar y mantener las teclas defaults write -g ApplePressAndHoldEnabled -bool false Fuente https://gist.github.com/hofmannsven/ff21749b0e6afc50da458bebbd9989c5 Para simular la pulsación de teclas https://mac-key-repeat.zaymon.dev/ ``` Las configuraciones del script se pueden ajustar para optimizar aún más la experiencia de usuario basándose en necesidades individuales."
   },
   {
     "url": "/posts/math-demo",
     "title": "Mathematical Formulas and Matrices",
-    "content": "Inline Math The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ and Euler's identity is $e^{i\\pi} + 1 = 0$. Display Math The Pythagorean theorem: $$ a^2 + b^2 = c^2 $$ Summation and Integration Sum of first $n$ natural numbers: $$ \\sum{i=1}^{n} i = \\frac{n(n+1)}{2} $$ Fundamental theorem of calculus: $$ \\int{a}^{b} f(x) \\, dx = F(b) - F(a) $$ Matrices Identity matrix: $$ I = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix} $$ Matrix multiplication: $$ \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix} $$ Determinant $$ \\det(A) = \\begin{vmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{vmatrix} = a\\begin{vmatrix} e & f \\\\ h & i \\end{vmatrix} - b\\begin{vmatrix} d & f \\\\ g & i \\end{vmatrix} + c\\begin{vmatrix} d & e \\\\ g & h \\end{vmatrix} $$ Systems of Linear Equations $$ \\begin{cases} 2x + 3y = 7 \\\\ x - y = 1 \\end{cases} $$ Greek Letters and Symbols Common symbols: $\\alpha, \\be"
+    "date": "2025-01-26",
+    "category": "demo",
+    "tags": [
+      "math",
+      "demo"
+    ],
+    "content": "Inline Math The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ and Euler's identity is $e^{i\\pi} + 1 = 0$. Display Math The Pythagorean theorem: $$ a^2 + b^2 = c^2 $$ Summation and Integration Sum of first $n$ natural numbers: $$ \\sum{i=1}^{n} i = \\frac{n(n+1)}{2} $$ Fundamental theorem of calculus: $$ \\int{a}^{b} f(x) \\, dx = F(b) - F(a) $$ Matrices Identity matrix: $$ I = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix} $$ Matrix multiplication: $$ \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix} $$ Determinant $$ \\det(A) = \\begin{vmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{vmatrix} = a\\begin{vmatrix} e & f \\\\ h & i \\end{vmatrix} - b\\begin{vmatrix} d & f \\\\ g & i \\end{vmatrix} + c\\begin{vmatrix} d & e \\\\ g & h \\end{vmatrix} $$ Systems of Linear Equations $$ \\begin{cases} 2x + 3y = 7 \\\\ x - y = 1 \\end{cases} $$ Greek Letters and Symbols Common symbols: $\\alpha, \\beta, \\gamma, \\Delta, \\Sigma, \\Omega$ $$ \\lim{x \\to \\infty} \\frac{1}{x} = 0 $$ Fractions and Binomials Binomial coefficient: $$ \\binom{n}{k} = \\frac{n!}{k!(n-k)!} $$ Complex Expressions The normal distribution probability density function: $$ f(x) = \\frac{1}{\\sigma\\sqrt{2\\pi}} e^{-\\frac{1}{2}\\left(\\frac{x-\\mu}{\\sigma}\\right)^2} $$ Eigenvalues For a matrix $A$, eigenvalues $\\lambda$ satisfy: $$ \\det(A - \\lambda I) = 0 $$ Eigenvectors satisfy: $$ Av = \\lambda v $$"
   },
   {
     "url": "/posts/maximizing-productivity",
     "title": "Maximizing productivity, physical and mental health",
-    "content": "{/ Title: Maximizing productivity, physical and mental health /} {/ Date: 2023-03-11 /} {/ Modified: 2023-03-11 /} {/ Category: Life /} {/ Tags: life, productivity, health /} {/ Slug: maximizingproductiviyphysicalandmentalhealth /} {/ Authors: Maximiliano Greco /} Maximizing Productivity, Physical & Mental Heathl I'm a big fan of Huberman and I'm starting to write down what I'm learning from his videos (science based). Linkt to the video(https://www.youtube.com/watch?v=aXvDEmo6uS4) 1. Morning light exposure - Description: Getting exposure to bright light in the morning, preferably within the first hour of waking up. - Usefulness: Helps regulate circadian rhythms, cortisol secretion, and mood. - Example: Walking outside, sitting near a window that receives natural light, using a light box. 2. Cool and dark bedroom for sleep - Description: Keeping the bedroom cool and dark to aid in falling asleep and staying asleep. - Usefulness: Throughout the night, there are phases of sleep where you"
+    "date": "2023-03-24",
+    "category": "health",
+    "tags": [
+      "huberman",
+      "health",
+      "productivity"
+    ],
+    "content": "{/ Title: Maximizing productivity, physical and mental health /} {/ Date: 2023-03-11 /} {/ Modified: 2023-03-11 /} {/ Category: Life /} {/ Tags: life, productivity, health /} {/ Slug: maximizingproductiviyphysicalandmentalhealth /} {/ Authors: Maximiliano Greco /} Maximizing Productivity, Physical & Mental Heathl I'm a big fan of Huberman and I'm starting to write down what I'm learning from his videos (science based). Linkt to the video(https://www.youtube.com/watch?v=aXvDEmo6uS4) 1. Morning light exposure - Description: Getting exposure to bright light in the morning, preferably within the first hour of waking up. - Usefulness: Helps regulate circadian rhythms, cortisol secretion, and mood. - Example: Walking outside, sitting near a window that receives natural light, using a light box. 2. Cool and dark bedroom for sleep - Description: Keeping the bedroom cool and dark to aid in falling asleep and staying asleep. - Usefulness: Throughout the night, there are phases of sleep where you are paralyzed, so-called REM sleep. There are portions of the night where you can move. And one of the more important movements that you do in the middle of the night is put your hand out or your foot out or you take your face out from under the covers as a means to cool yourself, and you do this while you are asleep. If you are in a cool room, you can put yourself under the blankets to stay warm, and then if you want to cool off, you can simply remove a limb or you can toss the covers off entirely. - Example: Keeping the thermostat at a lower temperature, using a fan, covering windows to block out light. 3. Non-sleep deep rest (NSDR) protocols - Description: Engaging in activities that promote deep relaxation, such as yoga nidra or sleep hypnosis, to help fall back asleep in the middle of the night. - Usefulness: Can help shift the mind away from anxiety and reduce rumination, making it easier to fall and stay asleep. - Example: Listening to a guided meditation, practicing long exhal"
   },
   {
     "url": "/posts/mermaid-demo",
     "title": "Mermaid Diagrams Demo",
-    "content": "Flowchart ``` flowchart TD AStart --> B{Is it working?} B -->|Yes| CGreat! B -->|No| DDebug D --> EFix bugs E --> B C --> FDeploy F --> GEnd ``` Sequence Diagram {` sequenceDiagram participant User participant Browser participant Server participant Database User->>Browser: Enter URL Browser->>Server: HTTP Request Server->>Database: Query data Database-->>Server: Return results Server-->>Browser: HTTP Response Browser-->>User: Display page `} Class Diagram {` classDiagram class Animal { +String name +int age +makeSound() } class Dog { +String breed +bark() } class Cat { +String color +meow() } Animal State Diagram {` stateDiagram-v2 --> Idle Idle --> Processing : Start Processing --> Success : Complete Processing --> Error : Fail Success --> Error --> Retry : Retry Retry --> Processing Error --> : Give up `} Pie Chart {` pie title Programming Languages Usage \"Python\" : 35 \"JavaScript\" : 25 \"Go\" : 20 \"Rust\" : 12 \"Other\" : 8 `} Custom Dimensions Fixed Height {` flowchart LR ASmall --> BDi"
+    "date": "2025-01-26",
+    "category": "demo",
+    "tags": [
+      "diagrams",
+      "demo",
+      "mermaid"
+    ],
+    "content": "Flowchart ``` flowchart TD AStart --> B{Is it working?} B -->|Yes| CGreat! B -->|No| DDebug D --> EFix bugs E --> B C --> FDeploy F --> GEnd ``` Sequence Diagram {` sequenceDiagram participant User participant Browser participant Server participant Database User->>Browser: Enter URL Browser->>Server: HTTP Request Server->>Database: Query data Database-->>Server: Return results Server-->>Browser: HTTP Response Browser-->>User: Display page `} Class Diagram {` classDiagram class Animal { +String name +int age +makeSound() } class Dog { +String breed +bark() } class Cat { +String color +meow() } Animal State Diagram {` stateDiagram-v2 --> Idle Idle --> Processing : Start Processing --> Success : Complete Processing --> Error : Fail Success --> Error --> Retry : Retry Retry --> Processing Error --> : Give up `} Pie Chart {` pie title Programming Languages Usage \"Python\" : 35 \"JavaScript\" : 25 \"Go\" : 20 \"Rust\" : 12 \"Other\" : 8 `} Custom Dimensions Fixed Height {` flowchart LR ASmall --> BDiagram B --> CFixed C --> DHeight `} Fixed Width and Height {` graph TB ACustom Size --> B500px wide A --> C400px tall B --> DCentered C --> D `}"
   },
   {
     "url": "/posts/music-genres",
     "title": "Notas sobre la Musica",
-    "content": "{/ Estilos musicales en un corto /} Hace unos días vi este short en YouTube, en el que un músico interpreta la misma pieza musical en varios estilos, una demostración que ha resonado en mi mente desde entonces. Me gustó mucho porque destaca las diferencias de cada estilo musical. Esto me hizo preguntarme: ¿es esta demostración de praxis solo posible para un experto? Aunque me falta el criterio para detectar imperfecciones sutiles, quizás eso también forma parte de la técnica. Ser capaz de cometer errores de forma imperceptible podría considerarse una muestra de buena praxis. {/ Cuando Aristóteles escucha un solo de piano /} Aquí entra Aristóteles en escena^poetica. En su libro \"Ética a Nicómaco\", destila estos conceptos^tecne: - Techné: El saber-cómo, los conocimientos que te permiten hacer algo. - Praxis: El hacer, la aplicación práctica de ese conocimiento. - Poiesis: La creatividad, o la aplicación innovadora del conocimiento para crear algo completamente nuevo. En este contexto, sa"
+    "date": "2025-04-18",
+    "category": "philosophy",
+    "tags": [
+      "music",
+      "aristotle",
+      "emotions"
+    ],
+    "content": "{/ Estilos musicales en un corto /} Hace unos días vi este short en YouTube, en el que un músico interpreta la misma pieza musical en varios estilos, una demostración que ha resonado en mi mente desde entonces. Me gustó mucho porque destaca las diferencias de cada estilo musical. Esto me hizo preguntarme: ¿es esta demostración de praxis solo posible para un experto? Aunque me falta el criterio para detectar imperfecciones sutiles, quizás eso también forma parte de la técnica. Ser capaz de cometer errores de forma imperceptible podría considerarse una muestra de buena praxis. {/ Cuando Aristóteles escucha un solo de piano /} Aquí entra Aristóteles en escena^poetica. En su libro \"Ética a Nicómaco\", destila estos conceptos^tecne: - Techné: El saber-cómo, los conocimientos que te permiten hacer algo. - Praxis: El hacer, la aplicación práctica de ese conocimiento. - Poiesis: La creatividad, o la aplicación innovadora del conocimiento para crear algo completamente nuevo. En este contexto, saber tocar el piano, conocer solfeo y dominar los distintos géneros musicales es techné. Tocar los instrumentos y hacerlo de forma satisfactoria es praxis. Componer una pieza musical original es poiesis. Los géneros musicales se van desarrollando poco a poco a partir de pequeñas demostraciones de poiesis. Cada vez que un músico experimenta e intenta algo nuevo, evoluciona y con él, la música. {/ La huella única de cada estilo /} Al interpretar diferentes estilos, me pareció claro que cada género tiene su propia huella, como un idioma con su cadencia, tono, armonía y forma de expresarse únicos. También me sugirió que la música comunica, enviando mensajes como si fuera otro idioma, pero es más potente porque, aunque no entiendas el contenido, transmite el mensaje a través de las sensaciones. Aristóteles hace referencia al poder catártico ^catharsis, que creo que se puede aplicar a la música para ayudarnos a procesar emociones. Interpreto a Kant como creyendo que la música es el lenguaje d"
   },
   {
     "url": "/posts/my-makefile",
     "title": "Makefile",
-    "content": "Makefile Some times you need a good starting point, here is mine: ```make variables PYVER := 3.10 venv := .venv python := $(venv)/bin/python pip := $(venv)/bin/pip @ Utility .PHONY: help help: Display this help @awk 'BEGIN {FS = \":.\"; printf \"\\nUsage:\\n make \\03336m\\0330m\\n\"} /^a-zA-Z\\.-+:.?/ { printf \" \\03336m%-15s\\0330m %s\\n\", $$1, $$2 } /^@/ { printf \"\\n\\0331m%s\\0330m\\n\", substr($$0, 5) } ' $(MAKEFILELIST) @ Setup $(venv): @python$(PYVER) -m venv $(venv) .PHONY: install install: $(venv) install $(pip) install . -r requirements.txt @ Development .PHONY: dev dev: $(venv) install dev mode $(pip) install -e .dev .PHONY: test test: $(venv) run tests $(python) -m pytest tests .PHONY: lint lint: $(venv) run linting check $(python) -m ruff ./src .PHONY: format format: $(venv) fomat code using ruff $(python) -m ruff format src test .PHONY: requirements.txt requirements.txt: update requirements.txt, e.g. make requirements.txt @test -d /tmp/venv && rm -r /tmp/venv || true @$(python) -m venv /t"
+    "date": "2024-09-19",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "makefile",
+      "python"
+    ],
+    "content": "Makefile Some times you need a good starting point, here is mine: ```make variables PYVER := 3.10 venv := .venv python := $(venv)/bin/python pip := $(venv)/bin/pip @ Utility .PHONY: help help: Display this help @awk 'BEGIN {FS = \":.\"; printf \"\\nUsage:\\n make \\03336m\\0330m\\n\"} /^a-zA-Z\\.-+:.?/ { printf \" \\03336m%-15s\\0330m %s\\n\", $$1, $$2 } /^@/ { printf \"\\n\\0331m%s\\0330m\\n\", substr($$0, 5) } ' $(MAKEFILELIST) @ Setup $(venv): @python$(PYVER) -m venv $(venv) .PHONY: install install: $(venv) install $(pip) install . -r requirements.txt @ Development .PHONY: dev dev: $(venv) install dev mode $(pip) install -e .dev .PHONY: test test: $(venv) run tests $(python) -m pytest tests .PHONY: lint lint: $(venv) run linting check $(python) -m ruff ./src .PHONY: format format: $(venv) fomat code using ruff $(python) -m ruff format src test .PHONY: requirements.txt requirements.txt: update requirements.txt, e.g. make requirements.txt @test -d /tmp/venv && rm -r /tmp/venv || true @$(python) -m venv /tmp/venv @/tmp/venv/bin/python -m pip -q install pip -U @/tmp/venv/bin/python -m pip -q install . --progress-bar off @/tmp/venv/bin/python -m pip freeze > requirements.txt ```"
   },
   {
     "url": "/posts/neovim-run-commands",
     "title": "Vim Tips: Running Commands",
-    "content": "Let's explore a few different ways to run commands in our terminal from the comfort of neovim. Trust me, it's cooler than it sounds! 😎 Here's a list of commands that I use all the time (and you should too!). ```bash{linenos=false} run a command :!sh execute the line and replace with the output :.!sh execute without replacing :.w !sh execute without replacing selection and it will persist until next selection! :' w !sh execute a the line 8 :8w !sh execute and replace a the line 8 :8 !sh execute the selection in python :' w !python -c \"$(cat)\" execute and replace the selection in python :' !python -c \"$(cat)\" ``` Hands-on Hey! This is my absolute favorite command ever! I use it all the time when I'm writing docs or README files because, let's face it - who wants to manually copy-paste code outputs? Not me! 😅 Instead of doing things the boring way, I use this neat little trick to get things done quickly. Plus, it's super handy when you want to format text using other tools too like sql "
+    "date": "2024-11-14",
+    "category": "vim",
+    "tags": [
+      "english",
+      "neovim",
+      "tips"
+    ],
+    "content": "Let's explore a few different ways to run commands in our terminal from the comfort of neovim. Trust me, it's cooler than it sounds! 😎 Here's a list of commands that I use all the time (and you should too!). ```bash{linenos=false} run a command :!sh execute the line and replace with the output :.!sh execute without replacing :.w !sh execute without replacing selection and it will persist until next selection! :' w !sh execute a the line 8 :8w !sh execute and replace a the line 8 :8 !sh execute the selection in python :' w !python -c \"$(cat)\" execute and replace the selection in python :' !python -c \"$(cat)\" ``` Hands-on Hey! This is my absolute favorite command ever! I use it all the time when I'm writing docs or README files because, let's face it - who wants to manually copy-paste code outputs? Not me! 😅 Instead of doing things the boring way, I use this neat little trick to get things done quickly. Plus, it's super handy when you want to format text using other tools too like sql queries! ```vim{linenos=false} 1 ls >2 ls NORMAL file.md + :.!sh ``` And check out what happens: ```vim{linenos=false} 1 ls 2 Makefile 3 README.md 4 archetypes 5 config.toml NORMAL file.md + ``` See what happened there? Instead of switching back and forth between your terminal and Vim (so annoying, right?), we just ran the `ls` command right from Vim! Pretty neat, huh? When we use `:.!sh`, Vim runs the current line as a shell command and shows us what happened. It's like having a mini-terminal inside your editor - how cool is that? This is super handy when you're writing docs or just need to quickly check something without leaving Vim. No more alt-tabbing between windows like a maniac! Think of it as your editor being your personal assistant - \"Hey Vim, could you run this command for me?\" And boom! There's your output, right where you need it. Simple, right? And trust me, once you start using this, you'll wonder how you ever lived without it! 🎯 Run a command without replacing the buff"
   },
   {
     "url": "/posts/nvim-md-mmd-pdf",
     "title": "Markdown preview PDF friendly",
+    "date": "2024-05-09",
+    "category": "programming",
+    "tags": [
+      "nvim",
+      "markdown",
+      "pdf"
+    ],
     "content": "How to print a PDF Edit the following files: - `/.local/share/nvim/lazy/markdown-preview.nvim/app/static/markdown.css` - `/.local/share/nvim/lazy/markdown-preview.nvim/app/static/page.css` add the following lines at the bottom: ```css @media print { page-header { display: none; } .markdown-body { background-color: fff; border: none; color: none; } main { background-color: fff; } } ``` Mermaid example ```mermaid flowchart TD a --> b ```"
   },
   {
     "url": "/posts/pipx-with-conda",
     "title": "Implementando pipx con conda en macOS",
-    "content": "Contexto Soy un gran fan y usuario de `pipx`, pero por alguna razón, no funciona tan bien en macOS como en Linux. La cosa es que uso `conda` (instalacion manual) y `pipx` (brew) muchas veces cuando tengo un entorno virual activado `pipx` se hace un lio y usa el entorno virtual incorrecto haciendo que el comando falle. Uno de los cambios que hice fue instalar `pipx` en un entorno conda en lugar de con `brew` y crear un alias para el binario, así ya no hay inconvenientes de entornos y variables. En general, funciona mejor; me permite controlar la versión de Python que usa `pipx` fácilmente (La variable de entorno `PIPXDEFAULTPYTHON` también me causa problemas en MacOS). Usando `brew` instala la última versión de Python, la cual algunos CLIs no soportan (como `duckdb`). Sin embargo, la situación no se limita a esto. Recientemente, me enfrenté al siguiente desafío: ```bash $ pipx install visidata installed package visidata 3.0.2, installed using Python 3.11.5 These apps are now globally av"
+    "date": "2024-03-30",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "python",
+      "pipx",
+      "conda",
+      "macos"
+    ],
+    "content": "Contexto Soy un gran fan y usuario de `pipx`, pero por alguna razón, no funciona tan bien en macOS como en Linux. La cosa es que uso `conda` (instalacion manual) y `pipx` (brew) muchas veces cuando tengo un entorno virual activado `pipx` se hace un lio y usa el entorno virtual incorrecto haciendo que el comando falle. Uno de los cambios que hice fue instalar `pipx` en un entorno conda en lugar de con `brew` y crear un alias para el binario, así ya no hay inconvenientes de entornos y variables. En general, funciona mejor; me permite controlar la versión de Python que usa `pipx` fácilmente (La variable de entorno `PIPXDEFAULTPYTHON` también me causa problemas en MacOS). Usando `brew` instala la última versión de Python, la cual algunos CLIs no soportan (como `duckdb`). Sin embargo, la situación no se limita a esto. Recientemente, me enfrenté al siguiente desafío: ```bash $ pipx install visidata installed package visidata 3.0.2, installed using Python 3.11.5 These apps are now globally available - vd - vd2to3.vdx - visidata These manual pages are now globally available - man1/vd.1 - man1/visidata.1 done! ✨ 🌟 ✨ $ vd zsh: /Users/mgreco/.local/bin/vd: bad interpreter: /Users/mgreco/Library/Application: no such file or directory ``` En este punto ya me he dado por vencido y no quiero seguir creando soluciones provisionales para esto, siendo que debería funcionar de inmediato (supongo que alguna implementación inusual de macOS, impide que funcione correctamente). Solución Se me ocurrio replica lo que hago cuando quiero instalar un dependencia que `pipx` en MacOS falla y que consiste en usar `conda` para gestionar los entornos y `pip` para instalar dependencias. Es replicar la funcionalidad de `pipx install`, pero usando conda. Esto tiene alguna ventaja extra como que te permite controlar la versión de Python que deseas usar para cada entorno. Lo primero que hice fue definir cómo quiero usarlo, que es fácil si ya conoces `pipx`: ```bash cx install black cx install black -p "
   },
   {
     "url": "/posts/podman-compose-up-credentials-error",
     "title": "podman compose up credentials error",
+    "date": "2025-11-09",
+    "category": "containers",
+    "tags": [
+      "podman",
+      "docker"
+    ],
     "content": "If you, like me, have run into this error: ```bash $ podman compose up --build WARN0000 Docker Compose is configured to build using Bake, but buildkit isn't enabled + Running 0/1 ⠋ Service web Building 0.1s error listing credentials - err: exec: \"docker-credential-desktop\": executable file not found in $PATH, out: `` Error: executing /usr/local/bin/docker-compose up --build: exit status 1 ``` The fix is to correct a typo in `/.docker/config.json`: ```diff { - \"credsStore\": \"desktop\", + \"credStore\": \"desktop\", } ```"
   },
   {
     "url": "/posts/process-substitution",
     "title": "Bash Process Substitution",
+    "date": "2026-01-17",
+    "category": "programming",
+    "tags": [
+      "bash"
+    ],
     "content": "I saw this and definitely wanted to share it. diff two variables ```bash VAR1=\"hello\" VAR2=\"helllo\" diff -u >(tr a-z A-Z) output: HELLO WORLD ```"
   },
   {
     "url": "/posts/programador-saludable",
     "title": "Como ser un programador Longevo",
+    "date": "2024-01-20",
+    "category": "programming",
+    "tags": [
+      "hacking",
+      "thoughts"
+    ],
     "content": "La idea de que alguien se quede obsoleto va más allá de aprender las tecnologías que usa la industria. De la misma forma en que para tener una vida saludable hay que tener hábitos saludables para ser un programador saludable (longevidad profesional), hay que tener hábitos que permitan sacar el máximo partido al contenido y las herramientas que tienes disponibles. Esta es la idea que comenta ThePrimeagen aquí: Se puede resumir en los siguientes puntos: 1. Profundiza en los conceptos. 1. Entiende bien tus herramientas. 1. Se capaz de entender problemas y crear soluciones. 1. Se capaz de argumentar opiniones."
   },
   {
     "url": "/posts/python-314",
     "title": "New Python 3.14",
+    "date": "2025-10-20",
+    "category": "programming",
+    "tags": [
+      "python"
+    ],
     "content": "Here's a list of my favorite new features in Python 3.14: 1. https://docs.python.org/3.14/whatsnew/3.14.htmla-new-type-of-interpreter 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-incremental-gc 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-asyncio-introspection 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-deferred-annotations 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-zstandard 1. https://docs.python.org/3/whatsnew/3.13.htmlan-experimental-just-in-time-jit-compiler 1. https://docs.python.org/3/whatsnew/3.13.htmlfree-threaded-cpython Performance: TL;DR; This version is the fastest python version. Python 3.14 Is Here. How Fast Is It?(https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it)"
   },
   {
     "url": "/posts/python-project-scratch",
     "title": "Guía sencilla para iniciar un proyecto Python desde cero",
-    "content": "Mira esta ejemplo de cómo configurar un proyecto Python con lo esencial para comenzar rápidamente, pero con la capacidad de ajustar y escalar conforme las necesidades aumenten. - `pyproject.toml`: archivo de configuración estándar PEP-518pep518 para proyectos Python. - `Makefile`: Se utiliza para automatizar tareas como testing, build, installs, entre otros. - `version` (opcional): Es útil para mantener un registro de las distintas versiones de tu proyecto. Mi estrategia favorita es comenzar con todos los elementos en un solo archivo y luego, a medida que el proyecto crezca, dividirlos en la estructura de carpetas basada en `src`. No me preocuparia por esta reestructuración hasta que sea verdaderamente necesario. Aqui uso `setuptools-scm` para obtener una versión automática de la librería basada en los tags de Git, los cuales deben seguir el estándar PEP-440pep440. Ejemplo: Creando `takt` Esto es lo que use para crear `takt`takt, con el que hasta ahora estoy muy contento: ```bash mkdir"
+    "date": "2024-01-26",
+    "category": "programming",
+    "tags": [
+      "python",
+      "project"
+    ],
+    "content": "Mira esta ejemplo de cómo configurar un proyecto Python con lo esencial para comenzar rápidamente, pero con la capacidad de ajustar y escalar conforme las necesidades aumenten. - `pyproject.toml`: archivo de configuración estándar PEP-518pep518 para proyectos Python. - `Makefile`: Se utiliza para automatizar tareas como testing, build, installs, entre otros. - `version` (opcional): Es útil para mantener un registro de las distintas versiones de tu proyecto. Mi estrategia favorita es comenzar con todos los elementos en un solo archivo y luego, a medida que el proyecto crezca, dividirlos en la estructura de carpetas basada en `src`. No me preocuparia por esta reestructuración hasta que sea verdaderamente necesario. Aqui uso `setuptools-scm` para obtener una versión automática de la librería basada en los tags de Git, los cuales deben seguir el estándar PEP-440pep440. Ejemplo: Creando `takt` Esto es lo que use para crear `takt`takt, con el que hasta ahora estoy muy contento: ```bash mkdir -p takt/tests touch takt/README.md touch takt/Makefile touch takt/pyproject.toml touch takt/takt.py ``` Esto es lo minimo que se necesita para empezar un proyecto python. `pyproject.toml` Este archivo es una especificación moderna de empaque para proyectos de Python, según PEP-518pep518. Sirve para declarar las dependencias que necesitas para construir tu proyecto desde la fuente. Esta es una alternativa al uso de `setup.py` y `requirements.txt` en proyectos Python. `pyproject.toml` es como un archivo de configuración centralizado para muchas de las herramientas que podrías usar en tu proyecto Python. Su uso es cada vez más común a medida que dichas herramientas migran su soporte al archivo `pyproject.toml`. ```toml build-system requires = \"setuptools>=60\", \"setuptools-scm>=8.0\" build-backend = \"setuptools.buildmeta\" project name = \"takt\" dynamic = \"version\" authors = {name=\"Max Greco\", email=\"asdf0x2199@gmail.com\"} readme = \"README.md\" requires-python = \">=3.6\" dependencies = \"rich\","
   },
   {
     "url": "/posts/python-versions-venv-manager",
     "title": "Python versions and venv manager",
-    "content": "Today, let's chat about something that has both delighted and frustrated me in equal measure: managing Python environments. You know how it is—sometimes you feel on top of the world, and other times, you want to launch your computer out the window. The PIPREQUIREVIRTUALENV Trick! So, here's the deal: setting `PIPREQUIREVIRTUALENV` prevents you from accidently polluting your global Python environment when installing packages. It's like having an overprotective parent guard your environment from bad influences. Nice, right? Read this nice SO question(https://stackoverflow.com/questions/17354852/how-to-make-sure-you-call-pip-only-in-virtualenv?rq=3). But, here's the hiccup: It’s not compatible with `conda`. And guess what I was using? Yep, `conda`. Ugh! So I jumped on the `venv` bandwagon, setting up Python 3.10, 3.11, 3.12 environments. And It works like a charm. Check out more about it here: PIP Issue 7902(https://github.com/pypa/pip/issues/7902). Hello, Rye! Then, I stumbled upon `rye`"
+    "date": "2024-07-18",
+    "category": "programming",
+    "tags": [
+      "english",
+      "python",
+      "project"
+    ],
+    "content": "Today, let's chat about something that has both delighted and frustrated me in equal measure: managing Python environments. You know how it is—sometimes you feel on top of the world, and other times, you want to launch your computer out the window. The PIPREQUIREVIRTUALENV Trick! So, here's the deal: setting `PIPREQUIREVIRTUALENV` prevents you from accidently polluting your global Python environment when installing packages. It's like having an overprotective parent guard your environment from bad influences. Nice, right? Read this nice SO question(https://stackoverflow.com/questions/17354852/how-to-make-sure-you-call-pip-only-in-virtualenv?rq=3). But, here's the hiccup: It’s not compatible with `conda`. And guess what I was using? Yep, `conda`. Ugh! So I jumped on the `venv` bandwagon, setting up Python 3.10, 3.11, 3.12 environments. And It works like a charm. Check out more about it here: PIP Issue 7902(https://github.com/pypa/pip/issues/7902). Hello, Rye! Then, I stumbled upon `rye`. It sounded perfect, a shiny new toy to replace `conda` as my virtualenv and Python version manager. I was like, “where have you been all my life?” However… and there’s always a “however”… 😅 I hit a few bumps, like frustrating `ModuleNotFoundError: No module named 'setuptools'`. I mean, come on! I’m still giving it a shot and testing it out. It’s got potential, but you know, new tools always come with a learning curve and their own set of quirks. For those curious, here's the rye bug tracker keeping my sanity in check: Rye Issues(https://github.com/astral-sh/rye/issues?q=ModuleNotFoundError%3A+No+module+named+%27setuptools%27). Wrapping Up! Here's my experience with Python environments. Do you have similar stories? Any tools you love or hate? Share your thoughts below. Let's share our tech adventures and have a laugh or two. Happy coding!"
   },
   {
     "url": "/posts/reading-emotions-an-indian-perspective",
     "title": "[NOTES] Emotions: An Indian Perspective",
-    "content": "source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/ > This view of emotions lays emphasis on desires as the root cause of emotional > upheavals. > They are seen as modification of desire and attachment. > The desires are seen as arising from the contact and attachment of the ego or > ahamkara with the external world and are caused by a sense of imperfection, > incompleteness or non-fulfillment. ```mermaid graph TD ADesires --> BEmotions B --> CDesires Attachments C --> DAhamkara with External World D --> EImperfection Incompleteness Non-fulfillment E --> A ``` > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “self” (avidya). ```mermaid graph LR AEmotions --> BCognitive A --> CPhysiological ``` ```mermaid graph LR AFeeling/Affect --> BExperience ``` ```mermaid graph LR AExternal World BEgo B -.-> CEmotions/Experience C --> DAction ``` > All emotions spring from desires and desire is caused by a sense of > imperfection, incompleteness or non"
+    "date": "2025-11-01",
+    "category": "psychology",
+    "tags": [
+      "emotions",
+      "eastern-psychology",
+      "yoga"
+    ],
+    "content": "source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/ > This view of emotions lays emphasis on desires as the root cause of emotional > upheavals. > They are seen as modification of desire and attachment. > The desires are seen as arising from the contact and attachment of the ego or > ahamkara with the external world and are caused by a sense of imperfection, > incompleteness or non-fulfillment. ```mermaid graph TD ADesires --> BEmotions B --> CDesires Attachments C --> DAhamkara with External World D --> EImperfection Incompleteness Non-fulfillment E --> A ``` > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “self” (avidya). ```mermaid graph LR AEmotions --> BCognitive A --> CPhysiological ``` ```mermaid graph LR AFeeling/Affect --> BExperience ``` ```mermaid graph LR AExternal World BEgo B -.-> CEmotions/Experience C --> DAction ``` > All emotions spring from desires and desire is caused by a sense of > imperfection, incompleteness or non-fulfillment felt within oneself. The > stronger the desire, the stronger would be the emotional experience. > Emotions are basically seen as virtue but allowing them to interfere with > one's judgment and awareness is considered a weakness. > Emotions are seen as modification of desire or attachment. It is suggested > that if one wants to overcome the overwhelming emotional experiences like > anger and sorrow, one must locate the desire underlying it and then eliminate > it. > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “Self” (avidya). Ignorance leads to misperception. Individuals > develop a false sense of ego by identifying themselves with things/objects > around them. The desires, with this ego attachment, become stronger. This ego > attachment, attraction, and repulsion are termed affliction (Klesas). The > misperception lies in the acceptance of external objects as the true self. > This produces a false view of reality. In this sense, "
   },
   {
     "url": "/posts/setup-dns-gh-pages-google-domains",
     "title": "How to setup DNS using GH pages and google domains",
+    "date": "2023-03-25",
+    "category": "programming",
+    "tags": [
+      "dns",
+      "issues",
+      "github",
+      "hacking",
+      "network"
+    ],
     "content": "I had struggled setting up the DNS configuracion of my custom domain in GH pages. Luckly, I found a video which make the process very straght forward. Ingredients ----------- - Github repo - Github pages - Google domains Summary ------- 1. Create a GH page 1. Create a Domain 1. Add a CNAME file (no sure if this is mandatory) 1. Add DNS rules (A, CNAME and AAAA) 1. Test it with dig `$ dig asdf0x2199.dev +noall +answer -t A`"
   },
   {
     "url": "/posts/start-stop-jobs-in-background",
     "title": "start/stop jobs in background",
+    "date": "2025-10-30",
+    "category": "programming",
+    "tags": [
+      "bash"
+    ],
     "content": "```bash PIDFILE=\"/tmp/my-process.pid\" LOGFILE=\"/tmp/my-process.log\" function start() { if -f \"$PIDFILE\" ; then local pid=$(cat \"$PIDFILE\" 2>/dev/null) if -n \"$pid\" && kill -0 \"$pid\" 2>/dev/null; then echo \"Already running (PID: $pid)\" return 0 fi rm -f \"$PIDFILE\" fi nohup bash -c 'while true; do your-command; sleep 2; done' > \"$LOGFILE\" 2>&1 & echo $! > \"$PIDFILE\" noti --title MyTunnel --message \"Started (PID: $(cat \"$PIDFILE\"))\" } function stop() { if ! -f \"$PIDFILE\" ; then echo \"Not running\" return 1 fi local pid=$(cat \"$PIDFILE\" 2>/dev/null) if kill -0 \"$pid\" 2>/dev/null; then kill \"$pid\" rm -f \"$PIDFILE\" echo \"Stopped (PID: $pid)\" noti --title MyTunnel --message \"Stopped (PID: $(cat \"$PIDFILE\"))\" else rm -f \"$PIDFILE\" echo \"Process not found\" fi } start ```"
   },
   {
     "url": "/posts/tests-selection-bias",
     "title": "El sesgo de seleccion y tests unitarios",
-    "content": "Los tests unitarios que escribimos y gestionamos nosotros tienen, por definición, un sesgo de selección. La implementación resuelve un problema específico y se prueba para los casos que se espera encontrar, lo que lleva a escribir tests que reflejan la implementación. No obstante, el margen de maniobra es limitado. La implementación evidentemente soluciona al menos el 80% de la casuística, y los tests son redundantes ya que buscan asegurar la corrección de lo implementado. Sin embargo, la razón principal para testear no es solo la corrección inmediata o la duda sobre la implementación, sino asegurar la funcionalidad a futuro, previniendo que cambios ulteriores alteren su comportamiento. Cuanto más experimentados son los desarrolladores, más redundantes son los tests, dado que la experiencia conlleva un código más robusto y eficiente. Se priorizan las piezas pequeñas, buscando minimalismo y sencillez, cualidades que los programadores experimentados reconocen por su trayectoria. El probl"
+    "date": "2025-05-01",
+    "category": "programming",
+    "tags": [
+      "test"
+    ],
+    "content": "Los tests unitarios que escribimos y gestionamos nosotros tienen, por definición, un sesgo de selección. La implementación resuelve un problema específico y se prueba para los casos que se espera encontrar, lo que lleva a escribir tests que reflejan la implementación. No obstante, el margen de maniobra es limitado. La implementación evidentemente soluciona al menos el 80% de la casuística, y los tests son redundantes ya que buscan asegurar la corrección de lo implementado. Sin embargo, la razón principal para testear no es solo la corrección inmediata o la duda sobre la implementación, sino asegurar la funcionalidad a futuro, previniendo que cambios ulteriores alteren su comportamiento. Cuanto más experimentados son los desarrolladores, más redundantes son los tests, dado que la experiencia conlleva un código más robusto y eficiente. Se priorizan las piezas pequeñas, buscando minimalismo y sencillez, cualidades que los programadores experimentados reconocen por su trayectoria. El problema surge con el tiempo, cuando se acumulan cambios (relacionados con el interés compuesto, donde a más cambios, los riesgos crecen exponencialmente), y aparecen casos límite no anticipados. Es aquí donde se manifiesta el sesgo de selección. Los tests son una herramienta útil para recordar errores pasados y evitar su recurrencia, aunque no son una solución universal."
   },
   {
     "url": "/posts/train-on-servers",
     "title": "Kubernetes resources to train on servers",
+    "date": "2026-01-17",
+    "category": "programming",
+    "tags": [
+      "servers",
+      "learning",
+      "kubernetes"
+    ],
     "content": "Train on servers - https://labs.iximiuz.com/ - https://sadservers.com/ - https://kodekloud.com/learning-path/kubernetes/ Challenges - https://cloudresumechallenge.dev/docs/extensions/kubernetes-challenge/ Courses - https://kubernetes.io/training/ Videos - https://www.youtube.com/watch?v=BE77h7dmoQU - https://github.com/sidpalas/devops-directive-kubernetes-course - https://www.youtube.com/watch?v=2T86xAtR6Fo Sources - https://www.reddit.com/r/kubernetes/comments/1h49nmt/bestcoursetolearnkubernetesin2024/"
   },
   {
     "url": "/posts/use-rich",
     "title": "Have you heard of rich?",
-    "content": "Have you heard of rich? Honestly, I don't remember how long I've been following Will'sWill work, but I find it very interesting and educational. Among Will's work are `rich`rich and `textual`textual, both projects designed to extend the use of the terminal. One thing you can see in Will's work is the modular design. On one hand, there's `rich`, which basically gives you the necessary tools to format console output to your liking, making the console output clearer and more attractive. Then we have `textual`textual, a framework for making TUIs (terminal user interfaces) that depends on `rich`rich. The value of `textual` is not only being able to create TUIs in Python easily and elegantly, but also that the TUI you develop could run in a web browser! The same application can run in the terminal or in the browser. This is music to the ears of many backends. Textual apps running in a browser! I intentionally obscured the address bar, as I&39;m not quite ready to share the dev URL. pic.twitt"
+    "date": "2023-08-20",
+    "category": "programming",
+    "tags": [
+      "hacking",
+      "rich",
+      "hack",
+      "python",
+      "console",
+      "terminal"
+    ],
+    "content": "Have you heard of rich? Honestly, I don't remember how long I've been following Will'sWill work, but I find it very interesting and educational. Among Will's work are `rich`rich and `textual`textual, both projects designed to extend the use of the terminal. One thing you can see in Will's work is the modular design. On one hand, there's `rich`, which basically gives you the necessary tools to format console output to your liking, making the console output clearer and more attractive. Then we have `textual`textual, a framework for making TUIs (terminal user interfaces) that depends on `rich`rich. The value of `textual` is not only being able to create TUIs in Python easily and elegantly, but also that the TUI you develop could run in a web browser! The same application can run in the terminal or in the browser. This is music to the ears of many backends. Textual apps running in a browser! I intentionally obscured the address bar, as I&39;m not quite ready to share the dev URL. pic.twitter.com/7ztn7r8G0o &mdash; Will McGugan (@willmcgugan) August 12, 2023 The most immediate use I can think of is that I could write many internal applications easily that I can share with the team, regardless of the hacking skills of my team members. The Textual web service signup dialog is looking good. Now to implement the backend. pic.twitter.com/2z2wqRQi54 &mdash; Will McGugan (@willmcgugan) August 15, 2023 What do you use rich for? `rich` has a series of ready-to-use functions that you can take advantage of without having to build anything additionally. Better print > https://rich.readthedocs.io/en/stable/pretty.html `rich` has made me love using `print` again. I no longer use the built-in `print`, but use `rich`'s: ```python from rich import print ``` For example, `print(myjson)` with rich, the output is much more elegant and readable than using `pprint`. Other examples are `print(mylist)`, `print(mydict)`, etc. Better Logging > https://rich.readthedocs.io/en/stable/logging.html ``"
   },
   {
     "url": "/posts/uv-issue-llvmlite",
     "title": "I found and issue on uv: llvmlite",
-    "content": "I've found an issue with `uv` while creating a simple `venv`. Nothing fancy with my dependencies. I've condensed everything in this issue: - https://github.com/astral-sh/uv/issues/9413 But here is the minimal reproducible example of it: ```bash rm -rf test uv init test cd test uv version uv venv && uv pip install numpy statsforecast uv add numpy statsforecast ``` For the time being, I'm using the latest release. ```bash $ uv version uv 0.5.4 (c62c83c37 2024-11-20) ``` This is what the error looks like: ```bash $ uv init test Initialized project `test` at `/Users/mgreco/github.com/asdf0x2199/blog/test` $ cd test $ uv version uv 0.5.4 (c62c83c37 2024-11-20) $ uv add numpy statsforecast Using CPython 3.12.4 Creating virtual environment at: .venv Resolved 15 packages in 9ms × Failed to download and build `llvmlite==0.36.0` ╰─▶ Build backend failed to determine requirements with `buildwheel()` (exit status: 1) stderr Traceback (most recent call last): File \" \", line 14, in File \"/Users/mgre"
+    "date": "2024-11-25",
+    "category": "programming",
+    "tags": [
+      "english",
+      "uv",
+      "python"
+    ],
+    "content": "I've found an issue with `uv` while creating a simple `venv`. Nothing fancy with my dependencies. I've condensed everything in this issue: - https://github.com/astral-sh/uv/issues/9413 But here is the minimal reproducible example of it: ```bash rm -rf test uv init test cd test uv version uv venv && uv pip install numpy statsforecast uv add numpy statsforecast ``` For the time being, I'm using the latest release. ```bash $ uv version uv 0.5.4 (c62c83c37 2024-11-20) ``` This is what the error looks like: ```bash $ uv init test Initialized project `test` at `/Users/mgreco/github.com/asdf0x2199/blog/test` $ cd test $ uv version uv 0.5.4 (c62c83c37 2024-11-20) $ uv add numpy statsforecast Using CPython 3.12.4 Creating virtual environment at: .venv Resolved 15 packages in 9ms × Failed to download and build `llvmlite==0.36.0` ╰─▶ Build backend failed to determine requirements with `buildwheel()` (exit status: 1) stderr Traceback (most recent call last): File \" \", line 14, in File \"/Users/mgreco/.cache/uv/builds-v0/.tmpgRNnS8/lib/python3.12/site-packages/setuptools/buildmeta.py\", line 334, in getrequiresforbuildwheel return self.getbuildrequires(configsettings, requirements=) ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ File \"/Users/mgreco/.cache/uv/builds-v0/.tmpgRNnS8/lib/python3.12/site-packages/setuptools/buildmeta.py\", line 304, in getbuildrequires self.runsetup() File \"/Users/mgreco/.cache/uv/builds-v0/.tmpgRNnS8/lib/python3.12/site-packages/setuptools/buildmeta.py\", line 522, in runsetup super().runsetup(setupscript=setupscript) File \"/Users/mgreco/.cache/uv/builds-v0/.tmpgRNnS8/lib/python3.12/site-packages/setuptools/buildmeta.py\", line 320, in runsetup exec(code, locals()) File \" \", line 55, in File \" \", line 52, in guardpyver RuntimeError: Cannot install on Python version 3.12.4; only versions >=3.6,<3.10 are supported. help: `llvmlite` (v0.36.0) was included because `test` (v0.1.0) depends on `statsforecast` (v0.7.1) which depends on `numba` (v0.53."
   },
   {
     "url": "/posts/uv-makefile",
     "title": "Makefile based on uv",
-    "content": "Hey there! 👋 This is a revisited version of my previous post about Makefiles, but this time I'm using uv (the shiny new Python package manager that's faster than a caffeinated cheetah! 🐆). I was tired of typing the same commands over and over in my Python projects, so I made this super cool Makefile using uv. Feel free to steal it - I mean, borrow it - for your own projects. It's like having a robot assistant that remembers all those pesky commands for you! 🤖 Makefile uv based ```make @ Utility .PHONY: help help: Display this help @awk 'BEGIN {FS = \":.\"; printf \"\\nUsage:\\n make \\03336m\\0330m\\n\"} /^a-zA-Z-+:.?/ { printf \" \\03336m%-15s\\0330m %s\\n\", $$1, $$2 } /^@/ { printf \"\\n\\0331m%s\\0330m\\n\", substr($$0, 5) } ' $(MAKEFILELIST) .PHONY: uv uv: Install uv if it's not present. @command -v uv >/dev/null 2>&1 || curl -LsSf https://astral.sh/uv/install.sh | sh .PHONY: dev dev: uv Install dev dependencies uv sync --dev .PHONY: lock lock: uv lock dependencies uv lock .PHONY: install install:"
+    "date": "2024-11-25",
+    "category": "programming",
+    "tags": [
+      "english",
+      "uv",
+      "makefile"
+    ],
+    "content": "Hey there! 👋 This is a revisited version of my previous post about Makefiles, but this time I'm using uv (the shiny new Python package manager that's faster than a caffeinated cheetah! 🐆). I was tired of typing the same commands over and over in my Python projects, so I made this super cool Makefile using uv. Feel free to steal it - I mean, borrow it - for your own projects. It's like having a robot assistant that remembers all those pesky commands for you! 🤖 Makefile uv based ```make @ Utility .PHONY: help help: Display this help @awk 'BEGIN {FS = \":.\"; printf \"\\nUsage:\\n make \\03336m\\0330m\\n\"} /^a-zA-Z-+:.?/ { printf \" \\03336m%-15s\\0330m %s\\n\", $$1, $$2 } /^@/ { printf \"\\n\\0331m%s\\0330m\\n\", substr($$0, 5) } ' $(MAKEFILELIST) .PHONY: uv uv: Install uv if it's not present. @command -v uv >/dev/null 2>&1 || curl -LsSf https://astral.sh/uv/install.sh | sh .PHONY: dev dev: uv Install dev dependencies uv sync --dev .PHONY: lock lock: uv lock dependencies uv lock .PHONY: install install: uv Install dependencies uv sync --frozen .PHONY: test test: Run tests uv run pytest .PHONY: lint lint: Run linters uv run ruff check ./src ./tests .PHONY: fix fix: Fix lint errors uv run ruff check ./src ./tests --fix uv run ruff format ./src ./tests .PHONY: cov cov: Run tests with coverage uv run pytest --cov=src --cov-report=term-missing .PHONY: doc doc: Build documentation cd docs && uv run make html .PHONY: build build: Build package uv build ```"
   },
   {
     "url": "/posts/uv-quickstart",
     "title": "Uv: Quickstart",
+    "date": "2024-09-19",
+    "category": "programming",
+    "tags": [
+      "english",
+      "dependencies",
+      "python",
+      "uv"
+    ],
     "content": "How to quickstart with uv ```bash curl -LsSf https://astral.sh/uv/install.sh | sh uv python install 3.10 3.11 3.12 uv python pin 3.11 uv venv uv pip install -r requirements.txt ``` References - https://docs.astral.sh/uv/ - https://mkennedy.codes/posts/python-docker-images-using-uv-s-new-python-features/"
   },
   {
     "url": "/posts/uv-review",
     "title": "Reviewing UV: The Quirkiest Python Package Manager Ever",
-    "content": "Quick facts - Similar to `poetry` API - Python compliant - Uses `.python-version` like `pyenv` - Uses `pyproject.toml` like `pip` - Uses `.venv` as default - `pyproject.toml` governed - `uv venv` equivalent to `python -m venv .venv` - `uv pip ...` equivalent to `pip ...` - Easy and quick installation - `curl -LsSf https://astral.sh/uv/install.sh | sh` - Upgrade with `uv self update` !screenshot comparing poetry and uvmage-1.jpg(https://i.postimg.cc/7Y1SX12p/image-1.jpg) > Note: > Screenshot comparing `poetry` (top) and `uv` (down). You can see the > different implementations of the `pyproject.toml` and the performance (15s vs > 1s). Development Common tasks we will find and use: - Minimal scaffolding - Manage venv/dependencies - Manage Python versions - Build distributions Example ```bash mkdir prj cd prj uv init uv venv uv add pandas scikit-learn scipy duckdb numba numpy uv sync uv python install 3.11 uv python pin 3.11 ``` Resources: - https://docs.astral.sh/uv/getting-started/featur"
+    "date": "2024-11-21",
+    "category": "programming",
+    "tags": [
+      "uv",
+      "python",
+      "english"
+    ],
+    "content": "Quick facts - Similar to `poetry` API - Python compliant - Uses `.python-version` like `pyenv` - Uses `pyproject.toml` like `pip` - Uses `.venv` as default - `pyproject.toml` governed - `uv venv` equivalent to `python -m venv .venv` - `uv pip ...` equivalent to `pip ...` - Easy and quick installation - `curl -LsSf https://astral.sh/uv/install.sh | sh` - Upgrade with `uv self update` !screenshot comparing poetry and uvmage-1.jpg(https://i.postimg.cc/7Y1SX12p/image-1.jpg) > Note: > Screenshot comparing `poetry` (top) and `uv` (down). You can see the > different implementations of the `pyproject.toml` and the performance (15s vs > 1s). Development Common tasks we will find and use: - Minimal scaffolding - Manage venv/dependencies - Manage Python versions - Build distributions Example ```bash mkdir prj cd prj uv init uv venv uv add pandas scikit-learn scipy duckdb numba numpy uv sync uv python install 3.11 uv python pin 3.11 ``` Resources: - https://docs.astral.sh/uv/getting-started/features/ - https://docs.astral.sh/uv/guides/projects/ - https://docs.astral.sh/uv/concepts/python-versions/adjusting-python-version-preferences - https://docs.astral.sh/uv/guides/integration/docker/ They Move Fast and Stick to the Standard They have an amazing philosophy of using built-in Python tools. An example of this, previously, they used the `tool.uv` table inside the `pyproject.toml` like this: ```toml tool.uv dev-dependencies = \"pytest>=8.3.3\", ``` to handle dev dependencies, now (`uv 0.5.4 (c62c83c37 2024-11-20)`) they replaced that in favor of dependency groups, becoming something like this: ```toml dependency-groups dev = \"pytest>=8.3.3\", ``` > !NOTE > `uv` adopted the PEP-735: dependency groups in pyproject.toml in only 15 days. > https://github.com/astral-sh/uv/issues/8090 Do you realize how great this is? Before, you were only able to install dev dependencies using `uv`, but after the change, you can use whatever tool you want, as long as they are Python-compliant, like `pip`."
   },
   {
     "url": "/posts/uv-will-unblock-you",
     "title": "UV is Shaking Up the Production Game",
-    "content": "I'm diving headfirst into using `uv` in my daily grind to be more efficient in my pile of work. So, I'm throwing myself into all sorts of random scenarios. On this journey, I've stumbled upon some bugsuv-bug and nifty features like a super-powered cache. But, hold up! The real point of this post is how an innovation affects to the production process. Intro Surprise, surprise! I'm an economist. In econ 101, we talk about the law of diminishing returns, which, in plain-speak, means you can't boost productivity just by tossing more resources at something. Like, hiring a bunch more people won't help if the room's already crowded and everyone's squished together like sardines. But hey, remote work's a game-changer! It lets us crank up productivity without being limited by physical space. Yet, there are other constraints like our code repositories (our virtual goldmines). Many cool innovations only happened because some earlier innovation paved the way. And without the former, thinking about"
+    "date": "2024-12-03",
+    "category": "programming",
+    "tags": [
+      "english",
+      "uv"
+    ],
+    "content": "I'm diving headfirst into using `uv` in my daily grind to be more efficient in my pile of work. So, I'm throwing myself into all sorts of random scenarios. On this journey, I've stumbled upon some bugsuv-bug and nifty features like a super-powered cache. But, hold up! The real point of this post is how an innovation affects to the production process. Intro Surprise, surprise! I'm an economist. In econ 101, we talk about the law of diminishing returns, which, in plain-speak, means you can't boost productivity just by tossing more resources at something. Like, hiring a bunch more people won't help if the room's already crowded and everyone's squished together like sardines. But hey, remote work's a game-changer! It lets us crank up productivity without being limited by physical space. Yet, there are other constraints like our code repositories (our virtual goldmines). Many cool innovations only happened because some earlier innovation paved the way. And without the former, thinking about the possibilities is like trying to catch smoke with a butterfly net (not always, but very often). That's how I see `uv`. It's totally the future of Python package managing. So far... Until now, starting with Python meant jumping through the same old hoops: setting up a virtual environment (venv), activating it, installing all your dependencies, and then cranking out code. We just accepted this as normal, like a hidden tax. Some of you might have a generic venv with your fave libs all set up, ready to roll. But that's just putting off the inevitable task of defining a proper venv + requirements when you share the code. You do this because tinkering with environments is such a time-suck! Too lazy for this... Let me share a fun example of this: Recently, I wanted to whip up a newsletter for this blog. But none of the existing solutions tickled my fancy, so I thought, \"Hey, why not make a monthly summary post with links?\" It was a grand idea but not quite a newsletter (no auto emails or "
   },
   {
     "url": "/posts/vim-for-ml",
     "title": "Neovim for ML",
-    "content": "Neovim for ML I started my professional career with a role somewhat similar to DS, but as time went on, I gravitated more towards a backend role. Partly because I enjoyed it more and partly because it was an area I hadn't explored as much. After several years of using PyCharm/VSCode, I switched to NeoVim. There was quite the adaptation period, but now I don’t regret making the change at all. Notebooks are undoubtedly handy, though they can be chaotic and nonlinear. Despite their convenience, they present challenges such as difficulty in maintenance, production adaptation, and change tracking. Neovim Plugins - jpalardy/vim-slime(https://github.com/jpalardy/vim-slime) - goerz/jupytext.vim(https://github.com/goerz/jupytext.vim) Python dependencies - IPython(https://ipython.org/) - plotly(https://plotly.com/python/) - pdbpp(https://github.com/pdbpp/pdbpp) Neovim Config Here's my current Neovim configuration for running Python code in chunks, a bit like a notebook, but in my opinion, it is "
+    "date": "2024-03-17",
+    "category": "programming",
+    "tags": [
+      "english",
+      "machine-learning",
+      "neovim",
+      "python"
+    ],
+    "content": "Neovim for ML I started my professional career with a role somewhat similar to DS, but as time went on, I gravitated more towards a backend role. Partly because I enjoyed it more and partly because it was an area I hadn't explored as much. After several years of using PyCharm/VSCode, I switched to NeoVim. There was quite the adaptation period, but now I don’t regret making the change at all. Notebooks are undoubtedly handy, though they can be chaotic and nonlinear. Despite their convenience, they present challenges such as difficulty in maintenance, production adaptation, and change tracking. Neovim Plugins - jpalardy/vim-slime(https://github.com/jpalardy/vim-slime) - goerz/jupytext.vim(https://github.com/goerz/jupytext.vim) Python dependencies - IPython(https://ipython.org/) - plotly(https://plotly.com/python/) - pdbpp(https://github.com/pdbpp/pdbpp) Neovim Config Here's my current Neovim configuration for running Python code in chunks, a bit like a notebook, but in my opinion, it is more versatile. > Note: I built my configuration from scratch (there could be errors I might > have missed). I use LazyVim as a plugin manager. ```lua { 'goerz/jupytext.vim', init=function () -- will use ` %%` to define cells vim.g.jupytextfmt = 'py:percent' end }, { 'jpalardy/vim-slime', init=function () vim.g.slimelastchannel = { nil } -- will use ` %%` to define cells vim.g.slimecelldelimiter = '\\\\s\\\\s%%' vim.g.slimepastefile = os.getenv(\"HOME\") .. \"/.slimepaste\" local function nextcell() vim.fn.search(vim.g.slimecelldelimiter) end local function prevcell() vim.fn.search(vim.g.slimecelldelimiter, \"b\") end vim.keymap.set('n', ' e', vim.cmd.SlimeSend, { noremap = true, desc = 'send line to term' }) vim.keymap.set('n', ' cv', vim.cmd.SlimeConfig, { noremap = true, desc = \"Open slime configuration\" }) vim.keymap.set('x', ' e', ' SlimeRegionSend', { noremap = true, desc = 'send line to tmux' }) vim.keymap.set('n', ' ep', ' SlimeParagraphSend', { noremap = true, desc = \"Send Paragraph wit"
   },
   {
     "url": "/posts/yaml-indentless-arrays",
     "title": "yaml indentless arrays",
+    "date": "2025-12-17",
+    "category": "programming",
+    "tags": [
+      "yamlfmt",
+      "go",
+      "neovim",
+      "conform"
+    ],
     "content": "How to use `indentlessarrays` on yaml files to avoid this: ```diff - env: - - name: RESERVEPRICECACHEENABLED - value: 'false' - - name: SPPGOHTTPPORT - value: '8080' + - name: RESERVEPRICECACHEENABLED + value: 'false' + - name: SPPGOHTTPPORT + value: '8080' ``` Install `yamlfmt` ```bash go install github.com/google/yamlfmt/cmd/yamlfmt@latest ``` File: `/.config/yamlfmt/.yamlfmt.yaml` ```yaml formatter: type: basic indentlessarrays: true ``` `conform.nvim`: ```lua { 'stevearc/conform.nvim', event = { 'BufWritePre' }, cmd = { 'ConformInfo' }, keys = { { ' f', function() require('conform').format { async = true, lspformat = 'fallback' } end, mode = '', desc = 'Format buffer', }, }, opts = { formattersbyft = { -- others yaml = { 'yamlfmt' }, }, defaultformatopts = { lspformat = 'fallback', }, notifyonerror = true, formatonsave = { lspformat = 'fallback', timeoutms = 500, }, }, } ```"
   },
   {
     "url": "/posts/you-dont-unitest",
     "title": "No escribes unit tests?",
-    "content": "{/ Title: No escribes unittest? /} {/ Date: 2023-03-07 /} {/ Modified: 2023-03-07 /} {/ Category: Programming /} {/ Tags: hack, programming, tests /} {/ Slug: no-escribes-unitests /} {/ Authors: Maximiliano Greco /} No escribes unittests? ====================== YT video de ThePrimeagen vs Theo discutiendo sobre pros and cons de escribir unittest 👇 - LINK VIDEO(https://www.youtube.com/watch?v=pvBHyip4peo) Highlights ---------- - (Theo) Get the wrong code as fast as possible. - (Theo) Communication is better than tests for moving faster. - (Theo) There will always be edge cases not covered. - (Theo) I hate unit test as demostration of how the code works or how to be used. - (Theo) People writes too many unit tests. - (Prime) Unittest are good for remembering the history of the project. - (Prime) Codebase without unittest doesn't scale. Mi Opinión ---------- - Theo tiene puntos validos pero creo que está overfitteado a su producto/empresa/cultura. - Me parece que ese tipo de programación"
+    "date": "2023-03-24",
+    "category": "programming",
+    "tags": [
+      "testing"
+    ],
+    "content": "{/ Title: No escribes unittest? /} {/ Date: 2023-03-07 /} {/ Modified: 2023-03-07 /} {/ Category: Programming /} {/ Tags: hack, programming, tests /} {/ Slug: no-escribes-unitests /} {/ Authors: Maximiliano Greco /} No escribes unittests? ====================== YT video de ThePrimeagen vs Theo discutiendo sobre pros and cons de escribir unittest 👇 - LINK VIDEO(https://www.youtube.com/watch?v=pvBHyip4peo) Highlights ---------- - (Theo) Get the wrong code as fast as possible. - (Theo) Communication is better than tests for moving faster. - (Theo) There will always be edge cases not covered. - (Theo) I hate unit test as demostration of how the code works or how to be used. - (Theo) People writes too many unit tests. - (Prime) Unittest are good for remembering the history of the project. - (Prime) Codebase without unittest doesn't scale. Mi Opinión ---------- - Theo tiene puntos validos pero creo que está overfitteado a su producto/empresa/cultura. - Me parece que ese tipo de programación genera mas dependencias debido a que todo el mundo tiene que tener todo en la cabeza; de alguna forma unit test es una forma de dejar un recordatorio de un error pasado que no quieres que se repita. - No todo el mundo está cómodo con este tipo de desarrollo. - Quizá estoy pecando de ingenuo pero tengo la intuición de que el estilo Theo es mas susceptible a reptir los errores del pasado."
   },
   {
     "url": "/posts/zsh-on-macos-profiling",
     "title": "Optimizing zsh on macos",
-    "content": "Every time I open a terminal on macOS, zsh takes like a second to show the prompt. It's super annoying! I profiled using ```zsh if -n \"${ZSHDEBUGRC+1}\" ; then zmodload zsh/zprof fi your zsh config if -n \"${ZSHDEBUGRC+1}\" ; then zprof fi ``` To make it easier I've added this alias: ```zsh alias zperf='time ZSHDEBUGRC=1 zsh -i -c exit' ``` Profiling ```zsh $ zperf num calls time self name ----------------------------------------------------------------------------------- 1) 1 36.73 36.73 26.10% 36.73 36.73 26.10% autoenvinit 2) 1 22.16 22.16 15.75% 22.16 22.16 15.75% misehook 3) 21 28.72 1.37 20.41% 18.10 0.86 12.86% omzsource 4) 2 15.97 7.99 11.35% 15.97 7.99 11.35% compaudit 5) 1 13.75 13.75 9.77% 13.75 13.75 9.77% (anon) /Users/mgreco/.oh-my-zsh/tools/checkforupgrade.sh:157 6) 1 24.00 24.00 17.05% 10.24 10.24 7.28% handleupdate 7) 1 8.93 8.93 6.34% 8.93 8.93 6.34% zrecompile 8) 1 8.81 8.81 6.26% 8.81 8.81 6.26% test-ls-args 9) 1 19.41 19.41 13.79% 3.44 3.44 2.44% compinit 10) 1 0.61 0"
+    "date": "2024-12-22",
+    "category": "programming",
+    "tags": [
+      "english",
+      "zsh"
+    ],
+    "content": "Every time I open a terminal on macOS, zsh takes like a second to show the prompt. It's super annoying! I profiled using ```zsh if -n \"${ZSHDEBUGRC+1}\" ; then zmodload zsh/zprof fi your zsh config if -n \"${ZSHDEBUGRC+1}\" ; then zprof fi ``` To make it easier I've added this alias: ```zsh alias zperf='time ZSHDEBUGRC=1 zsh -i -c exit' ``` Profiling ```zsh $ zperf num calls time self name ----------------------------------------------------------------------------------- 1) 1 36.73 36.73 26.10% 36.73 36.73 26.10% autoenvinit 2) 1 22.16 22.16 15.75% 22.16 22.16 15.75% misehook 3) 21 28.72 1.37 20.41% 18.10 0.86 12.86% omzsource 4) 2 15.97 7.99 11.35% 15.97 7.99 11.35% compaudit 5) 1 13.75 13.75 9.77% 13.75 13.75 9.77% (anon) /Users/mgreco/.oh-my-zsh/tools/checkforupgrade.sh:157 6) 1 24.00 24.00 17.05% 10.24 10.24 7.28% handleupdate 7) 1 8.93 8.93 6.34% 8.93 8.93 6.34% zrecompile 8) 1 8.81 8.81 6.26% 8.81 8.81 6.26% test-ls-args 9) 1 19.41 19.41 13.79% 3.44 3.44 2.44% compinit 10) 1 0.61 0.61 0.43% 0.61 0.61 0.43% regexp-replace 11) 1 0.57 0.57 0.41% 0.57 0.57 0.41% colors 12) 6 0.44 0.07 0.31% 0.44 0.07 0.31% add-zsh-hook 13) 4 0.23 0.06 0.16% 0.23 0.06 0.16% compdef 14) 2 0.22 0.11 0.16% 0.22 0.11 0.16% is-at-least 15) 8 0.14 0.02 0.10% 0.14 0.02 0.10% addToPathFront 16) 8 0.13 0.02 0.10% 0.13 0.02 0.10% addToPath 17) 1 36.85 36.85 26.18% 0.12 0.12 0.08% autoenvcd 18) 4 0.07 0.02 0.05% 0.07 0.02 0.05% addToMyGitProjects 19) 3 0.03 0.01 0.02% 0.03 0.01 0.02% istheme 20) 2 0.01 0.01 0.01% 0.01 0.01 0.01% envdefault 21) 1 36.86 36.86 26.20% 0.01 0.01 0.01% enableautoenv 22) 1 0.01 0.01 0.01% 0.01 0.01 0.01% bashcompinit 23) 1 36.85 36.85 26.19% 0.01 0.01 0.00% cd ----------------------------------------------------------------------------------- 21) 1 36.86 36.86 26.20% 0.01 0.01 0.01% enableautoenv 1/1 36.85 36.85 26.19% 0.01 0.01 cd 23 ----------------------------------------------------------------------------------- 1/1 36.85 36.85 26.19% 0.01 0.01 enableautoenv 21 2"
   },
   {
     "url": "/posts/zsh-profiling-nvm",
     "title": "Optimización de zsh y nvm en macOS",
-    "content": "Haciendo profiling de zsh El primer paso es hacer profiling del archivo `.zshrc`. Para hacer el profiling, incluye lo siguiente en el archivo de configuración: ```zsh zmodload zsh/zprof Tu configuración existente va aquí zprof ``` Para ejecutar el profiling, utiliza el siguiente comando: ```shell time zsh -i -c exit ``` Mejorar los tiempos de carga de `nvm` Para mejorar los tiempos de carga de `nvm`, realiza los siguientes cambios en tu archivo `.zshrc`: ```diff --- a/macos/home/.zshrc +++ b/macos/home/.zshrc @@ -1,17 +1,23 @@ !/usr/bin/env zsh + +zstyle ':omz:plugins:nvm' lazy yes export ... + +plugins=( + nvm +) source $ZSH/oh-my-zsh.sh source $DOTFILESUBUNTU/home/.prompt.zsh @@ -57,9 +63,10 @@ command -v pyenv > /dev/null 2>&1 && eval \"$(pyenv init -)\" 2> /dev/null -f /.fzf.zsh && source /.fzf.zsh source /usr/share/doc/fzf/examples/key-bindings.zsh -export NVMDIR=\"$HOME/.nvm\" - -s \"$NVMDIR/nvm.sh\" && \\. \"$NVMDIR/nvm.sh\" Esto carga nvm - -s \"$NVMDIR/bashcompletion\" && \\. \"$NVMDIR/bas"
+    "date": "2024-02-02",
+    "category": "programming",
+    "tags": [
+      "macos",
+      "nvm",
+      "zsh",
+      "profiling",
+      "spanish"
+    ],
+    "content": "Haciendo profiling de zsh El primer paso es hacer profiling del archivo `.zshrc`. Para hacer el profiling, incluye lo siguiente en el archivo de configuración: ```zsh zmodload zsh/zprof Tu configuración existente va aquí zprof ``` Para ejecutar el profiling, utiliza el siguiente comando: ```shell time zsh -i -c exit ``` Mejorar los tiempos de carga de `nvm` Para mejorar los tiempos de carga de `nvm`, realiza los siguientes cambios en tu archivo `.zshrc`: ```diff --- a/macos/home/.zshrc +++ b/macos/home/.zshrc @@ -1,17 +1,23 @@ !/usr/bin/env zsh + +zstyle ':omz:plugins:nvm' lazy yes export ... + +plugins=( + nvm +) source $ZSH/oh-my-zsh.sh source $DOTFILESUBUNTU/home/.prompt.zsh @@ -57,9 +63,10 @@ command -v pyenv > /dev/null 2>&1 && eval \"$(pyenv init -)\" 2> /dev/null -f /.fzf.zsh && source /.fzf.zsh source /usr/share/doc/fzf/examples/key-bindings.zsh -export NVMDIR=\"$HOME/.nvm\" - -s \"$NVMDIR/nvm.sh\" && \\. \"$NVMDIR/nvm.sh\" Esto carga nvm - -s \"$NVMDIR/bashcompletion\" && \\. \"$NVMDIR/bashcompletion\" Esto carga nvm bashcompletion + ``` Fuente: https://dev.to/thraizz/fix-slow-zsh-startup-due-to-nvm-408k(https://dev.to/thraizz/fix-slow-zsh-startup-due-to-nvm-408k)"
   },
   {
     "url": "/quotes/example",
     "title": "Jorge Luis Borges",
+    "date": "2025-10-26",
+    "category": "",
+    "tags": [],
     "content": "I have always imagined that Paradise will be a kind of library."
   },
   {
     "url": "/quotes/gautama-buda-dhammapada-los-sabios-se-dirigen-a-si-mismos",
     "title": "Gautama Buda",
+    "date": "2025-11-01",
+    "category": "",
+    "tags": [],
     "content": "Los que cavan acequias conducen el agua; los arqueros orientas con precisión sus flechas; los carpinteros domeñan la madera; y los sabios se dirigen a sí mismos."
   },
   {
     "url": "/til/grep",
     "title": "`grep -b` shows byte offset of matches",
+    "date": "2025-10-20",
+    "category": "",
+    "tags": [],
     "content": "`grep -b` shows byte offset of matches ```sh grep ```"
   },
   {
     "url": "/til/mfussenegger",
     "title": "Veeery nice Neovim-related blog by Michael Fussenegger:",
+    "date": "2025-11-07",
+    "category": "",
+    "tags": [],
     "content": "Veeery nice Neovim-related blog by Michael Fussenegger: - https://zignar.net/ - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔 - https://zignar.net/2022/11/06/structuring-neovim-lua-plugins/ ❤️"
   },
   {
     "url": "/til/neovim-opt-exrc",
     "title": "Load local nvim config from local files:",
+    "date": "2025-11-07",
+    "category": "",
+    "tags": [],
     "content": "Load local nvim config from local files: `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
   },
   {
     "url": "/til/sutta-central",
     "title": "sutta central",
+    "date": "2025-11-03",
+    "category": "",
+    "tags": [],
     "content": "sutta central Collection of Buddhist scriptures: - https://suttacentral.net/?lang=en I liked this sutta: - https://suttacentral.net/dn16/en/sujato?lang=en&layout=plain&reference=none&notes=sidenotes&highlight=false&script=latin1.6.2"
   }
 ]

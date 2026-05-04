@@ -11,7 +11,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
         type="search"
         id="search-page-input"
         name="q"
-        placeholder="type and press enter..."
+        placeholder="search posts, til, quotes..."
         aria-label="Search"
         autofocus
       />
@@ -60,46 +60,64 @@ import BaseLayout from "../layouts/BaseLayout.astro"
   }
 
   .result-item {
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--spacing-md);
+    padding-bottom: 0;
   }
 
-  .result-item:last-child {
-    border-bottom: none;
+  .result-item h2 {
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: 1.15rem;
+    font-weight: 500;
   }
 
-  .result-item a {
+  .result-item h2 a {
     text-decoration: none;
   }
 
-  .result-item a:hover .result-title {
+  .result-item h2 a:hover {
     text-decoration: underline;
   }
 
-  .result-title {
-    color: var(--color-accent);
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: var(--spacing-xs);
+  .result-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
   }
 
-  .result-url {
-    color: var(--color-text-muted);
-    font-size: 0.8rem;
-    margin-bottom: var(--spacing-xs);
+  .result-meta .section {
+    text-transform: lowercase;
+    border: 1px solid var(--color-border);
+    padding: 0 0.4rem;
     font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .result-meta .tag {
+    color: var(--color-text-muted);
+    white-space: nowrap;
   }
 
   .result-excerpt {
     color: var(--color-text);
     font-size: 0.9rem;
     line-height: 1.6;
+    opacity: 0.9;
   }
 
-  .result-excerpt :global(mark) {
+  .result-excerpt :global(mark),
+  .result-item h2 :global(mark) {
     background-color: var(--color-accent);
     color: var(--color-bg);
     padding: 0 2px;
+  }
+
+  .empty,
+  .hint {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
   }
 </style>
 
@@ -107,7 +125,14 @@ import BaseLayout from "../layouts/BaseLayout.astro"
   interface PageData {
     url: string
     title: string
+    date?: string
+    category?: string
+    tags?: string[]
     content: string
+  }
+
+  interface ScoredResult extends PageData {
+    score: number
   }
 
   const params = new URLSearchParams(window.location.search)
@@ -127,29 +152,104 @@ import BaseLayout from "../layouts/BaseLayout.astro"
       .replace(/'/g, "&#39;")
   }
 
-  function highlight(text: string, q: string): string {
-    const safe = escapeHtml(text)
-    if (!q) return safe
-    const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig")
-    return safe.replace(re, m => `<mark>${m}</mark>`)
+  function escapeRegex(s: string): string {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
   }
 
-  function getExcerpt(content: string, q: string): string {
+  function tokenize(q: string): string[] {
+    return q
+      .toLowerCase()
+      .split(/\s+/)
+      .map(t => t.trim())
+      .filter(t => t.length > 0)
+  }
+
+  function highlight(text: string, tokens: string[]): string {
+    const safe = escapeHtml(text)
+    if (tokens.length === 0) return safe
+    const re = new RegExp(`(${tokens.map(escapeRegex).join("|")})`, "ig")
+    return safe.replace(re, "<mark>$1</mark>")
+  }
+
+  function getExcerpt(content: string, tokens: string[]): string {
+    if (!tokens.length) return content.slice(0, 220) + "..."
     const lc = content.toLowerCase()
-    const lq = q.toLowerCase()
-    const i = lc.indexOf(lq)
-    if (i === -1) return content.slice(0, 200) + "..."
-    const start = Math.max(0, i - 100)
-    const end = Math.min(content.length, i + q.length + 100)
+    let best = -1
+    for (const t of tokens) {
+      const i = lc.indexOf(t)
+      if (i !== -1 && (best === -1 || i < best)) best = i
+    }
+    if (best === -1) return content.slice(0, 220) + "..."
+    const start = Math.max(0, best - 100)
+    const end = Math.min(content.length, best + 200)
     let ex = content.slice(start, end)
     if (start > 0) ex = "..." + ex
     if (end < content.length) ex = ex + "..."
     return ex
   }
 
+  function sectionFromUrl(url: string): string {
+    if (url.startsWith("/posts/")) return "post"
+    if (url.startsWith("/til/")) return "til"
+    if (url.startsWith("/quotes/")) return "quote"
+    if (url === "/posts") return "page"
+    return "page"
+  }
+
+  function score(page: PageData, tokens: string[]): number {
+    if (!tokens.length) return 0
+    const t = page.title.toLowerCase()
+    const c = page.content.toLowerCase()
+    const tagsStr = (page.tags || []).join(" ").toLowerCase()
+    const cat = (page.category || "").toLowerCase()
+    let s = 0
+    for (const tok of tokens) {
+      let any = false
+      if (t.includes(tok)) {
+        s += 10
+        any = true
+      }
+      if (tagsStr.includes(tok)) {
+        s += 5
+        any = true
+      }
+      if (cat.includes(tok)) {
+        s += 4
+        any = true
+      }
+      if (c.includes(tok)) {
+        // count occurrences (cap)
+        const m = c.match(new RegExp(escapeRegex(tok), "g"))
+        s += Math.min(m ? m.length : 0, 8)
+        any = true
+      }
+      if (!any) return 0 // require every token to match somewhere
+    }
+    // boost exact phrase
+    const phrase = tokens.join(" ")
+    if (t.includes(phrase)) s += 15
+    if (c.includes(phrase)) s += 5
+    return s
+  }
+
+  function formatDate(d: string): string {
+    if (!d) return ""
+    const dt = new Date(d)
+    if (isNaN(dt.getTime())) return d
+    return dt.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
+
   async function run() {
-    if (!query || query.length < 2) {
-      summary.textContent = query ? "type at least 2 characters." : "enter a query above."
+    if (!query) {
+      summary.innerHTML = `<span class="hint">enter a query to search across posts, til, and quotes.</span>`
+      return
+    }
+    if (query.length < 2) {
+      summary.innerHTML = `<span class="hint">type at least 2 characters.</span>`
       return
     }
 
@@ -162,25 +262,43 @@ import BaseLayout from "../layouts/BaseLayout.astro"
       return
     }
 
-    const lq = query.toLowerCase()
-    const results = pages.filter(
-      p => p.title.toLowerCase().includes(lq) || p.content.toLowerCase().includes(lq)
-    )
+    const tokens = tokenize(query)
+    const scored: ScoredResult[] = pages
+      .map(p => ({ ...p, score: score(p, tokens) }))
+      .filter(p => p.score > 0)
+      .sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score
+        const da = a.date ? new Date(a.date).getTime() : 0
+        const db = b.date ? new Date(b.date).getTime() : 0
+        return db - da
+      })
 
-    summary.textContent = `${results.length} result${results.length === 1 ? "" : "s"} for "${query}"`
+    if (scored.length === 0) {
+      summary.innerHTML = `no results for <strong>${escapeHtml(query)}</strong>.`
+      resultsEl.innerHTML = `<p class="empty">try fewer or different words.</p>`
+      return
+    }
 
-    resultsEl.innerHTML = results
-      .map(
-        p => `
-        <div class="result-item">
-          <a href="${p.url}">
-            <div class="result-title">${highlight(p.title, query)}</div>
-            <div class="result-url">${p.url}</div>
-            <div class="result-excerpt">${highlight(getExcerpt(p.content, query), query)}</div>
-          </a>
-        </div>
-      `
-      )
+    summary.innerHTML = `${scored.length} result${scored.length === 1 ? "" : "s"} for <strong>${escapeHtml(query)}</strong>`
+
+    resultsEl.innerHTML = scored
+      .map(p => {
+        const section = sectionFromUrl(p.url)
+        const date = p.date ? formatDate(p.date) : ""
+        const tags = (p.tags || []).slice(0, 6)
+        return `
+          <div class="result-item">
+            <h2><a href="${p.url}">${highlight(p.title, tokens)}</a></h2>
+            <div class="result-meta">
+              <span class="section">${section}</span>
+              ${date ? `<time>${date}</time>` : ""}
+              ${p.category ? `<span class="category">${escapeHtml(p.category)}</span>` : ""}
+              ${tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join("")}
+            </div>
+            <div class="result-excerpt">${highlight(getExcerpt(p.content, tokens), tokens)}</div>
+          </div>
+        `
+      })
       .join("")
   }
 
