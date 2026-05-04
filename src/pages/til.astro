@@ -112,25 +112,28 @@ const sortedTils = tils.sort((a, b) => {
     bottom: 0;
     width: 1px;
     background-color: var(--color-border);
+    opacity: 0.5;
   }
 
   .tl-pipe::after {
     content: "";
     position: absolute;
     top: calc(var(--spacing-md) + 0.1rem);
-    width: 13px;
-    height: 13px;
+    width: 11px;
+    height: 11px;
     border: 1px solid var(--color-border);
     background-color: var(--color-bg);
     border-radius: 50%;
     transition:
       border-color 0.2s,
-      background-color 0.2s;
+      background-color 0.2s,
+      box-shadow 0.2s;
   }
 
   .tl-pipe:hover::after {
     border-color: var(--color-accent);
     background-color: var(--color-accent);
+    box-shadow: 0 0 6px 1px var(--color-accent);
   }
 
   .tl-entry:first-child .tl-pipe::before {
