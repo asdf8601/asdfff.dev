@@ -35,14 +35,54 @@
     "content": "til Today I learned. Short notes. No fluff."
   },
   {
+    "url": "/posts/breathing-exercises",
+    "title": "enh(health): Respira!",
+    "content": "Según un estudio publicado en Cell Reports Medicine(https://www.washingtonpost.com/wellness/2023/03/16/breathing-exercises-mood-anxiety-brain/), practicar ejercicios de respiración durante solo cinco minutos al día durante un mes puede mejorar el estado de ánimo y reducir la ansiedad. El estudio encontró que el suspiro cíclico, en particular, fue efectivo para mejorar el estado de ánimo en comparación con la meditación de atención plena. Los ejercicios de respiración también pueden afectar la fisiología al inducir un estado físico más relajado y desplazar el equilibrio hacia el sistema parasimpático de descanso y digestión. Los efectos positivos de la respiración tardaron en aparecer, pero cuanto más días pasaron los participantes haciendo sus ejercicios de respiración, mejor se sintieron cada día sucesivo. - Suspiro cíclico: inhale lentamente por la nariz para expandir los pulmones, inhale nuevamente para llenar los pulmones al máximo. Luego, exhale lentamente y completamente el alien"
+  },
+  {
     "url": "/posts/card-demo",
     "title": "Card Component Demo",
     "content": "This post demonstrates the Card component that can be used to create fancy callouts. Default Card This is a default card with the standard green accent color. Perfect for general notes and highlights. Info Card This is an info card with blue accents. Use it for informational callouts and tips. Warning Card This is a warning card with orange accents. Use it to highlight warnings or important notices. Success Card This is a success card with green accents. Use it to highlight successful operations or positive outcomes. Error Card This is an error card with red accents. Use it to highlight errors or critical issues. Card Without Title You can also create cards without titles. Just omit the title prop and the content will fill the entire card. Complex Content Cards support markdown formatting including: - Lists - Bold text - Italic text - `Code blocks` You can put any markdown content inside the card. Code Example Import the Card component in your markdown frontmatter: ```astro ``` Then us"
   },
   {
+    "url": "/posts/clean-code-es-lento",
+    "title": "bug(programming) Clean code es horriblemente lento",
+    "content": "{/ Title: Clean code es lento /} {/ Date: 2023-03-07 /} {/ Modified: 2023-03-07 /} {/ Category: Hacking /} {/ Tags: hacking, programming, theory /} {/ Slug: clean-code-lento /} {/ Authors: Maximiliano Greco /} Me topé con este video en YT cuya tesis principal es que aplicar las reglas de clean code hace que el código sea lento. Aquí el link 👇 - LINK ARTICULO + VIDEO(https://www.computerenhance.com/p/clean-code-horrible-performance) Summary - Clean code hace que el codigo sea mas lento. - Las reglas de polimorfismo y no acoplamiento hace que perdamos 20 años de avances de hardware. Mi opinion - Me parece obvio que lo haga mas lento. Se añaden capas de abastracción y esto no es gratis. - Ojo, también podría ser mas rápido si el codigo estuviera desorganizado y hecho por muchas personas a la vez buscando incluir su propia funcionalidad sin coherencia. (dependende de la deuda tecnica). - Existe un trade off entre mantenibilidad/readability vs performance y encontrar el equilibrio es lo qu"
+  },
+  {
+    "url": "/posts/dbee-nvim",
+    "title": "enh(vim,plugin): I wrote my first vim plugin",
+    "content": "{/ Title: My first vim plugin: dbee.nvim /} {/ Date: 2021-08-22 /} {/ Modified: 2021-08-22 /} {/ Category: Python /} {/ Tags: devolopment, vim, database /} {/ Slug: first-plugin-dbee /} {/ Authors: Maximiliano Greco /} My first vim plugin! Have you ever had the necessity to check a query while you are writing a python wrapper? If so, this post is for you. Many times I have had the necessity of checking a query while I'm writing , debugging or testing a function. That's why I wrote my first vim (well, actually a nvim) plugin called `dbee.nvim`(https://github.com/mmngreco/dbee.nvim). My use case I have a virtual environment with `SQLAlchemy` and others Python dependencies, and then I want to check a query from my project. So, I have to open `DBeaver`, or another SQL client, copy-paste the query there and see the result. This process can be very annoying. Why do I have to open an external program when I already have all that I need in my virtual environment? The idea is to define an `engi"
+  },
+  {
+    "url": "/posts/graphic-tablets",
+    "title": "Graphic Tablets",
+    "content": "Using xsetwacom Here you will find anything you need to know about Graphics tablet: - https://wiki.archlinux.org/title/Graphicstablet What I'm using is: ```bash apt install xsetwacom xsetwacom -h ``` Common usages ```bash $ xsetwacom set MapToOutput $ the smart version $ xsetwacom set $(xsetwacom list | grep \"stylus\" | awk '{print $8}') MapToOutput $(xrandr | grep connected | grep -v dis | awk '{print $1}' | fzf --height 10% --reverse) ``` Use always the stylus' PID with: ```bash $(xsetwacom list | grep \"stylus\" | awk '{print $8}') ``` Choose a connected display with this code: > Note: using fzf as selector. ```bash $(xrandr | grep connected | grep -v dis | awk '{print $1}' | fzf --height 10% --reverse) ``` Change the default buttons behaviour > Notes > - stylus indexes start from 2 (the first one is when the pen touching the pad) > - pad indexes stars from 1 ```bash $ xsetwacom set 28 Button 2 \"key +ControlL z -ControlL\" $ the smart version $ xsetwacom set $(xsetwacom list | grep \"sty"
+  },
+  {
     "url": "/posts/grid-demo",
     "title": "Grid Component Demo",
     "content": "Two Column Grid (Default) This is the first item in a two-column grid layout. This is the second item in the grid. This is the third item. The grid wraps to a new row. This is the fourth item, completing the second row. Three Column Grid First column content Second column content Third column content Single Column Grid This card takes up the full width of the container. Grid components are responsive and stack on mobile. Custom Span Grid (2/3 + 1/3) This card spans 2 columns in a 3-column grid, taking up 2/3 of the width. This card spans 1 column, taking 1/3 of the width. Another Custom Layout (1/3 + 2/3) Narrow sidebar content (1/3) Main content area taking up 2/3 of the space. You can put longer content here."
+  },
+  {
+    "url": "/posts/hotelling",
+    "title": "enh(economics): La ley de hotelling",
+    "content": "{/ jupyter: /} {/ jupytext: /} {/ textrepresentation: /} {/ extension: .md /} {/ formatname: markdown /} {/ formatversion: '1.3' /} {/ jupytextversion: 1.11.4 /} {/ kernelspec: /} {/ displayname: Python 3 /} {/ language: python /} {/ name: python3 /} La ley de Hotelling ```python from IPython.display import IFrame ``` ```python IFrame(\"https://en.m.wikipedia.org/wiki/Hotelling%27slaw\", width=600, height=300) ``` ```python IFrame(\"https://en.m.wikipedia.org/wiki/Locationmodel\", width=600, height=300) ``` Hotelling con 4 jugadores ```python %matplotlib inline ``` ```python def calcprofits(df, space): \"\"\"Calcula el beneficio\"\"\" try: lastcol = df.columns-1 last game df = dflastcol.copy() change dataframe to serie except: df = df.copy() IF EACH FACTORY ARE ALONE if len(df.rank().unique()) == 4: Each player on different space df = df.sortvalues() Values ordered, so index get useful profits = df.copy() make profits variable as a copy, modify after profits.iloc0 = (df.iloc0 + df.iloc1) / 2 pro"
+  },
+  {
+    "url": "/posts/huberman-salt",
+    "title": "Huberman Salt",
+    "content": "The Salt System How Salt Affects Our Health and Performance - Salt is often associated with blood pressure, but it also regulates our appetite for salt and sugar cravings. - The so-called salt system regulates many aspects of our health and performance, including athletic and cognitive performance, aging, and dementia. - More salt might help some people, while less salt is better for others, depending on various parameters. - Guidelines, in concert with a physician, can help arrive at a salt intake that optimizes mental and physical health and performance. - The gut can distinguish between sweet things that contain calories and those that do, and the downstream consequences of this sensing are not yet clear. - Artificial sweeteners are controversial, and while they can help avoid excessive caloric intake, they can also disrupt the gut microbiome and evoke an insulin response under certain conditions. - Understanding how sweeteners are consumed at the level of the gut and how that chang"
+  },
+  {
+    "url": "/posts/hugo",
+    "title": "Using Hugo for my website",
+    "content": "Resources used to build this blog: - https://github.com/reuixiy/hugo-theme-meme/ - https://digitaldrummerj.me/hugo-add-additional-pages/ - https://github.com/luizdepra/hugo-coder/blob/main/layouts/shortcodes/notice.html"
+  },
+  {
+    "url": "/posts/i3-graphics-monitor-issues",
+    "title": "bug(i3): display issues",
+    "content": "Context I've had a weird issues in my laptop (carbon x1) which suddenly started to hanging processes and the laptop's monitor got laggy (e.g not showing in real time what I typed). I'm using i3 in a Pop!OS. Solution I've ended up in system76 article where they mention issues with external monitor and I've found the following command which solved my problems: ```bash $ gsettings set com.system76.hidpi enable false ``` > source: https://support.system76.com/articles/hidpi-multi-monitor/(https://support.system76.com/articles/hidpi-multi-monitor/)"
   },
   {
     "url": "/posts/k-debug",
@@ -53,6 +93,11 @@
     "url": "/posts/math-demo",
     "title": "Mathematical Formulas and Matrices",
     "content": "Inline Math The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}$ and Euler's identity is $e^{i\\pi} + 1 = 0$. Display Math The Pythagorean theorem: $$ a^2 + b^2 = c^2 $$ Summation and Integration Sum of first $n$ natural numbers: $$ \\sum{i=1}^{n} i = \\frac{n(n+1)}{2} $$ Fundamental theorem of calculus: $$ \\int{a}^{b} f(x) \\, dx = F(b) - F(a) $$ Matrices Identity matrix: $$ I = \\begin{pmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\end{pmatrix} $$ Matrix multiplication: $$ \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\begin{pmatrix} x \\\\ y \\end{pmatrix} = \\begin{pmatrix} ax + by \\\\ cx + dy \\end{pmatrix} $$ Determinant $$ \\det(A) = \\begin{vmatrix} a & b & c \\\\ d & e & f \\\\ g & h & i \\end{vmatrix} = a\\begin{vmatrix} e & f \\\\ h & i \\end{vmatrix} - b\\begin{vmatrix} d & f \\\\ g & i \\end{vmatrix} + c\\begin{vmatrix} d & e \\\\ g & h \\end{vmatrix} $$ Systems of Linear Equations $$ \\begin{cases} 2x + 3y = 7 \\\\ x - y = 1 \\end{cases} $$ Greek Letters and Symbols Common symbols: $\\alpha, \\be"
+  },
+  {
+    "url": "/posts/maximizing-productivity",
+    "title": "Maximizing productivity, physical and mental health",
+    "content": "{/ Title: Maximizing productivity, physical and mental health /} {/ Date: 2023-03-11 /} {/ Modified: 2023-03-11 /} {/ Category: Life /} {/ Tags: life, productivity, health /} {/ Slug: maximizingproductiviyphysicalandmentalhealth /} {/ Authors: Maximiliano Greco /} Maximizing Productivity, Physical & Mental Heathl I'm a big fan of Huberman and I'm starting to write down what I'm learning from his videos (science based). Linkt to the video(https://www.youtube.com/watch?v=aXvDEmo6uS4) 1. Morning light exposure - Description: Getting exposure to bright light in the morning, preferably within the first hour of waking up. - Usefulness: Helps regulate circadian rhythms, cortisol secretion, and mood. - Example: Walking outside, sitting near a window that receives natural light, using a light box. 2. Cool and dark bedroom for sleep - Description: Keeping the bedroom cool and dark to aid in falling asleep and staying asleep. - Usefulness: Throughout the night, there are phases of sleep where you"
   },
   {
     "url": "/posts/mermaid-demo",
@@ -80,6 +125,11 @@
     "content": "source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/ > This view of emotions lays emphasis on desires as the root cause of emotional > upheavals. > They are seen as modification of desire and attachment. > The desires are seen as arising from the contact and attachment of the ego or > ahamkara with the external world and are caused by a sense of imperfection, > incompleteness or non-fulfillment. ```mermaid graph TD ADesires --> BEmotions B --> CDesires Attachments C --> DAhamkara with External World D --> EImperfection Incompleteness Non-fulfillment E --> A ``` > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “self” (avidya). ```mermaid graph LR AEmotions --> BCognitive A --> CPhysiological ``` ```mermaid graph LR AFeeling/Affect --> BExperience ``` ```mermaid graph LR AExternal World BEgo B -.-> CEmotions/Experience C --> DAction ``` > All emotions spring from desires and desire is caused by a sense of > imperfection, incompleteness or non"
   },
   {
+    "url": "/posts/setup-dns-gh-pages-google-domains",
+    "title": "enh(dns): how to setup DNS using GH pages and google domains",
+    "content": "I had struggled setting up the DNS configuracion of my custom domain in GH pages. Luckly, I found a video which make the process very straght forward. Ingredients ----------- - Github repo - Github pages - Google domains Here's the step by step video: Summary ------- 1. Create a GH page 1. Create a Domain 1. Add a CNAME file (no sure if this is mandatory) 1. Add DNS rules (A, CNAME and AAAA) 1. Test it with dig `$ dig mmngreco.dev +noall +answer -t A`"
+  },
+  {
     "url": "/posts/start-stop-jobs-in-background",
     "title": "start/stop jobs in background",
     "content": "```bash PIDFILE=\"/tmp/my-process.pid\" LOGFILE=\"/tmp/my-process.log\" function start() { if -f \"$PIDFILE\" ; then local pid=$(cat \"$PIDFILE\" 2>/dev/null) if -n \"$pid\" && kill -0 \"$pid\" 2>/dev/null; then echo \"Already running (PID: $pid)\" return 0 fi rm -f \"$PIDFILE\" fi nohup bash -c 'while true; do your-command; sleep 2; done' > \"$LOGFILE\" 2>&1 & echo $! > \"$PIDFILE\" noti --title MyTunnel --message \"Started (PID: $(cat \"$PIDFILE\"))\" } function stop() { if ! -f \"$PIDFILE\" ; then echo \"Not running\" return 1 fi local pid=$(cat \"$PIDFILE\" 2>/dev/null) if kill -0 \"$pid\" 2>/dev/null; then kill \"$pid\" rm -f \"$PIDFILE\" echo \"Stopped (PID: $pid)\" noti --title MyTunnel --message \"Stopped (PID: $(cat \"$PIDFILE\"))\" else rm -f \"$PIDFILE\" echo \"Process not found\" fi } start ```"
@@ -93,6 +143,11 @@
     "url": "/posts/yaml-indentless-arrays",
     "title": "yaml indentless arrays",
     "content": "How to use `indentlessarrays` on yaml files to avoid this: ```diff - env: - - name: RESERVEPRICECACHEENABLED - value: 'false' - - name: SPPGOHTTPPORT - value: '8080' + - name: RESERVEPRICECACHEENABLED + value: 'false' + - name: SPPGOHTTPPORT + value: '8080' ``` Install `yamlfmt` ```bash go install github.com/google/yamlfmt/cmd/yamlfmt@latest ``` File: `/.config/yamlfmt/.yamlfmt.yaml` ```yaml formatter: type: basic indentlessarrays: true ``` `conform.nvim`: ```lua { 'stevearc/conform.nvim', event = { 'BufWritePre' }, cmd = { 'ConformInfo' }, keys = { { ' f', function() require('conform').format { async = true, lspformat = 'fallback' } end, mode = '', desc = 'Format buffer', }, }, opts = { formattersbyft = { -- others yaml = { 'yamlfmt' }, }, defaultformatopts = { lspformat = 'fallback', }, notifyonerror = true, formatonsave = { lspformat = 'fallback', timeoutms = 500, }, }, } ```"
+  },
+  {
+    "url": "/posts/you-dont-unitest",
+    "title": "qst(unittest): No escribes unit tests?",
+    "content": "{/ Title: No escribes unittest? /} {/ Date: 2023-03-07 /} {/ Modified: 2023-03-07 /} {/ Category: Programming /} {/ Tags: hack, programming, tests /} {/ Slug: no-escribes-unitests /} {/ Authors: Maximiliano Greco /} No escribes unittests? ====================== YT video de ThePrimeagen vs Theo discutiendo sobre pros and cons de escribir unittest 👇 - LINK VIDEO(https://www.youtube.com/watch?v=pvBHyip4peo) Highlights ---------- - (Theo) Get the wrong code as fast as possible. - (Theo) Communication is better than tests for moving faster. - (Theo) There will always be edge cases not covered. - (Theo) I hate unit test as demostration of how the code works or how to be used. - (Theo) People writes too many unit tests. - (Prime) Unittest are good for remembering the history of the project. - (Prime) Codebase without unittest doesn't scale. Mi Opinión ---------- - Theo tiene puntos validos pero creo que está overfitteado a su producto/empresa/cultura. - Me parece que ese tipo de programación"
   },
   {
     "url": "/quotes/example",
