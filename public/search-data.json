@@ -30,6 +30,11 @@
     "content": "quotes Words worth keeping. A curated collection of literary wisdom."
   },
   {
+    "url": "/search",
+    "title": "search",
+    "content": "search"
+  },
+  {
     "url": "/til",
     "title": "til",
     "content": "til Today I learned. Short notes. No fluff."

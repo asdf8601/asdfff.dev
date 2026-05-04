@@ -1,7 +1,6 @@
-<div class="search-container">
-  <input type="search" id="search-input" placeholder="ctrl-k" aria-label="Search" />
-  <div id="search-results" class="search-results" hidden></div>
-</div>
+<form class="search-container" action="/search" method="get" role="search">
+  <input type="search" id="search-input" name="q" placeholder="ctrl-k" aria-label="Search" />
+</form>
 
 <style>
   .search-container {
@@ -34,167 +33,14 @@
   #search-input::placeholder {
     color: var(--color-text-muted);
   }
-
-  .search-results {
-    position: absolute;
-    top: calc(100% + var(--spacing-xs));
-    left: 0;
-    min-width: 500px;
-    background-color: var(--color-bg);
-    border: var(--border-width) solid var(--color-accent);
-    max-height: 500px;
-    overflow-y: auto;
-    z-index: var(--z-index-dropdown);
-  }
-
-  @media (max-width: 768px) {
-    .search-results {
-      min-width: 100%;
-      max-width: calc(100vw - var(--spacing-md));
-      left: calc(var(--spacing-sm) * -1);
-    }
-  }
-
-  .search-results[hidden] {
-    display: none;
-  }
-
-  .search-result-item {
-    padding: var(--spacing-md);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .search-result-item:last-child {
-    border-bottom: none;
-  }
-
-  .search-result-item:hover {
-    background-color: var(--color-til-hover);
-  }
-
-  .search-result-item a {
-    text-decoration: none;
-    display: block;
-  }
-
-  .search-result-title {
-    color: var(--color-accent);
-    margin-bottom: var(--spacing-xs);
-    font-size: 1rem;
-    font-weight: 600;
-  }
-
-  .search-result-excerpt {
-    font-size: 0.9rem;
-    color: var(--color-text);
-    line-height: 1.5;
-  }
-
-  .search-no-results {
-    padding: var(--spacing-sm);
-    color: var(--color-text-muted);
-    text-align: center;
-  }
 </style>
 
 <script>
-  const searchInput = document.getElementById("search-input") as HTMLInputElement
-  const searchResults = document.getElementById("search-results") as HTMLDivElement
-
-  interface PageData {
-    url: string
-    title: string
-    content: string
-  }
-
-  let pagesData: PageData[] = []
-
-  async function loadPagesData() {
-    try {
-      const response = await fetch("/search-data.json")
-      pagesData = await response.json()
-    } catch (error) {
-      console.error("Failed to load search data:", error)
-    }
-  }
-
-  function search(query: string): PageData[] {
-    if (!query || query.length < 2) return []
-
-    const lowerQuery = query.toLowerCase()
-    return pagesData
-      .filter(
-        page =>
-          page.title.toLowerCase().includes(lowerQuery) ||
-          page.content.toLowerCase().includes(lowerQuery)
-      )
-      .slice(0, 5)
-  }
-
-  function getExcerpt(content: string, query: string): string {
-    const lowerContent = content.toLowerCase()
-    const lowerQuery = query.toLowerCase()
-    const index = lowerContent.indexOf(lowerQuery)
-
-    if (index === -1) return content.slice(0, 150) + "..."
-
-    const start = Math.max(0, index - 80)
-    const end = Math.min(content.length, index + query.length + 80)
-
-    let excerpt = content.slice(start, end)
-    if (start > 0) excerpt = "..." + excerpt
-    if (end < content.length) excerpt = excerpt + "..."
-
-    return excerpt
-  }
-
-  function displayResults(results: PageData[], query: string) {
-    if (results.length === 0) {
-      searchResults.innerHTML = '<div class="search-no-results">no results found</div>'
-      searchResults.hidden = false
-      return
-    }
-
-    searchResults.innerHTML = results
-      .map(
-        page => `
-        <div class="search-result-item">
-          <a href="${page.url}">
-            <div class="search-result-title">${page.title}</div>
-            <div class="search-result-excerpt">${getExcerpt(page.content, query)}</div>
-          </a>
-        </div>
-      `
-      )
-      .join("")
-
-    searchResults.hidden = false
-  }
-
-  searchInput?.addEventListener("input", e => {
-    const query = (e.target as HTMLInputElement).value
-
-    if (!query || query.length < 2) {
-      searchResults.hidden = true
-      return
-    }
-
-    const results = search(query)
-    displayResults(results, query)
-  })
+  const searchInput = document.getElementById("search-input") as HTMLInputElement | null
 
   searchInput?.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       searchInput.blur()
-      searchResults.hidden = true
     }
   })
-
-  document.addEventListener("click", e => {
-    if (!searchInput?.contains(e.target as Node) && !searchResults?.contains(e.target as Node)) {
-      searchResults.hidden = true
-    }
-  })
-
-  loadPagesData()
 </script>
