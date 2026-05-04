@@ -1,0 +1,32 @@
+---
+title: "El sesgo de seleccion y tests unitarios"
+date: 2025-05-01
+tag: [test]
+category: programming
+---
+
+Los tests unitarios que escribimos y gestionamos nosotros tienen, por
+definición, un sesgo de selección. La implementación resuelve un problema
+específico y se prueba para los casos que se espera encontrar, lo que lleva a
+escribir tests que reflejan la implementación.
+
+No obstante, el margen de maniobra es limitado. La implementación evidentemente
+soluciona al menos el 80% de la casuística, y los tests son redundantes ya que
+buscan asegurar la corrección de lo implementado.
+
+Sin embargo, la razón principal para testear no es solo la corrección inmediata
+o la duda sobre la implementación, sino asegurar la funcionalidad a futuro,
+previniendo que cambios ulteriores alteren su comportamiento.
+
+Cuanto más experimentados son los desarrolladores, más redundantes son los
+tests, dado que la experiencia conlleva un código más robusto y eficiente. Se
+priorizan las piezas pequeñas, buscando minimalismo y sencillez, cualidades que
+los programadores experimentados reconocen por su trayectoria.
+
+El problema surge con el tiempo, cuando se acumulan cambios (relacionados con
+el interés compuesto, donde a más cambios, los riesgos crecen
+exponencialmente), y aparecen casos límite no anticipados.
+
+Es aquí donde se manifiesta el sesgo de selección. Los tests son una
+herramienta útil para recordar errores pasados y evitar su recurrencia, aunque
+no son una solución universal.

@@ -1,0 +1,31 @@
+---
+title: "Creating Custom Keybindings in i3 for ChatGPT CLI"
+date: 2023-08-24
+tag: [hacking, i3, keybindings, chatgpt, cli, linux]
+category: programming
+---
+
+## Context
+
+I've recently discovered an impressive CLI tool called [ChatGPT][chatgpt],
+which has replaced about 80% of my browser interactions. Now, I want to share
+how to create a custom keybinding in i3 to open ChatGPT with a simple `Win+g`
+command.
+
+## Setting Up the Keybinding
+
+To create this keybinding, you need to add the following lines to your
+`i3/config` file:
+
+```
+bindsym $mod+g exec st -T "st:ChatGPT" -f "Caskaydia Cove Nerd Font:pixelsize=14" -e chatgpt
+for_window [title="st:ChatGPT"] floating enable, resize set 600 px 600 px, move position center
+```
+
+After adding these lines, restart i3. Now, you can press `Win+g` to open your
+ChatGPT CLI, ready for use.
+
+For more information about ChatGPT, visit the [ChatGPT GitHub page][chatgpt].
+
+{/* ===================================================================== */}
+[chatgpt]: https://github.com/j178/chatgpt
