@@ -302,6 +302,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
       function addCopyButtons() {
         document.querySelectorAll<HTMLElement>("pre").forEach(pre => {
+          if (pre.closest(".expressive-code")) return
           if (pre.querySelector(".copy-button")) return
           const btn = document.createElement("button")
           btn.type = "button"

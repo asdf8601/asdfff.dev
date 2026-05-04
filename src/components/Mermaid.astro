@@ -2,12 +2,23 @@
 interface Props {
   width?: string
   height?: string
+  code?: string
 }
 
-const { width, height } = Astro.props
+const { width, height, code } = Astro.props
 
-let content = await Astro.slots.render("default")
-content = content.replace(/<[^>]*>/g, "").trim()
+let content = code
+if (!content) {
+  const slotContent = await Astro.slots.render("default")
+  content = slotContent
+    .replace(/<[^>]*>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+}
+content = (content ?? "").trim()
 
 const style = [width ? `width: ${width}` : "", height ? `height: ${height}` : ""]
   .filter(Boolean)
@@ -15,7 +26,7 @@ const style = [width ? `width: ${width}` : "", height ? `height: ${height}` : ""
 ---
 
 <div class="mermaid-container" style={style || undefined}>
-  <pre class="mermaid" set:html={content} />
+  <pre class="mermaid">{content}</pre>
 </div>
 
 <style>

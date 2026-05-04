@@ -11,18 +11,16 @@ import Mermaid from "../../components/Mermaid.astro"
 
 ## Flowchart
 
-<Mermaid>
-```
-flowchart TD
-    A[Start] --> B{Is it working?}
-    B -->|Yes| C[Great!]
-    B -->|No| D[Debug]
+export const flowchart = `flowchart TD
+    A[Start] --> B[Is it working]
+    B --> C[Great]
+    B --> D[Debug]
     D --> E[Fix bugs]
     E --> B
     C --> F[Deploy]
-    F --> G[End]
-```
-</Mermaid>
+    F --> G[End]`
+
+<Mermaid code={flowchart} />
 
 ## Sequence Diagram
 
@@ -45,8 +43,7 @@ sequenceDiagram
 
 ## Class Diagram
 
-<Mermaid>
-  {`
+export const classDiagram = `
 classDiagram
     class Animal {
         +String name
@@ -63,8 +60,9 @@ classDiagram
     }
     Animal <|-- Dog
     Animal <|-- Cat
-`}
-</Mermaid>
+`
+
+<Mermaid code={classDiagram} />
 
 ## State Diagram
 
