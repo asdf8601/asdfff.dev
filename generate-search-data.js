@@ -51,16 +51,36 @@ async function processFile(filePath, fileName) {
   }
 }
 
+function parseListLike(s) {
+  if (!s) return []
+  return s
+    .replace(/^\[|\]$/g, "")
+    .split(",")
+    .map(x =>
+      x
+        .trim()
+        .replace(/^['"]|['"]$/g, "")
+        .trim()
+    )
+    .filter(Boolean)
+}
+
 async function processMarkdownFile(filePath, relativePath) {
   const content = await readFile(filePath, "utf-8")
   const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/)
 
   let title = "Untitled"
+  let date = ""
+  let category = ""
+  let tags = []
 
   if (frontmatterMatch) {
     const frontmatter = frontmatterMatch[1]
     const titleMatch = frontmatter.match(/title:\s*["']?([^"'\n]+)["']?/)
     const authorMatch = frontmatter.match(/author:\s*["']?([^"'\n]+)["']?/)
+    const dateMatch = frontmatter.match(/date:\s*["']?([^"'\n]+)["']?/)
+    const categoryMatch = frontmatter.match(/category:\s*["']?([^"'\n]+)["']?/)
+    const tagMatch = frontmatter.match(/^tag(?:s)?:\s*(.+)$/m)
 
     if (titleMatch) {
       title = titleMatch[1].trim()
@@ -76,6 +96,9 @@ async function processMarkdownFile(filePath, relativePath) {
           .slice(0, 60)
       }
     }
+    if (dateMatch) date = dateMatch[1].trim().slice(0, 10)
+    if (categoryMatch) category = categoryMatch[1].trim()
+    if (tagMatch) tags = parseListLike(tagMatch[1])
   }
 
   const text = content
@@ -89,7 +112,10 @@ async function processMarkdownFile(filePath, relativePath) {
   return {
     url: relativePath.replace(/\.mdx?$/, "").replace("src/pages", ""),
     title,
-    content: text.slice(0, 1000),
+    date,
+    category,
+    tags,
+    content: text.slice(0, 2000),
   }
 }
 
