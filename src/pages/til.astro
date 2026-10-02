@@ -40,9 +40,11 @@ const sortedTils = Object.entries(tilModules)
               <div class="tl-entry" id={`til-${tilNumber}`}>
                 <div class="tl-date">
                   {isFirstOfDay ? <time>{formattedDate}</time> : <span class="tl-same-day" />}
-                  <span class="tl-number">#{tilNumber}</span>
+                  <a href={`#til-${tilNumber}`} class="tl-number" aria-label={`Link to TIL #${tilNumber}`}>
+                    #{tilNumber}
+                  </a>
                 </div>
-                <a href={`#til-${tilNumber}`} class="tl-pipe" aria-label="Link to this TIL" />
+                <span class="tl-pipe" />
                 <div class="tl-content">
                   <til.Content />
                 </div>
@@ -102,8 +104,6 @@ const sortedTils = Object.entries(tilModules)
     position: relative;
     display: flex;
     justify-content: center;
-    cursor: pointer;
-    text-decoration: none;
   }
 
   .tl-pipe::before {
@@ -129,12 +129,6 @@ const sortedTils = Object.entries(tilModules)
       border-color 0.2s,
       background-color 0.2s,
       box-shadow 0.2s;
-  }
-
-  .tl-pipe:hover::after {
-    border-color: var(--color-accent);
-    background-color: var(--color-accent);
-    box-shadow: 0 0 6px 1px var(--color-accent);
   }
 
   .tl-entry:first-child .tl-pipe::before {
@@ -224,26 +218,6 @@ const sortedTils = Object.entries(tilModules)
   const { openPageSearch, isPageSearchActive } = (window as any).pageSearchHandlers
 
   document.addEventListener("DOMContentLoaded", () => {
-    const tilLinks = document.querySelectorAll(".tl-pipe")
-
-    tilLinks.forEach(link => {
-      link.addEventListener("click", async e => {
-        e.preventDefault()
-        const href = link.getAttribute("href")
-
-        if (href) {
-          const fullUrl = window.location.origin + window.location.pathname + href
-
-          try {
-            await navigator.clipboard.writeText(fullUrl)
-            ;(window as any).showNotification?.("link copied")
-          } catch (err) {
-            console.error("Failed to copy link:", err)
-          }
-        }
-      })
-    })
-
     const tilEntries = Array.from(document.querySelectorAll(".tl-entry"))
     let selectedIndex = -1
 
@@ -287,7 +261,7 @@ const sortedTils = Object.entries(tilModules)
         }
       } else if (e.key === "Enter" && selectedIndex >= 0) {
         e.preventDefault()
-        const link = tilEntries[selectedIndex].querySelector(".tl-pipe") as HTMLAnchorElement
+        const link = tilEntries[selectedIndex].querySelector(".tl-number") as HTMLAnchorElement
         if (link) {
           link.click()
         }
