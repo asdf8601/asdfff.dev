@@ -39,7 +39,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
         if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
           return localStorage.getItem("theme")
         }
-        return "dark"
+        return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
       })()
       document.documentElement.setAttribute("data-theme", theme)
     </script>
