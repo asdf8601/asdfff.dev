@@ -35,7 +35,11 @@ const sortedTils = Object.entries(tilModules)
               <section class="tl-entry" id={`til-${tilNumber}`}>
                 <div class="tl-meta">
                   <time datetime={dateKey}>{formattedDate}</time>
-                  <a href={`#til-${tilNumber}`} class="tl-number" aria-label={`Link to TIL #${tilNumber}`}>
+                  <a
+                    href={`#til-${tilNumber}`}
+                    class="tl-number"
+                    aria-label={`Link to TIL #${tilNumber}`}
+                  >
                     #{tilNumber}
                   </a>
                 </div>

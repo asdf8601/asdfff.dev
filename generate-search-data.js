@@ -142,12 +142,13 @@ async function processDirectory(dir, baseDir = PAGES_DIR) {
 async function processTils() {
   const files = (await readdir(TIL_DIR)).filter(f => f.endsWith(".md"))
   const tils = await Promise.all(files.map(f => processMarkdownFile(join(TIL_DIR, f), f)))
-  const sorted = tils
-    .map((til, i) => ({ ...til, file: files[i] }))
-    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0) || a.file.localeCompare(b.file))
-  return sorted.map(({ file, ...til }, index) => ({
-    ...til,
-    url: `/til/#til-${sorted.length - index}`,
+  const order = Array.from(files.keys()).sort(
+    (a, b) =>
+      new Date(tils[b].date || 0) - new Date(tils[a].date || 0) || files[a].localeCompare(files[b])
+  )
+  return order.map((i, index) => ({
+    ...tils[i],
+    url: `/til/#til-${order.length - index}`,
   }))
 }
 
