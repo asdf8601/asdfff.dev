@@ -140,6 +140,10 @@ a {
   transition: color 0.2s ease;
 }
 
+article a {
+  overflow-wrap: anywhere;
+}
+
 a:hover {
   color: var(--color-accent-hover);
   text-decoration: underline;
@@ -186,6 +190,31 @@ code {
   font-family: var(--font-mono);
   font-size: 1em;
   color: var(--color-accent);
+}
+
+:not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
+article img,
+article video {
+  max-width: 100%;
+  height: auto;
+}
+
+article iframe {
+  max-width: 100%;
+}
+
+article iframe[src*="youtube"] {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 pre {
