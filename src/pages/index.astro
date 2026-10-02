@@ -7,7 +7,7 @@ const posts = Object.values(postModules) as any[]
 const quoteModules = import.meta.glob("./quotes/*.md", { eager: true })
 const quotes = Object.values(quoteModules) as any[]
 
-const tilModules = import.meta.glob("./til/*.md", { eager: true })
+const tilModules = import.meta.glob("../content/til/*.md", { eager: true })
 const tils = Object.values(tilModules) as any[]
 
 const isDev = import.meta.env.DEV
@@ -30,7 +30,7 @@ const contentData = await Promise.all([
   })),
   ...tils.map(async (t: any) => ({
     type: "til",
-    html: await t.compiledContent(),
+    html: `${t.frontmatter.title ? `<p><strong>${t.frontmatter.title}</strong></p>` : ""}${await t.compiledContent()}`,
   })),
 ])
 

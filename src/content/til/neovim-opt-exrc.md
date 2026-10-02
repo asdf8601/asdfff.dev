@@ -1,8 +1,7 @@
 ---
+title: "Load a per-project Neovim config with exrc"
 date: 2025-11-07
 ---
-
-Load local nvim config from local files:
 
 [`:help exrc`](https://neovim.io/doc/user/options.html#'exrc')
 

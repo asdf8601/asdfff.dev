@@ -140,6 +140,10 @@ a {
   transition: color 0.2s ease;
 }
 
+article a {
+  overflow-wrap: anywhere;
+}
+
 a:hover {
   color: var(--color-accent-hover);
   text-decoration: underline;
