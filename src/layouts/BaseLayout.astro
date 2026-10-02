@@ -148,6 +148,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
     <footer role="contentinfo">
       <p>&copy; {new Date().getFullYear()} Write the Fucking Manual</p>
+      <p class="shortcut-hint">press <kbd>?</kbd> for keyboard shortcuts</p>
     </footer>
 
     <script>
@@ -464,6 +465,22 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     margin: 0 auto;
     color: var(--color-text-muted);
     font-size: 0.85rem;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+  }
+
+  .shortcut-hint {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shortcut-hint {
+      display: block;
+    }
   }
 
   @media (max-width: 768px) {
