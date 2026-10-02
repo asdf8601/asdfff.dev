@@ -22,16 +22,14 @@ source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/
 </GridItem>
 
 <GridItem cols={2}>
-  <Mermaid>
-  ```mermaid
-  graph TD
-      A[Desires] --> B[Emotions]
-      B --> C[Desires<br>Attachments]
-      C --> D[Ahamkara with<br>External World]
-      D --> E[Imperfection<br>Incompleteness<br>Non-fulfillment]
-      E --> A
-  ```
-  </Mermaid>
+  <Mermaid code={`
+graph TD
+    A[Desires] --> B[Emotions]
+    B --> C[Desires<br>Attachments]
+    C --> D[Ahamkara with<br>External World]
+    D --> E[Imperfection<br>Incompleteness<br>Non-fulfillment]
+    E --> A
+`} />
 </GridItem>
 
 </Grid>
@@ -39,29 +37,23 @@ source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/
 > According to Patanjali's Yoga Shastra, suffering is due to ignorance about
 > one's true “self” (avidya).
 
-<Mermaid>
-```mermaid
+<Mermaid code={`
 graph LR
   A[Emotions] --> B[Cognitive]
   A --> C[Physiological]
-```
-</Mermaid>
+`} />
 
-<Mermaid>
-```mermaid
+<Mermaid code={`
 graph LR
   A[Feeling/Affect] --> B[Experience]
-```
-</Mermaid>
+`} />
 
-<Mermaid>
-```mermaid
+<Mermaid code={`
 graph LR
   A[External World] <--> B[Ego]
   B -.-> C[Emotions/Experience]
   C --> D[Action]
-```
-</Mermaid>
+`} />
 
 > All emotions spring from desires and desire is caused by a sense of
 > imperfection, incompleteness or non-fulfillment felt within oneself. The
