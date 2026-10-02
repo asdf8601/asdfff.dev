@@ -137,8 +137,11 @@ ul li + pre {
 a {
   color: var(--color-accent);
   text-decoration: none;
-  overflow-wrap: anywhere;
   transition: color 0.2s ease;
+}
+
+article a {
+  overflow-wrap: anywhere;
 }
 
 a:hover {
