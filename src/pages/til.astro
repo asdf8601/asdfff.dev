@@ -26,11 +26,6 @@ const sortedTils = Object.entries(tilModules)
             const tilNumber = sortedTils.length - index
             const date = new Date(til.frontmatter.date)
             const dateKey = date.toISOString().slice(0, 10)
-            const prevDateKey =
-              index > 0
-                ? new Date(sortedTils[index - 1].frontmatter.date).toISOString().slice(0, 10)
-                : null
-            const isFirstOfDay = dateKey !== prevDateKey
             const formattedDate = date.toLocaleDateString("en-US", {
               year: "numeric",
               month: "short",
@@ -39,7 +34,7 @@ const sortedTils = Object.entries(tilModules)
             return (
               <section class="tl-entry" id={`til-${tilNumber}`}>
                 <div class="tl-meta">
-                  {isFirstOfDay && <time datetime={dateKey}>{formattedDate}</time>}
+                  <time datetime={dateKey}>{formattedDate}</time>
                   <a href={`#til-${tilNumber}`} class="tl-number" aria-label={`Link to TIL #${tilNumber}`}>
                     #{tilNumber}
                   </a>
