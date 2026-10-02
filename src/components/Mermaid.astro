@@ -31,6 +31,7 @@ const style = [width ? `width: ${width}` : "", height ? `height: ${height}` : ""
 
 <style>
   .mermaid-container {
+    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,12 +47,12 @@ const style = [width ? `width: ${width}` : "", height ? `height: ${height}` : ""
     margin: 0;
   }
 
-  .mermaid-container pre.mermaid svg {
+  .mermaid-container pre.mermaid :global(svg) {
     max-width: 100%;
     height: auto;
   }
 
-  .mermaid-container[style*="height"] pre.mermaid svg {
+  .mermaid-container[style*="height"] pre.mermaid :global(svg) {
     height: 100%;
   }
 </style>
