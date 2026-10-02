@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile, stat } from "fs/promises"
 import { join } from "path"
 
 const PAGES_DIR = "./src/pages"
+const TIL_DIR = "./src/content/til"
 const OUTPUT_FILE = "./public/search-data.json"
 
 function removeNestedBraces(str) {
@@ -138,6 +139,18 @@ async function processDirectory(dir, baseDir = PAGES_DIR) {
   return results
 }
 
+async function processTils() {
+  const files = (await readdir(TIL_DIR)).filter(f => f.endsWith(".md"))
+  const tils = await Promise.all(files.map(f => processMarkdownFile(join(TIL_DIR, f), f)))
+  const sorted = tils
+    .map((til, i) => ({ ...til, file: files[i] }))
+    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0) || a.file.localeCompare(b.file))
+  return sorted.map(({ file, ...til }, index) => ({
+    ...til,
+    url: `/til/#til-${sorted.length - index}`,
+  }))
+}
+
 async function generateSearchData() {
   const files = await readdir(PAGES_DIR)
   const astroFiles = files.filter(f => f.endsWith(".astro"))
@@ -148,7 +161,9 @@ async function generateSearchData() {
 
   const markdownData = await processDirectory(PAGES_DIR)
 
-  const allData = [...pagesData, ...markdownData]
+  const tilData = await processTils()
+
+  const allData = [...pagesData, ...markdownData, ...tilData]
 
   await writeFile(OUTPUT_FILE, JSON.stringify(allData, null, 2))
   console.log(

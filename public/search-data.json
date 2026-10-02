@@ -541,18 +541,6 @@
     "content": "Mira esta ejemplo de cómo configurar un proyecto Python con lo esencial para comenzar rápidamente, pero con la capacidad de ajustar y escalar conforme las necesidades aumenten. - `pyproject.toml`: archivo de configuración estándar PEP-518pep518 para proyectos Python. - `Makefile`: Se utiliza para automatizar tareas como testing, build, installs, entre otros. - `version` (opcional): Es útil para mantener un registro de las distintas versiones de tu proyecto. Mi estrategia favorita es comenzar con todos los elementos en un solo archivo y luego, a medida que el proyecto crezca, dividirlos en la estructura de carpetas basada en `src`. No me preocuparia por esta reestructuración hasta que sea verdaderamente necesario. Aqui uso `setuptools-scm` para obtener una versión automática de la librería basada en los tags de Git, los cuales deben seguir el estándar PEP-440pep440. Ejemplo: Creando `takt` Esto es lo que use para crear `takt`takt, con el que hasta ahora estoy muy contento: ```bash mkdir -p takt/tests touch takt/README.md touch takt/Makefile touch takt/pyproject.toml touch takt/takt.py ``` Esto es lo minimo que se necesita para empezar un proyecto python. `pyproject.toml` Este archivo es una especificación moderna de empaque para proyectos de Python, según PEP-518pep518. Sirve para declarar las dependencias que necesitas para construir tu proyecto desde la fuente. Esta es una alternativa al uso de `setup.py` y `requirements.txt` en proyectos Python. `pyproject.toml` es como un archivo de configuración centralizado para muchas de las herramientas que podrías usar en tu proyecto Python. Su uso es cada vez más común a medida que dichas herramientas migran su soporte al archivo `pyproject.toml`. ```toml build-system requires = \"setuptools>=60\", \"setuptools-scm>=8.0\" build-backend = \"setuptools.buildmeta\" project name = \"takt\" dynamic = \"version\" authors = {name=\"Max Greco\", email=\"asdf0x2199@gmail.com\"} readme = \"README.md\" requires-python = \">=3.6\" dependencies = \"rich\","
   },
   {
-    "url": "/posts/python-versions-venv-manager",
-    "title": "Python versions and venv manager",
-    "date": "2024-07-18",
-    "category": "programming",
-    "tags": [
-      "english",
-      "python",
-      "project"
-    ],
-    "content": "Today, let's chat about something that has both delighted and frustrated me in equal measure: managing Python environments. You know how it is—sometimes you feel on top of the world, and other times, you want to launch your computer out the window. The PIPREQUIREVIRTUALENV Trick! So, here's the deal: setting `PIPREQUIREVIRTUALENV` prevents you from accidently polluting your global Python environment when installing packages. It's like having an overprotective parent guard your environment from bad influences. Nice, right? Read this nice SO question(https://stackoverflow.com/questions/17354852/how-to-make-sure-you-call-pip-only-in-virtualenv?rq=3). But, here's the hiccup: It’s not compatible with `conda`. And guess what I was using? Yep, `conda`. Ugh! So I jumped on the `venv` bandwagon, setting up Python 3.10, 3.11, 3.12 environments. And It works like a charm. Check out more about it here: PIP Issue 7902(https://github.com/pypa/pip/issues/7902). Hello, Rye! Then, I stumbled upon `rye`. It sounded perfect, a shiny new toy to replace `conda` as my virtualenv and Python version manager. I was like, “where have you been all my life?” However… and there’s always a “however”… 😅 I hit a few bumps, like frustrating `ModuleNotFoundError: No module named 'setuptools'`. I mean, come on! I’m still giving it a shot and testing it out. It’s got potential, but you know, new tools always come with a learning curve and their own set of quirks. For those curious, here's the rye bug tracker keeping my sanity in check: Rye Issues(https://github.com/astral-sh/rye/issues?q=ModuleNotFoundError%3A+No+module+named+%27setuptools%27). Wrapping Up! Here's my experience with Python environments. Do you have similar stories? Any tools you love or hate? Share your thoughts below. Let's share our tech adventures and have a laugh or two. Happy coding!"
-  },
-  {
     "url": "/posts/reading-emotions-an-indian-perspective",
     "title": "[NOTES] Emotions: An Indian Perspective",
     "date": "2025-11-01",
@@ -562,7 +550,7 @@
       "eastern-psychology",
       "yoga"
     ],
-    "content": "source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/ > This view of emotions lays emphasis on desires as the root cause of emotional > upheavals. > They are seen as modification of desire and attachment. > The desires are seen as arising from the contact and attachment of the ego or > ahamkara with the external world and are caused by a sense of imperfection, > incompleteness or non-fulfillment. ```mermaid graph TD ADesires --> BEmotions B --> CDesires Attachments C --> DAhamkara with External World D --> EImperfection Incompleteness Non-fulfillment E --> A ``` > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “self” (avidya). ```mermaid graph LR AEmotions --> BCognitive A --> CPhysiological ``` ```mermaid graph LR AFeeling/Affect --> BExperience ``` ```mermaid graph LR AExternal World BEgo B -.-> CEmotions/Experience C --> DAction ``` > All emotions spring from desires and desire is caused by a sense of > imperfection, incompleteness or non-fulfillment felt within oneself. The > stronger the desire, the stronger would be the emotional experience. > Emotions are basically seen as virtue but allowing them to interfere with > one's judgment and awareness is considered a weakness. > Emotions are seen as modification of desire or attachment. It is suggested > that if one wants to overcome the overwhelming emotional experiences like > anger and sorrow, one must locate the desire underlying it and then eliminate > it. > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “Self” (avidya). Ignorance leads to misperception. Individuals > develop a false sense of ego by identifying themselves with things/objects > around them. The desires, with this ego attachment, become stronger. This ego > attachment, attraction, and repulsion are termed affliction (Klesas). The > misperception lies in the acceptance of external objects as the true self. > This produces a false view of reality. In this sense, "
+    "content": "source: https://pmc.ncbi.nlm.nih.gov/articles/PMC3705675/ > This view of emotions lays emphasis on desires as the root cause of emotional > upheavals. > They are seen as modification of desire and attachment. > The desires are seen as arising from the contact and attachment of the ego or > ahamkara with the external world and are caused by a sense of imperfection, > incompleteness or non-fulfillment. BEmotions B --> CDesires Attachments C --> DAhamkara with External World D --> EImperfection Incompleteness Non-fulfillment E --> A `} /> > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “self” (avidya). BCognitive A --> CPhysiological `} /> BExperience `} /> BEgo B -.-> CEmotions/Experience C --> DAction `} /> > All emotions spring from desires and desire is caused by a sense of > imperfection, incompleteness or non-fulfillment felt within oneself. The > stronger the desire, the stronger would be the emotional experience. > Emotions are basically seen as virtue but allowing them to interfere with > one's judgment and awareness is considered a weakness. > Emotions are seen as modification of desire or attachment. It is suggested > that if one wants to overcome the overwhelming emotional experiences like > anger and sorrow, one must locate the desire underlying it and then eliminate > it. > According to Patanjali's Yoga Shastra, suffering is due to ignorance about > one's true “Self” (avidya). Ignorance leads to misperception. Individuals > develop a false sense of ego by identifying themselves with things/objects > around them. The desires, with this ego attachment, become stronger. This ego > attachment, attraction, and repulsion are termed affliction (Klesas). The > misperception lies in the acceptance of external objects as the true self. > This produces a false view of reality. In this sense, suffering/dukha arises > from within and not from the outside world. Glossary Gunas: satva, rajas, tamas Sukha: pleasure Dukha: pain/un"
   },
   {
     "url": "/posts/setup-dns-gh-pages-google-domains",
@@ -763,15 +751,7 @@
     "content": "Los que cavan acequias conducen el agua; los arqueros orientas con precisión sus flechas; los carpinteros domeñan la madera; y los sabios se dirigen a sí mismos."
   },
   {
-    "url": "/til/grep",
-    "title": "`grep -b` shows byte offset of matches",
-    "date": "2025-10-20",
-    "category": "",
-    "tags": [],
-    "content": "`grep -b` shows byte offset of matches ```sh grep ```"
-  },
-  {
-    "url": "/til/mfussenegger",
+    "url": "/til/#til-4",
     "title": "Veeery nice Neovim-related blog by Michael Fussenegger:",
     "date": "2025-11-07",
     "category": "",
@@ -779,7 +759,7 @@
     "content": "Veeery nice Neovim-related blog by Michael Fussenegger: - https://zignar.net/ - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔 - https://zignar.net/2022/11/06/structuring-neovim-lua-plugins/ ❤️"
   },
   {
-    "url": "/til/neovim-opt-exrc",
+    "url": "/til/#til-3",
     "title": "Load local nvim config from local files:",
     "date": "2025-11-07",
     "category": "",
@@ -787,11 +767,19 @@
     "content": "Load local nvim config from local files: `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
   },
   {
-    "url": "/til/sutta-central",
+    "url": "/til/#til-2",
     "title": "sutta central",
     "date": "2025-11-03",
     "category": "",
     "tags": [],
     "content": "sutta central Collection of Buddhist scriptures: - https://suttacentral.net/?lang=en I liked this sutta: - https://suttacentral.net/dn16/en/sujato?lang=en&layout=plain&reference=none&notes=sidenotes&highlight=false&script=latin1.6.2"
+  },
+  {
+    "url": "/til/#til-1",
+    "title": "`grep -b` shows byte offset of matches",
+    "date": "2025-10-20",
+    "category": "",
+    "tags": [],
+    "content": "`grep -b` shows byte offset of matches ```sh $ printf 'foo bar\\nsay hello\\n' > notes.txt $ grep -b hello notes.txt 8:say hello $ grep -ob hello notes.txt 12:hello $ tail -c +13 notes.txt hello ``` Offsets are 0-based. Alone, `-b` gives the offset of the matching line; with `-o` it gives the offset of the match itself. `tail -c +N` is 1-based, so jump to offset + 1. ugrep(https://github.com/Genivia/ugrep) prints the match offset even without `-o`."
   }
 ]
