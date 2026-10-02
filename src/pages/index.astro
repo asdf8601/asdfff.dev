@@ -30,7 +30,7 @@ const contentData = await Promise.all([
   })),
   ...tils.map(async (t: any) => ({
     type: "til",
-    html: await t.compiledContent(),
+    html: `${t.frontmatter.title ? `<p><strong>${t.frontmatter.title}</strong></p>` : ""}${await t.compiledContent()}`,
   })),
 ])
 

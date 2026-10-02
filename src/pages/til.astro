@@ -39,6 +39,7 @@ const sortedTils = Object.entries(tilModules)
                     #{tilNumber}
                   </a>
                 </div>
+                {til.frontmatter.title && <h2 class="tl-title">{til.frontmatter.title}</h2>}
                 <div class="tl-content">
                   <til.Content />
                 </div>
@@ -90,6 +91,11 @@ const sortedTils = Object.entries(tilModules)
   .tl-entry.selected-item .tl-meta,
   .tl-entry.selected-item .tl-number {
     color: var(--color-accent);
+  }
+
+  .tl-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: 1.05rem;
   }
 
   .tl-content :global(p) {

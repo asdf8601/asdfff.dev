@@ -1,9 +1,9 @@
 ---
+title: "Neovim blog by Michael Fussenegger"
 date: 2025-11-07
 ---
 
-
-Veeery nice Neovim-related blog by Michael Fussenegger:
+Veeery nice Neovim-related blog:
 
 - https://zignar.net/
 - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔

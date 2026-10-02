@@ -752,34 +752,34 @@
   },
   {
     "url": "/til/#til-4",
-    "title": "Veeery nice Neovim-related blog by Michael Fussenegger:",
+    "title": "Neovim blog by Michael Fussenegger",
     "date": "2025-11-07",
     "category": "",
     "tags": [],
-    "content": "Veeery nice Neovim-related blog by Michael Fussenegger: - https://zignar.net/ - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔 - https://zignar.net/2022/11/06/structuring-neovim-lua-plugins/ ❤️"
+    "content": "Veeery nice Neovim-related blog: - https://zignar.net/ - https://zignar.net/2025/06/26/dealing-with-flaky-tests/ 🤔 - https://zignar.net/2022/11/06/structuring-neovim-lua-plugins/ ❤️"
   },
   {
     "url": "/til/#til-3",
-    "title": "Load local nvim config from local files:",
+    "title": "Load a per-project Neovim config with exrc",
     "date": "2025-11-07",
     "category": "",
     "tags": [],
-    "content": "Load local nvim config from local files: `:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
+    "content": "`:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
   },
   {
     "url": "/til/#til-2",
-    "title": "sutta central",
+    "title": "SuttaCentral",
     "date": "2025-11-03",
     "category": "",
     "tags": [],
-    "content": "sutta central Collection of Buddhist scriptures: - https://suttacentral.net/?lang=en I liked this sutta: - https://suttacentral.net/dn16/en/sujato?lang=en&layout=plain&reference=none&notes=sidenotes&highlight=false&script=latin1.6.2"
+    "content": "Collection of Buddhist scriptures: https://suttacentral.net/?lang=en I liked this sutta: DN 16, section 1.6.2(https://suttacentral.net/dn16/en/sujato?lang=en&layout=plain&reference=none&notes=sidenotes&highlight=false&script=latin1.6.2)"
   },
   {
     "url": "/til/#til-1",
-    "title": "`grep -b` shows byte offset of matches",
+    "title": "grep -b shows the byte offset of matches",
     "date": "2025-10-20",
     "category": "",
     "tags": [],
-    "content": "`grep -b` shows byte offset of matches ```sh $ printf 'foo bar\\nsay hello\\n' > notes.txt $ grep -b hello notes.txt 8:say hello $ grep -ob hello notes.txt 12:hello $ tail -c +13 notes.txt hello ``` Offsets are 0-based. Alone, `-b` gives the offset of the matching line; with `-o` it gives the offset of the match itself. `tail -c +N` is 1-based, so jump to offset + 1. ugrep(https://github.com/Genivia/ugrep) prints the match offset even without `-o`."
+    "content": "```sh $ printf 'foo bar\\nsay hello\\n' > notes.txt $ grep -b hello notes.txt 8:say hello $ grep -ob hello notes.txt 12:hello $ tail -c +13 notes.txt hello ``` Offsets are 0-based. Alone, `-b` gives the offset of the matching line; with `-o` it gives the offset of the match itself. `tail -c +N` is 1-based, so jump to offset + 1. ugrep(https://github.com/Genivia/ugrep) prints the match offset even without `-o`."
   }
 ]
