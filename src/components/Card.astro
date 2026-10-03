@@ -16,16 +16,20 @@ const { title, type = "default" } = Astro.props
 
 <style>
   .card {
+    --card-color: var(--color-text-muted);
+
     margin-bottom: var(--spacing-lg);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-left: 2px solid var(--color-accent);
-    border-bottom: 1px solid var(--color-border);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--color-bg-secondary);
+    border-left: 2px solid var(--card-color);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
   }
 
   .card-title {
-    color: var(--color-accent);
-    font-size: 0.85rem;
-    font-weight: 600;
+    color: var(--card-color);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
     margin-bottom: var(--spacing-xs);
     text-transform: uppercase;
   }
@@ -46,34 +50,34 @@ const { title, type = "default" } = Astro.props
   }
 
   .card-info {
-    border-left-color: #0088ff;
-  }
-
-  .card-info .card-title {
-    color: #0088ff;
+    --card-color: #4a6f8a;
   }
 
   .card-warning {
-    border-left-color: #ffaa00;
-  }
-
-  .card-warning .card-title {
-    color: #ffaa00;
+    --card-color: #725a1e;
   }
 
   .card-success {
-    border-left-color: var(--color-accent);
-  }
-
-  .card-success .card-title {
-    color: var(--color-accent);
+    --card-color: #4d673a;
   }
 
   .card-error {
-    border-left-color: #ff0000;
+    --card-color: #b5432f;
   }
 
-  .card-error .card-title {
-    color: #ff0000;
+  :global([data-theme="dark"]) .card-info {
+    --card-color: #8fb4cf;
+  }
+
+  :global([data-theme="dark"]) .card-warning {
+    --card-color: #d3b273;
+  }
+
+  :global([data-theme="dark"]) .card-success {
+    --card-color: #a7bf8e;
+  }
+
+  :global([data-theme="dark"]) .card-error {
+    --card-color: #e08a74;
   }
 </style>

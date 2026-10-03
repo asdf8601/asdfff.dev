@@ -21,6 +21,12 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif+JP:wght@500&display=swap"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -49,7 +55,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
     <header role="banner">
       <nav role="navigation" aria-label="Main navigation">
-        <a href="/" aria-label="Home">wtfm!</a>
+        <a href="/" aria-label="Home">wtfm</a>
         <a href="/posts/">posts</a>
         <a href="/til/">til</a>
         <a href="/quotes/">quotes</a>
@@ -167,9 +173,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
         const navLinks = document.querySelectorAll("nav a:not(:first-child)")
         const currentPath = window.location.pathname
 
-        navLinks.forEach((link, index) => {
-          link.setAttribute("data-nav-index", (index + 1).toString())
-
+        navLinks.forEach(link => {
           const href = link.getAttribute("href")
           if (href && currentPath.startsWith(href)) {
             link.classList.add("active-page")
@@ -343,8 +347,7 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 <style>
   header {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--color-border);
+    padding: var(--spacing-lg) var(--spacing-xl) 0;
   }
 
   nav {
@@ -356,58 +359,47 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   }
 
   nav a {
-    font-weight: 400;
-    font-size: 1rem;
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    transition: color var(--transition);
+  }
+
+  nav a:hover {
+    color: var(--color-text);
     text-decoration: none;
   }
 
-  nav a:not(:first-child) {
-    padding: 0.25rem 0.5rem;
-    position: relative;
+  nav a:first-child {
+    margin-right: auto;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
     color: var(--color-text);
-    transition: color 0.2s ease;
   }
 
-  nav a:not(:first-child):hover {
-    color: var(--color-accent);
-  }
-
-  nav a:not(:first-child) {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.1rem;
-  }
-
-  nav a:not(:first-child)::after {
-    content: attr(data-nav-index);
-    font-size: 0.6rem;
-    color: var(--color-text-muted);
-    opacity: 0.5;
-    width: 0.5em;
-    height: 0.8em;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: sub;
-    line-height: 0;
-  }
-
-  nav a:not(:first-child):hover::after {
-    content: "";
-    background-color: var(--color-accent);
-    opacity: 1;
+  nav a.active-page {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
   }
 
   @media (max-width: 768px) {
+    header {
+      padding: var(--spacing-md) var(--spacing-md) 0;
+    }
+
     nav {
       flex-wrap: wrap;
-      gap: 0.5rem 0.25rem;
+      gap: var(--spacing-sm) var(--spacing-md);
     }
 
     nav::before {
       content: "";
       order: 2;
       flex-basis: 100%;
+      height: 0;
     }
 
     nav > :global(#theme-toggle),
@@ -417,55 +409,32 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
     nav a:not(:first-child) {
       order: 3;
-      padding: 0.25rem 0.3rem;
       font-size: 0.9rem;
     }
-
-    nav a:not(:first-child)::after {
-      display: none;
-    }
-
-    header {
-      padding: 0.75rem 1rem;
-      margin-bottom: var(--spacing-md);
-    }
-  }
-  nav a:first-child {
-    margin-right: auto;
-    color: var(--color-text-muted);
-    transition: color 0.2s;
-  }
-
-  nav a:first-child:hover {
-    color: var(--color-text);
-  }
-
-  nav a:first-child::before {
-    content: ":";
-    color: var(--color-accent);
-  }
-
-  nav a.active-page::after {
-    content: "";
-    background-color: var(--color-accent);
-    opacity: 1;
   }
 
   footer {
     width: 100%;
-    border-top: 1px solid var(--color-border);
-    padding: 0.75rem 1rem;
-    text-align: left;
     max-width: var(--max-width);
     margin: 0 auto;
-    color: var(--color-text-muted);
-    font-size: 0.85rem;
-  }
-
-  footer {
+    padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-xl);
     display: flex;
     justify-content: space-between;
     gap: var(--spacing-sm);
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+  }
+
+  footer p {
+    margin: 0;
+  }
+
+  footer kbd {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0 0.3rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
   }
 
   .shortcut-hint {
@@ -480,21 +449,19 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
   @media (max-width: 768px) {
     footer {
-      padding: 0.75rem var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-md) var(--spacing-lg);
     }
   }
 
   .help-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.9);
+    inset: 0;
+    background-color: var(--color-overlay);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    padding: var(--spacing-md);
+    z-index: var(--z-index-modal);
   }
 
   .help-modal[hidden] {
@@ -503,33 +470,35 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
 
   .help-content {
     background-color: var(--color-bg);
-    border: 1px solid var(--color-accent);
-    padding: 1.5rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-modal);
+    padding: var(--spacing-xl);
+    max-width: var(--modal-width);
+    width: 100%;
+    max-height: var(--modal-height);
     overflow-y: auto;
   }
 
   .help-content h2 {
     margin-top: 0;
-    margin-bottom: var(--spacing-md);
-    text-transform: lowercase;
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.25rem;
   }
 
   .help-content h3 {
-    font-size: 1rem;
-    margin-bottom: var(--spacing-xs);
-    color: var(--color-accent);
-    text-transform: lowercase;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--spacing-sm);
   }
 
   .help-shortcuts {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
   }
 
   .help-section {
@@ -541,47 +510,54 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
   .help-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--spacing-md);
   }
 
   .help-item kbd {
-    border: 1px solid var(--color-border);
-    padding: 0.25rem 0.5rem;
     font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--color-accent);
-    min-width: 3rem;
+    font-size: 0.8rem;
+    padding: 0.15rem 0.5rem;
+    min-width: 3.5rem;
     text-align: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-secondary);
   }
 
   .help-item span {
-    color: var(--color-text);
     font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .help-content {
+      padding: var(--spacing-lg);
+    }
   }
 
   .notification {
     position: fixed;
-    top: 1rem;
-    right: 1rem;
-    background-color: var(--color-accent);
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background-color: var(--color-text);
     color: var(--color-bg);
     padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
     font-size: 0.85rem;
     z-index: 2000;
-    animation: slideIn 0.3s ease-out;
+    animation: fade-in 0.2s ease-out;
   }
 
   .notification[hidden] {
     display: none;
   }
 
-  @keyframes slideIn {
+  @keyframes fade-in {
     from {
-      transform: translateX(100%);
+      transform: translateY(-4px);
       opacity: 0;
     }
     to {
-      transform: translateX(0);
+      transform: translateY(0);
       opacity: 1;
     }
   }

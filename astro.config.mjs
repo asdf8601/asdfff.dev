@@ -30,22 +30,38 @@ export default defineConfig({
   },
   integrations: [
     expressiveCode({
-      themes: ["github-dark", "github-light"],
+      themes: ["vitesse-light", "vitesse-dark"],
       themeCssSelector: theme => `[data-theme="${theme.type}"]`,
+      useDarkModeMediaQuery: false,
       styleOverrides: {
-        borderRadius: "4px",
+        borderRadius: "8px",
+        borderWidth: "1px",
         borderColor: "var(--color-border)",
         codeFontFamily: "var(--font-mono)",
-        codeBackground: ({ theme }) => (theme.type === "light" ? "#f1f1f1" : "#282828"),
+        codeFontSize: "0.85rem",
+        codeLineHeight: "1.65",
+        codePaddingInline: "1.25rem",
+        uiFontFamily: "var(--font-sans)",
+        codeBackground: ({ theme }) => (theme.type === "light" ? "#f3f0e9" : "#262523"),
         frames: {
           shadowColor: "transparent",
-          editorBackground: ({ theme }) => (theme.type === "light" ? "#f1f1f1" : "#282828"),
-          terminalBackground: ({ theme }) => (theme.type === "light" ? "#f1f1f1" : "#282828"),
+          editorBackground: ({ theme }) => (theme.type === "light" ? "#f3f0e9" : "#262523"),
+          terminalBackground: ({ theme }) => (theme.type === "light" ? "#f3f0e9" : "#262523"),
           editorActiveTabBackground: ({ theme }) =>
-            theme.type === "light" ? "#fafafa" : "#1d2021",
+            theme.type === "light" ? "#f3f0e9" : "#262523",
+          editorActiveTabIndicatorTopColor: "transparent",
+          editorActiveTabIndicatorBottomColor: ({ theme }) =>
+            theme.type === "light" ? "#b5432f" : "#e08a74",
+          editorTabBarBackground: ({ theme }) => (theme.type === "light" ? "#ece7dc" : "#1e1d1b"),
           terminalTitlebarBackground: ({ theme }) =>
-            theme.type === "light" ? "#e6e6e6" : "#3c3836",
-          editorTabBarBackground: ({ theme }) => (theme.type === "light" ? "#e6e6e6" : "#3c3836"),
+            theme.type === "light" ? "#ece7dc" : "#1e1d1b",
+          terminalTitlebarDotsForeground: "var(--color-border)",
+          terminalTitlebarDotsOpacity: "1",
+          editorTabBarBorderBottomColor: "var(--color-border)",
+          terminalTitlebarBorderBottomColor: "var(--color-border)",
+          inlineButtonBackground: ({ theme }) => (theme.type === "light" ? "#faf8f3" : "#1e1d1b"),
+          inlineButtonBorder: "var(--color-border)",
+          inlineButtonForeground: "var(--color-text-muted)",
         },
       },
       defaultProps: {
