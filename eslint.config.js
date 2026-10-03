@@ -5,7 +5,7 @@ import astroPlugin from "eslint-plugin-astro"
 
 export default [
   {
-    ignores: ["dist/", ".astro/", "node_modules/", "public/search-data.json"],
+    ignores: ["dist/", ".astro/", "node_modules/", ".worktree/", "public/search-data.json"],
   },
   js.configs.recommended,
   {

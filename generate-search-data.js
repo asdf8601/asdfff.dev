@@ -3,6 +3,7 @@ import { join } from "path"
 
 const PAGES_DIR = "./src/pages"
 const TIL_DIR = "./src/content/til"
+const QUOTES_DIR = "./src/content/quotes"
 const OUTPUT_FILE = "./public/search-data.json"
 
 function removeNestedBraces(str) {
@@ -139,16 +140,17 @@ async function processDirectory(dir, baseDir = PAGES_DIR) {
   return results
 }
 
-async function processTils() {
-  const files = (await readdir(TIL_DIR)).filter(f => f.endsWith(".md"))
-  const tils = await Promise.all(files.map(f => processMarkdownFile(join(TIL_DIR, f), f)))
+async function processAnchoredEntries(dir, page, anchor) {
+  const files = (await readdir(dir)).filter(f => f.endsWith(".md"))
+  const entries = await Promise.all(files.map(f => processMarkdownFile(join(dir, f), f)))
   const order = Array.from(files.keys()).sort(
     (a, b) =>
-      new Date(tils[b].date || 0) - new Date(tils[a].date || 0) || files[a].localeCompare(files[b])
+      new Date(entries[b].date || 0) - new Date(entries[a].date || 0) ||
+      files[a].localeCompare(files[b])
   )
   return order.map((i, index) => ({
-    ...tils[i],
-    url: `/til/#til-${order.length - index}`,
+    ...entries[i],
+    url: `${page}#${anchor}-${order.length - index}`,
   }))
 }
 
@@ -162,9 +164,10 @@ async function generateSearchData() {
 
   const markdownData = await processDirectory(PAGES_DIR)
 
-  const tilData = await processTils()
+  const tilData = await processAnchoredEntries(TIL_DIR, "/til/", "til")
+  const quoteData = await processAnchoredEntries(QUOTES_DIR, "/quotes/", "quote")
 
-  const allData = [...pagesData, ...markdownData, ...tilData]
+  const allData = [...pagesData, ...markdownData, ...tilData, ...quoteData]
 
   await writeFile(OUTPUT_FILE, JSON.stringify(allData, null, 2))
   console.log(
