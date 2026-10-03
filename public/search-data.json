@@ -748,7 +748,7 @@
     "date": "2025-11-07",
     "category": "",
     "tags": [],
-    "content": "`:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua init.lua vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua .nvim.lua / .nvimrc / .exrc vim.print(\"hello from local rc\") ```"
+    "content": "`:help exrc`(https://neovim.io/doc/user/options.html'exrc') ```lua title=\"init.lua\" vim.opt.exrc = true vim.opt.secure = true ``` Files: `.nvim.lua` > `.nvimrc` > `.exrc` ```lua -- .nvim.lua (.nvimrc and .exrc are Vimscript) vim.print(\"hello from local rc\") ```"
   },
   {
     "url": "/til/#til-2",
