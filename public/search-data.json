@@ -735,22 +735,6 @@
     "content": "Haciendo profiling de zsh El primer paso es hacer profiling del archivo `.zshrc`. Para hacer el profiling, incluye lo siguiente en el archivo de configuración: ```zsh zmodload zsh/zprof Tu configuración existente va aquí zprof ``` Para ejecutar el profiling, utiliza el siguiente comando: ```shell time zsh -i -c exit ``` Mejorar los tiempos de carga de `nvm` Para mejorar los tiempos de carga de `nvm`, realiza los siguientes cambios en tu archivo `.zshrc`: ```diff --- a/macos/home/.zshrc +++ b/macos/home/.zshrc @@ -1,17 +1,23 @@ !/usr/bin/env zsh + +zstyle ':omz:plugins:nvm' lazy yes export ... + +plugins=( + nvm +) source $ZSH/oh-my-zsh.sh source $DOTFILESUBUNTU/home/.prompt.zsh @@ -57,9 +63,10 @@ command -v pyenv > /dev/null 2>&1 && eval \"$(pyenv init -)\" 2> /dev/null -f /.fzf.zsh && source /.fzf.zsh source /usr/share/doc/fzf/examples/key-bindings.zsh -export NVMDIR=\"$HOME/.nvm\" - -s \"$NVMDIR/nvm.sh\" && \\. \"$NVMDIR/nvm.sh\" Esto carga nvm - -s \"$NVMDIR/bashcompletion\" && \\. \"$NVMDIR/bashcompletion\" Esto carga nvm bashcompletion + ``` Fuente: https://dev.to/thraizz/fix-slow-zsh-startup-due-to-nvm-408k(https://dev.to/thraizz/fix-slow-zsh-startup-due-to-nvm-408k)"
   },
   {
-    "url": "/quotes/example",
-    "title": "Jorge Luis Borges",
-    "date": "2025-10-26",
-    "category": "",
-    "tags": [],
-    "content": "I have always imagined that Paradise will be a kind of library."
-  },
-  {
-    "url": "/quotes/gautama-buda-dhammapada-los-sabios-se-dirigen-a-si-mismos",
-    "title": "Gautama Buda",
-    "date": "2025-11-01",
-    "category": "",
-    "tags": [],
-    "content": "Los que cavan acequias conducen el agua; los arqueros orientas con precisión sus flechas; los carpinteros domeñan la madera; y los sabios se dirigen a sí mismos."
-  },
-  {
     "url": "/til/#til-4",
     "title": "Neovim blog by Michael Fussenegger",
     "date": "2025-11-07",
@@ -781,5 +765,21 @@
     "category": "",
     "tags": [],
     "content": "```sh $ printf 'foo bar\\nsay hello\\n' > notes.txt $ grep -b hello notes.txt 8:say hello $ grep -ob hello notes.txt 12:hello $ tail -c +13 notes.txt hello ``` Offsets are 0-based. Alone, `-b` gives the offset of the matching line; with `-o` it gives the offset of the match itself. `tail -c +N` is 1-based, so jump to offset + 1. ugrep(https://github.com/Genivia/ugrep) prints the match offset even without `-o`."
+  },
+  {
+    "url": "/quotes/#quote-2",
+    "title": "Gautama Buda",
+    "date": "2025-11-01",
+    "category": "",
+    "tags": [],
+    "content": "Los que cavan acequias conducen el agua; los arqueros orientas con precisión sus flechas; los carpinteros domeñan la madera; y los sabios se dirigen a sí mismos."
+  },
+  {
+    "url": "/quotes/#quote-1",
+    "title": "Jorge Luis Borges",
+    "date": "2025-10-26",
+    "category": "",
+    "tags": [],
+    "content": "I have always imagined that Paradise will be a kind of library."
   }
 ]

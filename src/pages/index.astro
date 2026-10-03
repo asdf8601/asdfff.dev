@@ -4,7 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
 const postModules = import.meta.glob("./posts/*.mdx", { eager: true })
 const posts = Object.values(postModules) as any[]
 
-const quoteModules = import.meta.glob("./quotes/*.md", { eager: true })
+const quoteModules = import.meta.glob("../content/quotes/*.md", { eager: true })
 const quotes = Object.values(quoteModules) as any[]
 
 const tilModules = import.meta.glob("../content/til/*.md", { eager: true })
