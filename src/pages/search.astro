@@ -272,6 +272,7 @@ import BaseLayout from "../layouts/BaseLayout.astro"
       const res = await fetch("/search-data.json")
       pages = await res.json()
     } catch (e) {
+      console.error("Failed to load search index:", e)
       summary.textContent = "failed to load search index."
       return
     }
