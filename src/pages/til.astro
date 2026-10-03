@@ -17,7 +17,7 @@ const sortedTils = Object.entries(tilModules)
   <article>
     <h1>til</h1>
 
-    <p>Today I learned.</p>
+    <p class="lead">Today I learned.</p>
 
     {
       sortedTils.length > 0 ? (
@@ -63,24 +63,23 @@ const sortedTils = Object.entries(tilModules)
 <style>
   h1 {
     margin-bottom: var(--spacing-md);
-    text-transform: lowercase;
+  }
+
+  .lead {
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-xl);
   }
 
   .tl-list {
     display: flex;
     flex-direction: column;
-    margin-top: var(--spacing-lg);
+    gap: var(--spacing-2xl);
   }
 
   .tl-entry {
-    scroll-margin-top: var(--spacing-md);
-    padding: var(--spacing-xl) 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .tl-entry:first-child {
-    border-top: none;
-    padding-top: 0;
+    scroll-margin-top: var(--spacing-xl);
+    padding-left: var(--spacing-md);
+    margin-left: calc(var(--spacing-md) * -1);
   }
 
   .tl-meta {
@@ -96,16 +95,20 @@ const sortedTils = Object.entries(tilModules)
     color: var(--color-text-muted);
   }
 
-  .tl-entry:target .tl-meta,
+  .tl-entry:target {
+    box-shadow: inset 2px 0 0 var(--color-accent);
+  }
+
   .tl-entry:target .tl-number,
-  .tl-entry.selected-item .tl-meta,
   .tl-entry.selected-item .tl-number {
     color: var(--color-accent);
   }
 
   .tl-title {
     margin: 0 0 var(--spacing-sm) 0;
-    font-size: 1.05rem;
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 500;
   }
 
   .tl-content :global(p) {
