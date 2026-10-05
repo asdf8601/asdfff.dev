@@ -28,7 +28,11 @@ const description = frontmatter?.description
     if (document.querySelector("pre.mermaid")) {
       const s = document.createElement("script")
       s.src = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"
-      s.onload = () => {
+      const diagrams = Array.from(document.querySelectorAll("pre.mermaid"))
+      diagrams.forEach(pre => {
+        pre.dataset.source = pre.textContent
+      })
+      const render = () => {
         const isDark = document.documentElement.getAttribute("data-theme") === "dark"
         const palette = isDark
           ? {
@@ -68,7 +72,18 @@ const description = frontmatter?.description
           theme: "base",
           themeVariables: palette,
         })
-        mermaid.run({ querySelector: "pre.mermaid" }).catch(err => console.error("mermaid:", err))
+        diagrams.forEach(pre => {
+          pre.removeAttribute("data-processed")
+          pre.textContent = pre.dataset.source
+        })
+        mermaid.run({ nodes: diagrams }).catch(err => console.error("mermaid:", err))
+      }
+      s.onload = () => {
+        render()
+        new MutationObserver(render).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["data-theme"],
+        })
       }
       document.head.appendChild(s)
     }

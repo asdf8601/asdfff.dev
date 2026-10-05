@@ -176,10 +176,7 @@ function formatDate(dateString: string): string {
     const target = e.target as HTMLElement
     const pageSearchHandlers = (window as any).pageSearchHandlers
 
-    if (pageSearchHandlers?.isActive()) {
-      pageSearchHandlers.handleKeydown(e)
-      return
-    }
+    if (pageSearchHandlers?.isPageSearchActive()) return
 
     if (target instanceof HTMLInputElement) return
 
@@ -189,7 +186,7 @@ function formatDate(dateString: string): string {
 
     if (e.key === "/") {
       e.preventDefault()
-      ;(window as any).pageSearchHandlers?.open()
+      pageSearchHandlers?.openPageSearch()
       return
     }
 
