@@ -2,5 +2,7 @@
   "*.{js,mjs,cjs,ts,astro}": ["eslint --fix", "prettier --write"],
   "*.css": ["stylelint --fix", "prettier --write"],
   "*.astro": ["stylelint --fix", "prettier --write"],
-  "*.{json,md,mdx}": ["prettier --write"]
+  "*.{json,md,mdx}": ["prettier --write"],
+  "*.{png,jpg,jpeg,webp,PNG,JPG,JPEG,WEBP}": ["node optimize-images.js"],
+  "*.svg": ["svgo"]
 }

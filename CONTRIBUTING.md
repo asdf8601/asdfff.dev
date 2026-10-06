@@ -11,6 +11,7 @@ Runs automatically before each commit:
 - **ESLint**: Lints JavaScript/TypeScript/Astro files and auto-fixes issues
 - **Prettier**: Formats all code files
 - **CSpell**: Checks for typos in code and documentation
+- **Images**: Recompresses staged PNG, JPEG and WebP files with sharp (`optimize-images.js`) and SVG files with SVGO. A raster file is rewritten only when the result is smaller, and its metadata (EXIF, GPS) is stripped
 
 Files are only linted/formatted if they're staged for commit.
 
