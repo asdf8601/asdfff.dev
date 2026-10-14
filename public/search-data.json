@@ -530,6 +530,18 @@
     "content": "Here's a list of my favorite new features in Python 3.14: 1. https://docs.python.org/3.14/whatsnew/3.14.htmla-new-type-of-interpreter 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-incremental-gc 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-asyncio-introspection 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-deferred-annotations 1. https://docs.python.org/3.14/whatsnew/3.14.htmlwhatsnew314-zstandard 1. https://docs.python.org/3/whatsnew/3.13.htmlan-experimental-just-in-time-jit-compiler 1. https://docs.python.org/3/whatsnew/3.13.htmlfree-threaded-cpython Performance: TL;DR; This version is the fastest python version. Python 3.14 Is Here. How Fast Is It?(https://blog.miguelgrinberg.com/post/python-3-14-is-here-how-fast-is-it)"
   },
   {
+    "url": "/posts/python-315",
+    "title": "Python 3.15, explained with short examples",
+    "date": "2026-10-14",
+    "category": "programming",
+    "tags": [
+      "python",
+      "performance",
+      "uv"
+    ],
+    "content": "Python 3.15 is out(https://www.python.org/downloads/release/python-3150/). The standard interpreter is about as fast as Python 3.14, so this release is more about useful new tools than a huge speed jump. Here are the changes I care about, with the reason each one helps. Lazy imports Large Python programs often load modules they never use. That makes command-line tools feel slow before they have even started doing work. Python 3.15 lets an import wait until the code uses it: ```python lazy import json print(\"Ready\") json has not loaded yet payload = json.dumps({\"ok\": True}) json loads here ``` This is useful for CLIs with optional plugins or heavy dependencies. A small command no longer needs to load every library the full application might use. There is one catch: an import error or import-time setup now happens when the name is first used, not at startup. PEP 810 explains the details.(https://peps.python.org/pep-0810/) Easier ways to join data Flattening nested lists used to need a double loop. The new unpacking syntax makes the intent more obvious: ```python groups = 1, 2, 3, 4 flat = group for group in groups 1, 2, 3, 4 ``` It also works for sets and dictionaries. This saves a little code, but the real benefit is that you can read “join these groups” right where it happens. PEP 798 has more examples.(https://peps.python.org/pep-0798/) A profiler in the standard library When a service or script is slow, guessing is expensive. Python 3.15 includes a sampling profiler called Tachyon, which can attach to a process that is already running: ```bash Replace 1234 with the process ID uv run --python 3.15 python -m profiling.sampling attach 1234 ``` It samples the call stack while the program runs, then reports where it spent its time. That makes it easier to find the code worth fixing before you start optimizing the wrong thing. The experimental JIT The normal Python 3.15 interpreter is only a small step ahead of 3.14. The experimental JIT is more interesting. In Miguel G"
+  },
+  {
     "url": "/posts/python-project-scratch",
     "title": "Guía sencilla para iniciar un proyecto Python desde cero",
     "date": "2024-01-26",

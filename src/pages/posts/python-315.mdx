@@ -1,0 +1,84 @@
+---
+title: "Python 3.15, explained with short examples"
+date: 2026-10-14
+description: "The Python 3.15 changes worth knowing, and where they help."
+tags: [python, performance, uv]
+category: programming
+---
+
+[Python 3.15 is out](https://www.python.org/downloads/release/python-3150/). The standard interpreter is about as fast as Python 3.14, so this release is more about useful new tools than a huge speed jump.
+
+Here are the changes I care about, with the reason each one helps.
+
+## Lazy imports
+
+Large Python programs often load modules they never use. That makes command-line tools feel slow before they have even started doing work.
+
+Python 3.15 lets an import wait until the code uses it:
+
+```python
+lazy import json
+
+print("Ready")  # json has not loaded yet
+payload = json.dumps({"ok": True})  # json loads here
+```
+
+This is useful for CLIs with optional plugins or heavy dependencies. A small command no longer needs to load every library the full application might use. There is one catch: an import error or import-time setup now happens when the name is first used, not at startup. [PEP 810 explains the details.](https://peps.python.org/pep-0810/)
+
+## Easier ways to join data
+
+Flattening nested lists used to need a double loop. The new unpacking syntax makes the intent more obvious:
+
+```python
+groups = [[1, 2], [3, 4]]
+flat = [*group for group in groups]
+
+# [1, 2, 3, 4]
+```
+
+It also works for sets and dictionaries. This saves a little code, but the real benefit is that you can read “join these groups” right where it happens. [PEP 798 has more examples.](https://peps.python.org/pep-0798/)
+
+## A profiler in the standard library
+
+When a service or script is slow, guessing is expensive. Python 3.15 includes a sampling profiler called Tachyon, which can attach to a process that is already running:
+
+```bash
+# Replace 1234 with the process ID
+uv run --python 3.15 python -m profiling.sampling attach 1234
+```
+
+It samples the call stack while the program runs, then reports where it spent its time. That makes it easier to find the code worth fixing before you start optimizing the wrong thing.
+
+## The experimental JIT
+
+The normal Python 3.15 interpreter is only a small step ahead of 3.14. The experimental JIT is more interesting. In [Miguel Grinberg's benchmark](https://blog.miguelgrinberg.com/post/how-fast-is-python-3-15), it made one Fibonacci test about 20% faster and one bubble-sort test about 28% faster.
+
+Those are promising results, but they are not a promise that every app will get faster. The JIT is still experimental, so I would treat it as something to try and measure, not a production default.
+
+## Dropping Python 3.10
+
+Python 3.10 has reached end of life. If your project supports every maintained Python release, you can now require Python 3.11. That removes some compatibility code and unlocks useful built-ins.
+
+For example, reading TOML no longer needs a third-party parser:
+
+```python
+import tomllib
+
+config = tomllib.loads('name = "my-app"')
+```
+
+Python 3.11 also added `asyncio.TaskGroup`, `asyncio.timeout()`, better tracebacks, and several SQLite improvements. They reduce the glue code you need in modern Python apps.
+
+## Upgrading with uv
+
+If you use [uv](https://docs.astral.sh/uv/), the upgrade is short:
+
+```bash
+uv self update
+uv python install 3.15
+uv python pin --global 3.15
+```
+
+This installs 3.15 and makes it the default for `uv run`, unless a project selects another version.
+
+Simon Willison's [original post](https://simonwillison.net/2026/Oct/12/python-3-15/) is a good starting point if you want the full list of new features.
