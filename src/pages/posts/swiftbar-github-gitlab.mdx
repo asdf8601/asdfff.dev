@@ -5,22 +5,23 @@ tag: [spanish, macos, swiftbar, github, gitlab, productivity]
 category: programming
 ---
 
-Quería ver de un vistazo qué PRs me esperan sin abrir el navegador. Con
-[SwiftBar](https://github.com/swiftbar/SwiftBar), un script de bash y `jq` sale
-en un rato.
+Quería ver de un vistazo que PRs tengo que atender de un vistazo. Lo resuelvo
+rapidisimo con
+[SwiftBar](https://github.com/swiftbar/SwiftBar), un script de bash y `jq`.
 
 ![Menú de SwiftBar con reviews pedidas y mis PRs](/images/swiftbar-menu.png)
 
 ## La idea
 
-SwiftBar ejecuta un script cada X tiempo y pinta lo que imprime en la barra de
+SwiftBar ejecuta un script cada X tiempo y pinta el stdout en la barra de
 menús. Eso es todo.
 
-- El nombre del archivo marca el intervalo: `github.10m.sh` corre cada 10 min.
-- Lo que va antes del primer `---` sale en la barra. Lo de después, en el menú.
+- El nombre del archivo marca el intervalo: `github.10m.sh` (cada 10 min).
+- Lo que va antes del primer `---` sale en la barra. Lo de después, en el menú
+desplegable.
 - Cada línea acepta parámetros detrás de una barra vertical: `texto | href=URL color=red`.
 
-## Setup
+## Requirements
 
 ```bash
 brew install --cask swiftbar
@@ -32,7 +33,9 @@ mkdir -p ~/swiftbar   # elígela como carpeta de plugins al abrir SwiftBar
 
 ## MVP
 
+
 ```bash
+# create file
 cat > ~/swiftbar/mvp.5m.sh <<'EOF'
 #!/usr/bin/env bash
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
@@ -41,7 +44,11 @@ echo "PRs $(jq length <<<"$prs")"
 echo "---"
 jq -r '.[] | "\(.repository.name)#\(.number) \(.title | gsub("\\|"; "/")) | href=\(.url)"' <<<"$prs"
 EOF
+
+# make it executable
 chmod +x ~/swiftbar/mvp.5m.sh
+
+# run it
 open -g 'swiftbar://refreshallplugins'
 ```
 
@@ -136,7 +143,7 @@ echo "Refresh | refresh=true"
 ```
 
 - `detailedMergeStatus` te dice qué bloquea: `CONFLICT`, `NOT_APPROVED`, `CI_MUST_PASS`, `DISCUSSIONS_NOT_RESOLVED`.
-- Un plugin por forja. Si una falla, la otra sigue.
+- Un plugin por proveedor. Si una falla, el otro sigue.
 
 ## Chuleta
 
