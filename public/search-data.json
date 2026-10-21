@@ -589,6 +589,21 @@
     "content": "```bash PIDFILE=\"/tmp/my-process.pid\" LOGFILE=\"/tmp/my-process.log\" function start() { if -f \"$PIDFILE\" ; then local pid=$(cat \"$PIDFILE\" 2>/dev/null) if -n \"$pid\" && kill -0 \"$pid\" 2>/dev/null; then echo \"Already running (PID: $pid)\" return 0 fi rm -f \"$PIDFILE\" fi nohup bash -c 'while true; do your-command; sleep 2; done' > \"$LOGFILE\" 2>&1 & echo $! > \"$PIDFILE\" noti --title MyTunnel --message \"Started (PID: $(cat \"$PIDFILE\"))\" } function stop() { if ! -f \"$PIDFILE\" ; then echo \"Not running\" return 1 fi local pid=$(cat \"$PIDFILE\" 2>/dev/null) if kill -0 \"$pid\" 2>/dev/null; then kill \"$pid\" rm -f \"$PIDFILE\" echo \"Stopped (PID: $pid)\" noti --title MyTunnel --message \"Stopped (PID: $(cat \"$PIDFILE\"))\" else rm -f \"$PIDFILE\" echo \"Process not found\" fi } start ```"
   },
   {
+    "url": "/posts/swiftbar-github-gitlab",
+    "title": "SwiftBar + GitHub/GitLab: tus PRs en la barra de menús",
+    "date": "2026-10-21",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "macos",
+      "swiftbar",
+      "github",
+      "gitlab",
+      "productivity"
+    ],
+    "content": "Quería ver de un vistazo qué PRs me esperan sin abrir el navegador. Con SwiftBar(https://github.com/swiftbar/SwiftBar), un script de bash y `jq` sale en un rato. !Menú de SwiftBar con reviews pedidas y mis PRs(/images/swiftbar-menu.png) La idea SwiftBar ejecuta un script cada X tiempo y pinta lo que imprime en la barra de menús. Eso es todo. - El nombre del archivo marca el intervalo: `github.10m.sh` corre cada 10 min. - Lo que va antes del primer `---` sale en la barra. Lo de después, en el menú. - Cada línea acepta parámetros detrás de una barra vertical: `texto | href=URL color=red`. Setup ```bash brew install --cask swiftbar brew install gh glab jq gh auth login glab auth login mkdir -p /swiftbar elígela como carpeta de plugins al abrir SwiftBar ``` MVP ```bash cat > /swiftbar/mvp.5m.sh true true export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\" unset GHTOKEN GITHUBTOKEN query=' fragment pr on PullRequest { number title url repository { nameWithOwner } commits(last: 1) { nodes { commit { statusCheckRollup { state } } } } } query { mine: search(query: \"is:open is:pr archived:false author:@me\", type: ISSUE, first: 50) { nodes { ...pr } } review: search(query: \"is:open is:pr archived:false user-review-requested:@me\", type: ISSUE, first: 50) { nodes { ...pr } } }' if ! json=$(gh api graphql -f query=\"$query\" 2>&1); then echo \"GH !\"; echo \"---\"; echo \"gh falló | color=red\"; exit 0 fi jq -r ' def ci: {\"SUCCESS\": \"✓\", \"FAILURE\": \"✗\", \"ERROR\": \"✗\", \"PENDING\": \"…\"}.commits.nodes0.commit.statusCheckRollup.state // \"\" // \"\"; def row: \"\\(.repository.nameWithOwner)\\(.number) \\(.title | gsub(\"\\\\|\"; \"/\")) \\(ci) | href=\\(.url)\"; .data as $d | \"👀 \\($d.review.nodes | length) 📝 \\($d.mine.nodes | length)\", \"---\", \"Review pedida\", ($d.review.nodes | row), \"---\", \"Mis PRs\", ($d.mine.nodes | row) ' true true export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\" unset GITLABTOKEN export GITLABHOST=gitlab.example.com si es self-hosted query=' fragment mr on MergeRequest { iid title "
+  },
+  {
     "url": "/posts/tests-selection-bias",
     "title": "El sesgo de seleccion y tests unitarios",
     "date": "2025-05-01",
