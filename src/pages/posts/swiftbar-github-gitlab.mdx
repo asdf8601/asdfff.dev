@@ -56,45 +56,76 @@ Si ves `PRs N` en la barra, funciona. Lo demás es lo mismo con más filtros.
 
 ## GitHub
 
-Reviews que te piden + tus PRs con estado de CI, en una sola query.
+Reviews que te piden + tus PRs con estado de CI, en columnas.
 
 ```bash
 #!/usr/bin/env bash
 # <swiftbar.hideRunInTerminal>true</swiftbar.hideRunInTerminal>
 # <swiftbar.hideAbout>true</swiftbar.hideAbout>
 
+# SwiftBar no lee tu .zshrc: sin esto no encuentra gh ni jq.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+# Un GH_TOKEN exportado pisa el login de gh y puede no ver todos tus repos.
 unset GH_TOKEN GITHUB_TOKEN
 
-query='
+fragment='
 fragment pr on PullRequest {
   number title url
-  repository { nameWithOwner }
+  repository { name }
   commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
-}
-query {
-  mine: search(query: "is:open is:pr archived:false author:@me", type: ISSUE, first: 50) { nodes { ...pr } }
-  review: search(query: "is:open is:pr archived:false user-review-requested:@me", type: ISSUE, first: 50) { nodes { ...pr } }
 }'
 
-if ! json=$(gh api graphql -f query="$query" 2>&1); then
-  echo "GH !"; echo "---"; echo "gh falló | color=red"; exit 0
-fi
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
 
-jq -r '
+# Todas las búsquedas en una query tardan más de los ~10 s que GitHub da a
+# GraphQL y vuelven como 502/504. Cada búsqueda va en su propia petición,
+# en paralelo, y se reintenta una vez porque el timeout es intermitente.
+search() { # nombre filtro
+  local query="$fragment query { $1: search(query: \"$2\", type: ISSUE, first: 50) { nodes { ...pr } } }"
+  gh api graphql -f query="$query" >"$tmp/$1" 2>/dev/null ||
+    gh api graphql -f query="$query" >"$tmp/$1" 2>/dev/null ||
+    echo "{\"data\": {\"$1\": {\"nodes\": []}}, \"failed\": [\"$1\"]}" >"$tmp/$1"
+}
+
+# user-review-requested y no review-requested, que mete las peticiones a tus equipos.
+search review "is:open is:pr archived:false user-review-requested:@me" &
+search mine "is:open is:pr archived:false author:@me" &
+wait
+
+# Si una búsqueda falla, su sección sale marcada con ! y la otra sigue
+# funcionando. Un menú vacío se confunde con "no tengo nada pendiente".
+# shellcheck disable=SC2016
+jq -rs '
 def ci: {"SUCCESS": "✓", "FAILURE": "✗", "ERROR": "✗", "PENDING": "…"}[.commits.nodes[0].commit.statusCheckRollup.state // ""] // "";
-def row: "\(.repository.nameWithOwner)#\(.number) \(.title | gsub("\\|"; "/")) \(ci) | href=\(.url)";
-.data as $d
-| "👀 \($d.review.nodes | length) 📝 \($d.mine.nodes | length)",
-  "---", "Review pedida", ($d.review.nodes[] | row),
-  "---", "Mis PRs", ($d.mine.nodes[] | row)
-' <<<"$json"
+def cap($n): if length > $n then .[0:$n - 1] + "…" else . end;
+def pad($n): . + ((" " * ($n - length)) // "");
+def clean: gsub("\\|"; "/") | gsub("\""; "'\''");
+(map(.data) | add) as $d
+| (map(.failed // []) | add) as $failed
+| [{key: "review", icon: "👀", label: "Review pedida"}, {key: "mine", icon: "📝", label: "Mis PRs"}]
+| map(. + {prs: $d[.key].nodes, failed: (.key as $k | $failed | index($k) != null)})
+# Nombres largos de repo y títulos de 80 caracteres hacen el menú más ancho
+# que la pantalla: el repo se recorta a 24, el título a 40 y el completo va al tooltip.
+| map(.prs |= map(. + {ref: ("#\(.number)" as $n | (.repository.name | cap(24 - ($n | length))) + $n),
+                         short: (.title | clean | cap(40))}))
+# Ancho común a todas las secciones para que las columnas cuadren.
+| ([.[].prs[].ref | length] | max // 0) as $wr
+| ([.[].prs[].short | length] | max // 0) as $wt
+| (map("\(.icon) \(if .failed then "!" else .prs | length end)") | join(" ")),
+  (.[] | "---",
+    "\(.icon) \(.label)\(if .failed then " (falló) | color=red" else "" end)",
+    (.prs[] | "\(.ref | pad($wr))  \(.short | pad($wt))  \(ci) | href=\(.url) tooltip=\"\(.title | clean)\" font=Menlo size=12 symbolize=false"))
+' "$tmp"/review "$tmp"/mine
 echo "---"
 echo "Refresh | refresh=true"
 ```
 
 - Los filtros son los de la búsqueda de github.com/pulls. Pruébalos ahí primero.
-- `user-review-requested` y no `review-requested`, que mete las peticiones a tus equipos.
+- Mi versión tiene cinco búsquedas, con hilos de review y comentarios. En una
+sola query tardaba de 9 a 12 s y GitHub la cortaba a los ~10 s con 502/504. Con
+una petición por búsqueda, en paralelo, desaparecen.
+- Para alinear columnas hace falta una fuente monoespaciada: `font=Menlo`.
 - Para más secciones: `mergeStateStatus` (`DIRTY` = conflictos, `CLEAN` = listo), `reviewDecision`, `isDraft`.
 
 ## GitLab
@@ -181,7 +212,8 @@ env -i HOME=$HOME PATH=/usr/bin:/bin ~/swiftbar/github.10m.sh
 - **Faltan repos:** hay un `GH_TOKEN` exportado que pisa el login. El `unset` lo arregla.
 - **Fila rota:** un título con barra vertical. Para eso está el `gsub`.
 - **Datos viejos:** el script falló en silencio. Imprime un título de error y `exit 0`.
-- **Rate limit:** una sola query GraphQL y 5 a 10 min de intervalo.
+- **`GH !` o secciones con `!`:** GraphQL cortó la petición (502/504). Divide la query en varias.
+- **Rate limit:** pocas peticiones GraphQL y 5 a 10 min de intervalo.
 
 No metas tokens en los scripts.
 
