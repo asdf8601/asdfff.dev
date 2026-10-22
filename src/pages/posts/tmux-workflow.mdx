@@ -17,16 +17,18 @@ cuál me está esperando.
    apunto un TODO sin romper el layout.
 3. **Wrapper `ccr` para Claude Code.** Para que cada pane vuelva a su chat y
    no al último chat del directorio.
-4. **`cc-spawn` para lanzar sesiones.** Abrir un Claude con nombre, en su
-   ventana y si hace falta en su propio worktree, con una tecla.
+4. **`cc-spawn` para lanzar sesiones.** Desde una sesión puedo mandar
+   trabajo a otra nueva, en su ventana y su worktree, y recibir su informe
+   sin dejar lo que estaba haciendo.
 5. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
    todas las ventanas sin pensar.
 6. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
    mirando una a una cuál ha terminado.
 7. **Índice de sesiones (`sessions`).** Con tantas ventanas y chats
    viejos, buscar a ojo dónde estaba el chat de una PR es lento.
-8. **`/todo` para saber qué me toca.** Tickets, PRs y ventanas están en
-   sitios distintos, y quiero verlos juntos con el siguiente paso.
+8. **`/todo` y la ventana `board`.** Tickets, PRs y ventanas están en
+   sitios distintos. Los veo juntos en una ventana fija, y desde ahí rescato
+   trabajo que se me olvida.
 9. **Nombre de ventana: hook `cc-tmux-name` y skill `/tmux-name`.** El
    nombre de la ventana dice de qué va la sesión, no el directorio.
 10. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
@@ -134,6 +136,21 @@ Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual:
 ```tmux
 bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-spawn %1 #{pane_current_path} >/dev/null'"
 ```
+
+### Mandar trabajo a otra sesión
+
+Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. Si en mitad de
+una tarea veo un arreglo que no toca, o quiero separar el diseño de la
+ejecución, la sesión en la que estoy:
+
+1. lanza otra con `cc-spawn -w <branch> <name>`,
+2. le escribe la tarea en un archivo y se la pasa con un mensaje entre
+   sesiones (`SendMessage`),
+3. sigue con lo suyo.
+
+Cuando la otra sesión termina, le manda su informe de vuelta y la primera me
+lo resume en una línea. Si hace falta, siguen hablando en las dos
+direcciones. Yo solo miro la ventana nueva si el icono se pone rojo.
 
 ## 5. Autosave
 
@@ -261,6 +278,17 @@ siguiente movimiento:
 
 Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
 ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
+
+### La ventana `board`
+
+La primera ventana de mi sesión de tmux se llama `board` y tiene un Claude
+fijo que no trabaja en nada concreto. Es mi centro de control: ahí lanzo
+`/todo` y desde ahí:
+
+- rescato trabajo que se me ha olvidado, como una sesión que se quedó a
+  medias o un ticket desplegado que nadie validó,
+- veo qué tareas pendientes necesitan su propia sesión y la abro con
+  `cc-spawn`, o vuelvo a la que ya existía con `prefix g`.
 
 ## 9. Nombre de ventana
 
