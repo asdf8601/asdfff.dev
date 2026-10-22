@@ -29,9 +29,11 @@ cuál me está esperando.
 8. **`/todo` y la ventana `board`.** Tickets, PRs y ventanas están en
    sitios distintos. Los veo juntos en una ventana fija, y desde ahí rescato
    trabajo que se me olvida.
-9. **Nombre de ventana: hook `cc-tmux-name` y skill `/tmux-name`.** El
+9. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Con veinte
+   ventanas abiertas necesito separar lo que llevo ahora de lo que espera.
+10. **Nombre de ventana: hook `cc-tmux-name` y skill `/tmux-name`.** El
    nombre de la ventana dice de qué va la sesión, no el directorio.
-10. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
+11. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
    tmux.
 
 La config y los scripts `cc-*` están en mis
@@ -290,7 +292,36 @@ fijo que no trabaja en nada concreto. Es mi centro de control: ahí lanzo
 - veo qué tareas pendientes necesitan su propia sesión y la abro con
   `cc-spawn`, o vuelvo a la que ya existía con `prefix g`.
 
-## 9. Nombre de ventana
+## 9. `doing`, `parked` y `oncall`
+
+Mis ventanas viven en tres sesiones de tmux:
+
+- **`doing`**: lo que llevo ahora. Una sesión trabajando, esperando mi
+  respuesta, o con una PR o un ticket abierto. La primera ventana es `board`.
+- **`parked`**: lo terminado o en pausa que quiero mantener abierto. No me
+  distrae, pero el chat sigue ahí si vuelve a hacer falta.
+- **`oncall`**: la guardia, aparte para que una alerta no se mezcle con el
+  trabajo del día.
+
+`/todo` solo mira las ventanas de `doing`, así que lo aparcado no ensucia la
+lista de lo que me toca.
+
+Para mover una ventana de una sesión a otra:
+
+```bash
+tmux move-window -d -s @N -t parked:
+```
+
+Los dos puntos del final la añaden al final de `parked`. La ventana se lleva
+su proceso, su `ccr` con el uuid y su icono de estado, y resurrect restaura
+cada sesión con su nombre.
+
+Casi nunca lo hago a mano. Desde la ventana `board` le pido a Claude que
+ordene las ventanas (el skill `tmux-board`): mira el resumen de cada sesión,
+propone qué va a `doing` y qué a `parked`, y solo mueve cuando le digo que
+sí.
+
+## 10. Nombre de ventana
 
 Hay dos piezas: un hook que renombra solo y un skill para cuando quiero un
 nombre mejor.
@@ -318,7 +349,7 @@ propia sesión que se ponga nombre: como sabe en qué está trabajando, elige
 no. Renombra su ventana y me dice el `/rename <nombre>` para que la sesión
 de Claude lleve el mismo título. Así el hook ve ese nombre y no lo pisa.
 
-## 10. Avisos por Telegram
+## 11. Avisos por Telegram
 
 Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
 y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
