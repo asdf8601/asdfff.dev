@@ -9,84 +9,32 @@ category: programming
 conversación exacta tras un reinicio, y la barra de estado me dice cuál me está
 esperando.**
 
-## Qué tengo y por qué
-
 Trabajo con muchas sesiones de Claude Code a la vez, a veces veinte, cada una
-en su ventana de tmux. Casi todo lo de abajo existe para que eso no se vuelva
-un caos. Quiero no perder ninguna, saber cuál me necesita y no olvidar trabajo
-a medias.
+en su ventana de tmux. Eso trae cuatro problemas, y cada sección de este post
+cuenta cómo resuelvo uno:
 
-1. **Popups.** Para lanzar un comando rápido tenía que abrir un pane,
-   esperar a que acabara y cerrarlo. Lo hago tantas veces al día que me hacía
-   falta algo mejor. Ahora lo lanzo en una ventana flotante que se cierra sola
-   al terminar y no toca el layout.
-2. **Cada pane vuelve a su chat.** Tenía varios chats abiertos en la misma
-   carpeta y, tras un reinicio, todos los panes reabrían el mismo, porque tmux
-   relanzaba `claude --continue`. Un wrapper pequeño, `ccr`, apunta el id del
-   chat en el comando para que cada pane recupere el suyo.
-3. **Sesiones que se reparten trabajo.** En mitad de una tarea veo un arreglo
-   que no toca, o quiero separar el diseño de la ejecución, y si cambio de
-   sesión pierdo el hilo. Desde la sesión en la que estoy lanzo otra en una
-   ventana nueva, le paso la tarea y recibo su informe. Lo hace un script,
-   `cc-spawn`.
-4. **Autosave.** Con veinte ventanas, un reinicio del Mac me obligaba a volver
-   a montarlo todo a mano. tmux guarda todas las ventanas cada 5 minutos y las
-   restaura al arrancar. Tiene una trampa con `prefix r` que cuento en su
-   sección.
-5. **Un icono por ventana con el estado de Claude.** Con diez sesiones
-   abiertas no sabía cuál había terminado ni cuál llevaba un rato parada en un
-   permiso sin mirarlas una a una. El icono es amarillo si Claude trabaja,
-   verde si terminó y rojo si pide permiso.
-6. **Buscar una sesión por PR o ticket.** Encontrar "la sesión donde hice la
-   PR 2032" entre veinte ventanas y chats viejos era lento. Un índice de todos
-   mis chats me deja saltar a esa sesión sin recordar en qué ventana estaba.
-7. **Una lista de lo que me toca.** Se me olvidaba trabajo, como una sesión a
-   medias o un ticket desplegado que nadie llegó a validar. `/todo` junta
-   tickets, PRs y ventanas abiertas y me dice el siguiente paso de cada uno.
-   Lo lanzo desde una ventana fija, `board`.
-8. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Las veinte
-   ventanas mezclaban lo de hoy con lo terminado y lo que esperaba a otro
-   equipo. Separo lo que llevo ahora de lo aparcado y de la guardia. No las
-   ordeno yo, se lo pido a Claude, así que en `doing` siempre está lo
-   relevante.
-9. **Ventanas con un nombre útil.** tmux nombraba cada ventana por su
-   carpeta, así que la barra decía el mismo repo diez veces. Ahora cada
-   ventana de Claude se llama como su tarea. Un hook pone el nombre solo, y un
-   skill me deja pedir uno mejor.
-10. **Avisos por Telegram.** Las notificaciones de Ghostty no atraviesan tmux,
-    así que me perdía el aviso de que una tarea larga había terminado. Ahora
-    me llega un mensaje al móvil.
+1. no perder ninguna sesión,
+2. saber cuál me necesita,
+3. encontrar una sesión concreta,
+4. no olvidar trabajo a medias.
 
 La config y los scripts `cc-*` están en mis
 [dotfiles](https://github.com/asdf8601/dotfiles) (`macos/home/.tmux.conf` y
-`macos/home/.local/bin`). Hace falta tmux 3.8, porque uso `new-pane -O` y eventos
-de usuario que no existen en versiones anteriores. Los puntos 6 y 7 dependen de
-scripts que no he publicado, y lo digo en cada sección.
+`macos/home/.local/bin`). Hace falta tmux 3.8, porque uso `new-pane -O` y
+eventos de usuario que no existen en versiones anteriores. El índice de
+sesiones y `/todo` dependen de scripts que no he publicado, y lo digo en su
+sección.
 
 Los atajos van con el prefijo de tmux, que tengo en `Ctrl+a`. Cuando escribo
 `prefix C`, significa `Ctrl+a` y luego `C`.
 
-## 1. Popups
+## No perder ninguna sesión
 
-Abrir un pane para un comando y cerrarlo después es poco trabajo, pero lo
-hacía decenas de veces al día. Los popups se abren encima del layout y desaparecen al terminar:
+Tenía varios chats abiertos en la misma carpeta y, tras un reinicio, todos los
+panes reabrían el mismo. Y un reinicio del Mac con veinte ventanas abiertas
+era recolocarlo todo a mano.
 
-| Tecla | Qué hace                                     |
-| ----- | -------------------------------------------- |
-| `s`   | elegir sesión con fzf y preview              |
-| `P`   | hacer attach a otra sesión                   |
-| `Z`   | tmux-sessionizer (sesión por proyecto)       |
-| `O`   | navegar sesiones con tmux-oil.nvim           |
-| `D`   | editar los dotfiles, commit y push al cerrar |
-| `J`   | buscar tickets de Jira                       |
-| `N`   | crear un ticket                              |
-
-`T` no sale en la tabla porque no abre un popup. Abre `TODO.md` en un split a
-la izquierda que ocupa el 20%. `tmux-fzf-session` y `tmux-sessionizer` están
-en los dotfiles. `jira-fzf` y `jira-new` son scripts míos sin publicar sobre
-el CLI de Jira.
-
-## 2. El wrapper `ccr`
+### Cada pane vuelve a su chat: `ccr`
 
 tmux-resurrect guarda el comando de cada pane y lo relanza al restaurar. El
 problema es que `claude --continue` abre el último chat del directorio, así
@@ -126,50 +74,7 @@ fi
   pane, lanzo `cc <uuid>`.
 - Con flags (`cc -c`, `cc -r`) pasa todo tal cual a `claude`.
 
-## 3. `cc-spawn`
-
-En mitad de una tarea veo un arreglo que no toca, o quiero separar el diseño
-de la ejecución, y cambiar de sesión me hace perder el hilo.
-
-```bash
-cc-spawn [-p] [-w <branch>] <name> [dir]
-```
-
-Abre una ventana nueva (o un pane con `-p`) que ejecuta
-`ccr <uuid> --name <name>` y devuelve el uuid de la sesión.
-
-- Con `-w <branch>` la sesión corre en `<repo>/.worktree/<branch>` (las `/`
-  de la rama pasan a `-`), y si el worktree no existe lo crea desde
-  `origin/main`. Así puedo tener varias sesiones tocando el mismo repo sin
-  pisarse.
-- El pane solo lleva `ccr` con su uuid, nunca el prompt de la tarea, porque
-  resurrect relanza ese comando al restaurar, y un prompt ahí se volvería a enviar en
-  cada reinicio. La tarea la escribo luego en el pane, o se la manda la
-  sesión que lo abrió.
-
-Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual:
-
-```tmux
-bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-spawn %1 #{pane_current_path} >/dev/null'"
-```
-
-### Mandar trabajo a otra sesión
-
-Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. La sesión en la
-que estoy:
-
-1. lanza otra con `cc-spawn -w <branch> <name>`,
-2. le escribe la tarea en un archivo y se la pasa con un mensaje entre
-   sesiones (`SendMessage`),
-3. sigue con lo suyo.
-
-Cuando la sesión nueva termina, manda su informe a la que la lanzó, y esa me
-lo resume en una línea. Si hace falta, siguen hablando en las dos
-direcciones. Yo solo miro la ventana nueva si el icono se pone rojo.
-
-## 4. Autosave
-
-Un reinicio del Mac con veinte ventanas abiertas era recolocarlo todo a mano.
+### Autosave
 
 ```tmux
 set -g @resurrect-processes '~ipython ~ccr "~claude->claude --continue"'
@@ -178,17 +83,20 @@ set -g @continuum-restore 'on'
 set -g @continuum-save-interval '5'
 ```
 
-Guarda cada 5 minutos y restaura al arrancar tmux. Relanza `ccr`, `ipython`
-y `claude` (este último con `--continue`), y nvim con su sesión.
+tmux-continuum guarda cada 5 minutos y restaura al arrancar tmux. Relanza
+`ccr`, `ipython` y `claude` (este último con `--continue`), y nvim con su
+sesión.
 
 ### Cuidado con `prefix r`
 
-Un reinicio me devolvió un layout de dos semanas antes. Recargar la config (`source-file`) machaca `status-right`, y tmux-continuum
-guarda las sesiones a través de un comando metido en `status-right`. Tras
-recargar, el autosave se moría en silencio hasta el siguiente reinicio.
+Un reinicio me devolvió un layout de dos semanas antes. Recargar la config
+(`source-file`) machaca `status-right`, y tmux-continuum guarda las sesiones a
+través de un comando metido en `status-right`. Tras recargar, el autosave se
+moría en silencio hasta el siguiente reinicio.
 
 El arreglo es poner el hook a mano en la config, con la misma ruta absoluta
-que usa el plugin (el `#{@cc_count}` del principio es el contador del punto 5):
+que usa el plugin (el `#{@cc_count}` del principio es el contador de la
+sección siguiente):
 
 ```tmux
 set -g status-right "#{@cc_count}#[default]#($HOME/.tmux/plugins/tmux-continuum/scripts/continuum_save.sh) %Y-%m-%d  %H:%M "
@@ -200,10 +108,14 @@ Después de recargar lo compruebo con este comando, que tiene que dar 1:
 tmux show-option -gv status-right | grep -c continuum_save
 ```
 
-## 5. Estado de Claude en la barra
+## Saber cuál me necesita
 
 Con diez sesiones abiertas no sabía cuál había terminado ni cuál llevaba un
-rato esperando un permiso sin ir ventana por ventana.
+rato esperando un permiso sin ir ventana por ventana. La barra tampoco
+ayudaba, porque decía el mismo repo diez veces. Y si me levantaba de la mesa,
+me perdía el aviso de que una tarea larga había terminado.
+
+### Un icono de estado por ventana
 
 Unos hooks de Claude Code en `~/.claude/settings.json` llaman a un script,
 `cc-tmux-state`, que guarda el estado de cada pane y pinta un icono delante
@@ -225,23 +137,57 @@ set-hook -g pane-focus-in 'run-shell -b "$HOME/.local/bin/cc-tmux-state seen #{p
 
 El hook `pane-focus-in` marca el pane como visto, así el verde solo dura
 hasta que miro la ventana. El rojo se queda hasta que respondo al permiso,
-porque solo lo quita `PostToolUse` cuando la herramienta aprobada ya ha corrido.
+porque solo lo quita `PostToolUse` cuando la herramienta aprobada ya ha
+corrido.
 
 A la derecha de la barra va `#{@cc_count}`, el número de panes en rojo y en
-verde. Con `prefix A` abro un popup con esos panes. Salen primero los que piden
-permiso y luego los turnos terminados que no he mirado, de más viejo a más
-nuevo.
+verde. Con `prefix A` abro un popup con esos panes. Salen primero los que
+piden permiso y luego los turnos terminados que no he mirado, de más viejo a
+más nuevo.
 
-## 6. Índice de sesiones
+### Ventanas con un nombre útil
+
+Por defecto la ventana se llama como su directorio:
+
+```tmux
+set-option -g automatic-rename on
+set-option -g automatic-rename-format '#{b:pane_current_path}'
+```
+
+Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
+renombra la ventana con el título de la sesión. Solo toca ventanas de un
+pane con nombre genérico (el directorio, `zsh`) o que ya nombró antes. Un
+nombre puesto a mano se respeta.
+
+El título automático a veces es largo o vago. Con el skill `/tmux-name` le
+pido a la propia sesión que se ponga nombre. Como sabe en qué está
+trabajando, elige `<ticket>-<slug>` si hay ticket o PR, o dos o tres palabras
+de la tarea si no. Renombra su ventana y me dice el `/rename <nombre>` para
+que la sesión de Claude lleve el mismo título. Así el hook ve ese nombre y no
+lo pisa.
+
+### Avisos por Telegram
+
+Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
+y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
+algo terminó, me mando un Telegram. Uso un bot y un `curl` a
+`api.telegram.org/bot<token>/sendMessage`, envuelto en un skill para pedirlo
+desde el chat.
+
+## Encontrar una sesión
 
 Encontrar la sesión donde trabajé una PR concreta, entre ventanas abiertas y
-chats cerrados, me llevaba un rato cada vez.
+chats cerrados, me llevaba un rato cada vez. Y con veinte ventanas en una
+sola sesión de tmux, lo que estaba haciendo se mezclaba con lo terminado y
+con lo que esperaba a otro equipo.
+
+### Índice de sesiones: `prefix g` y `prefix G`
 
 `sessions.py` es un script mío sin publicar, porque está atado a mi Jira y a
-mis repos. Lee todos los transcripts de `~/.claude/projects/` y guarda un índice
-local con una línea por sesión: última actividad, directorio y título. A cada
-línea añade las PRs y tickets que esa sesión tocó de verdad (abrió la PR,
-hizo push, movió el ticket), con su estado en vivo.
+mis repos. Lee todos los transcripts de `~/.claude/projects/` y guarda un
+índice local con una línea por sesión: última actividad, directorio y título.
+A cada línea añade las PRs y tickets que esa sesión tocó de verdad (abrió la
+PR, hizo push, movió el ticket), con su estado en vivo.
 
 ```bash
 python3 ~/.claude/skills/sessions/sessions.py [all] [query] [--sync]
@@ -264,72 +210,20 @@ bind G display-popup -E -w 80% -h 70% "python3 $HOME/.claude/skills/sessions/ses
   pane. Si la sesión ya no está abierta, la reanuda en una ventana nueva.
   Tarda unos 3 segundos.
 
-Al cerrar una sesión, el hook `SessionEnd` llama a `cc-session-end`, que mira
-si dejó algún ticket desactualizado (PR mergeada con el ticket aún abierto,
-por ejemplo). Lo guarda en `~/.claude/ticket-followups.tsv` y lo muestra 8
-segundos en la barra. No toca Jira, solo avisa.
-
 También es un skill de Claude Code, así que puedo pedirle "vuelve a la
 sesión de la PR 2032" y lo resuelve con el mismo script.
 
-## 7. `/todo` y la ventana `board`
-
-Se me olvidaba trabajo, como una sesión que se quedó a medias o un ticket
-desplegado que nadie llegó a validar.
-
-`/todo` es un skill de Claude Code, también sin publicar. Tira del MCP de
-Atlassian, de `gh` y del índice de sesiones, y junta en una sola vista:
-
-- mis tickets de Jira asignados y los cerrados en la última semana,
-- mis PRs abiertas, las reviews que me piden y las mergeadas en 7 días,
-- las ventanas de tmux donde hay una sesión trabajando, con su resumen,
-- los tickets desactualizados que apuntó el índice de sesiones.
-
-Lo une todo por ticket y lo reparte en tres secciones según de quién es el
-siguiente movimiento:
-
-```
-## Te toca
-| Ticket            | Siguiente paso             | Ventana |
-| PROJ-1234 timeout | validar en producción      | doing:4 |
-| PROJ-1235 tokens  | empezar (30 días en To Do) |         |
-
-## Esperas a otros
-- PROJ-1236 → review de un compañero en repo#123 · doing:6
-
-## Terminado (7 días)
-- Tickets: PROJ-1230, PROJ-1231
-```
-
-Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
-ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
-
-### La ventana `board`
-
-La primera ventana de mi sesión de tmux se llama `board` y tiene un Claude
-fijo que no trabaja en nada concreto. Es mi centro de control.
-
-Ahí lanzo `/todo` y rescato el trabajo olvidado. También veo qué
-tareas pendientes necesitan su propia sesión. La abro con `cc-spawn`, o vuelvo
-a la que ya existía con `prefix g`.
-
-## 8. `doing`, `parked` y `oncall`
-
-Con veinte ventanas en una sola sesión, lo que estaba haciendo se mezclaba con
-lo terminado y con lo que esperaba a otro equipo.
+### Tres sesiones de tmux: `doing`, `parked` y `oncall`
 
 Mis ventanas viven en tres sesiones de tmux:
 
 - **`doing`** guarda lo que llevo ahora, sea una sesión trabajando, una que
   espera mi respuesta o una con una PR o un ticket abierto. Su primera
-  ventana es `board`.
+  ventana es `board`, que cuento en la sección siguiente.
 - **`parked`** guarda lo terminado o en pausa que quiero mantener abierto. No
   me distrae, pero el chat sigue ahí si vuelve a hacer falta.
 - **`oncall`** es para la guardia. Va aparte para que una alerta no se mezcle
   con el trabajo del día.
-
-`/todo` solo mira las ventanas de `doing`, así que lo aparcado no ensucia la
-lista de lo que me toca.
 
 ### Claude ordena las ventanas
 
@@ -355,44 +249,114 @@ Los dos puntos del final la añaden al final de `parked`. La ventana se lleva
 su proceso, su `ccr` con el uuid y su icono de estado, y resurrect restaura
 cada sesión con su nombre.
 
-## 9. Nombre de ventana
+## No olvidar trabajo
 
-Con el nombre automático la barra decía el mismo repo diez veces.
+Se me olvidaba trabajo, como una sesión que se quedó a medias o un ticket
+desplegado que nadie llegó a validar. Y en mitad de una tarea veía un arreglo
+que no tocaba, o quería separar el diseño de la ejecución, pero cambiar de
+sesión me hacía perder el hilo.
 
-Un hook renombra la ventana solo, y un skill me deja pedir un nombre mejor
-cuando el automático no sirve.
+### `/todo` y la ventana `board`
 
-Por defecto la ventana se llama como su directorio:
+`/todo` es un skill de Claude Code, también sin publicar. Tira del MCP de
+Atlassian, de `gh` y del índice de sesiones, y junta en una sola vista:
 
-```tmux
-set-option -g automatic-rename on
-set-option -g automatic-rename-format '#{b:pane_current_path}'
+- mis tickets de Jira asignados y los cerrados en la última semana,
+- mis PRs abiertas, las reviews que me piden y las mergeadas en 7 días,
+- las ventanas de `doing` donde hay una sesión trabajando, con su resumen,
+- los tickets desactualizados que apuntó el índice de sesiones.
+
+Lo une todo por ticket y lo reparte en tres secciones según de quién es el
+siguiente movimiento:
+
+```
+## Te toca
+| Ticket            | Siguiente paso             | Ventana |
+| PROJ-1234 timeout | validar en producción      | doing:4 |
+| PROJ-1235 tokens  | empezar (30 días en To Do) |         |
+
+## Esperas a otros
+- PROJ-1236 → review de un compañero en repo#123 · doing:6
+
+## Terminado (7 días)
+- Tickets: PROJ-1230, PROJ-1231
 ```
 
-### El hook `cc-tmux-name`
+Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
+ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
 
-Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
-renombra la ventana con el título de la sesión. Solo toca ventanas de un
-pane con nombre genérico (el directorio, `zsh`) o que ya nombró antes. Un
-nombre puesto a mano se respeta.
+Los tickets desactualizados los apunta un hook. Al cerrar una sesión,
+`SessionEnd` llama a `cc-session-end`, que mira si dejó algún ticket
+desactualizado (PR mergeada con el ticket aún abierto, por ejemplo). Lo
+guarda en `~/.claude/ticket-followups.tsv` y lo muestra 8 segundos en la
+barra. No toca Jira, solo avisa.
 
-### El skill `/tmux-name`
+La primera ventana de `doing` se llama `board` y tiene un Claude fijo que no
+trabaja en nada concreto. Es mi centro de control. Ahí lanzo `/todo` y
+rescato el trabajo olvidado. También veo qué tareas pendientes necesitan su
+propia sesión. La abro con `cc-spawn`, o vuelvo a la que ya existía con
+`prefix g`.
 
-El título automático a veces es largo o vago. Con `/tmux-name` le pido a la
-propia sesión que se ponga nombre. Como sabe en qué está trabajando, elige
-`<ticket>-<slug>` si hay ticket o PR, o dos o tres palabras de la tarea si
-no. Renombra su ventana y me dice el `/rename <nombre>` para que la sesión
-de Claude lleve el mismo título. Así el hook ve ese nombre y no lo pisa.
+### Repartir trabajo: `cc-spawn`
 
-## 10. Avisos por Telegram
+```bash
+cc-spawn [-p] [-w <branch>] <name> [dir]
+```
 
-Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
-y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
-algo terminó, me mando un Telegram. Uso un bot y un `curl` a
-`api.telegram.org/bot<token>/sendMessage`, envuelto en un skill para pedirlo
-desde el chat.
+Abre una ventana nueva (o un pane con `-p`) que ejecuta
+`ccr <uuid> --name <name>` y devuelve el uuid de la sesión.
 
-## Apéndice: plugins
+- Con `-w <branch>` la sesión corre en `<repo>/.worktree/<branch>` (las `/`
+  de la rama pasan a `-`), y si el worktree no existe lo crea desde
+  `origin/main`. Así puedo tener varias sesiones tocando el mismo repo sin
+  pisarse.
+- El pane solo lleva `ccr` con su uuid, nunca el prompt de la tarea, porque
+  resurrect relanza ese comando al restaurar, y un prompt ahí se volvería a
+  enviar en cada reinicio. La tarea la escribo luego en el pane, o se la
+  manda la sesión que lo abrió.
+
+Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual:
+
+```tmux
+bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-spawn %1 #{pane_current_path} >/dev/null'"
+```
+
+Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. La sesión en la
+que estoy:
+
+1. lanza otra con `cc-spawn -w <branch> <name>`,
+2. le escribe la tarea en un archivo y se la pasa con un mensaje entre
+   sesiones (`SendMessage`),
+3. sigue con lo suyo.
+
+Cuando la sesión nueva termina, manda su informe a la que la lanzó, y esa me
+lo resume en una línea. Si hace falta, siguen hablando en las dos
+direcciones. Yo solo miro la ventana nueva si el icono se pone rojo.
+
+## Extras
+
+### Popups
+
+Para lanzar un comando rápido tenía que abrir un pane, esperar a que acabara
+y cerrarlo. Lo hago tantas veces al día que me hacía falta algo mejor. Los
+popups se abren encima del layout y desaparecen al terminar:
+
+| Tecla | Qué hace                                     |
+| ----- | -------------------------------------------- |
+| `s`   | elegir sesión con fzf y preview              |
+| `P`   | hacer attach a otra sesión                   |
+| `Z`   | tmux-sessionizer (sesión por proyecto)       |
+| `O`   | navegar sesiones con tmux-oil.nvim           |
+| `D`   | editar los dotfiles, commit y push al cerrar |
+| `J`   | buscar tickets de Jira                       |
+| `N`   | crear un ticket                              |
+
+`T` no sale en la tabla porque no abre un popup. Abre `TODO.md` en un split a
+la izquierda que ocupa el 20%. `tmux-fzf-session` y `tmux-sessionizer` están
+en los dotfiles. `jira-fzf` y `jira-new` son scripts míos sin publicar sobre
+el CLI de Jira.
+
+### Plugins
 
 ```tmux
 set -g @plugin 'tmux-plugins/tpm'  # Plugin Manager
