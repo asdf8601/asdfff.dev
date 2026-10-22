@@ -37,7 +37,8 @@ a medias.
    ventana fija, `board`, que uso para rescatar trabajo olvidado.
 8. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Separo lo que
    llevo ahora de lo aparcado y de la guardia, para que veinte ventanas no se
-   mezclen.
+   mezclen. No las ordeno yo, se lo pido a Claude, así que en `doing` siempre
+   está lo relevante y lo demás queda en `parked`.
 9. **Ventanas con un nombre útil.** Cada ventana de Claude se llama como su
     tarea y no como su carpeta. Un hook pone el nombre solo, y un skill me
     deja pedir uno mejor.
@@ -303,7 +304,21 @@ Mis ventanas viven en tres sesiones de tmux:
 `/todo` solo mira las ventanas de `doing`, así que lo aparcado no ensucia la
 lista de lo que me toca.
 
-Para mover una ventana de una sesión a otra uso `move-window`:
+### Claude ordena las ventanas
+
+Las ventanas cambian de estado todo el rato. Una PR se mergea, una tarea se
+queda esperando a otro equipo, una sesión aparcada vuelve a hacer falta. En
+vez de moverlas yo, desde la ventana `board` le pido a Claude que las ordene
+con el skill `tmux-board`.
+
+Claude lee el resumen de cada sesión y el estado de sus PRs y tickets, y
+propone qué va a `doing` y qué a `parked`. Lo que trabaja, espera mi
+respuesta o tiene una PR abierta va a `doing`. Lo terminado o en pausa va a
+`parked`. Solo mueve cuando le digo que sí, y de paso propone nombres mejores
+para las ventanas que aún tienen uno genérico. Así `doing` siempre tiene lo
+relevante y nada más.
+
+Por debajo usa `move-window`:
 
 ```bash
 tmux move-window -d -s @N -t parked:
@@ -312,11 +327,6 @@ tmux move-window -d -s @N -t parked:
 Los dos puntos del final la añaden al final de `parked`. La ventana se lleva
 su proceso, su `ccr` con el uuid y su icono de estado, y resurrect restaura
 cada sesión con su nombre.
-
-Casi nunca lo hago a mano. Desde la ventana `board` le pido a Claude que
-ordene las ventanas con el skill `tmux-board`. Claude mira el resumen de cada
-sesión, propone qué va a `doing` y qué a `parked`, y solo mueve cuando le digo
-que sí.
 
 ## 9. Nombre de ventana
 
