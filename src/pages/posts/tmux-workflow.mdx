@@ -25,11 +25,13 @@ cuál me está esperando.
    todas las ventanas sin pensar.
 7. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
    mirando una a una cuál ha terminado.
-8. **Saltar a una sesión con `g` y `G`.** Con tantas ventanas, buscar a ojo
-   dónde estaba el chat de una PR es lento.
-9. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
+8. **Índice de sesiones (`sessions`).** Con tantas ventanas y chats
+   viejos, buscar a ojo dónde estaba el chat de una PR es lento.
+9. **`/todo` para saber qué me toca.** Tickets, PRs y ventanas están en
+   sitios distintos, y quiero verlos juntos con el siguiente paso.
+10. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
    va la sesión, no el directorio.
-10. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
+11. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
    tmux.
 
 La config vive en mis dotfiles: `~/.dotfiles/macos/home/.tmux.conf`.
@@ -189,10 +191,21 @@ atención hasta que la miras.
 Con `prefix A` abro un popup con los panes que me esperan: primero los que
 piden permiso, luego los turnos terminados que no he mirado.
 
-## 8. Saltar a una sesión: `g` y `G`
+## 8. Índice de sesiones
 
-Un script en Python indexa los transcripts de Claude Code por las PRs y los
-tickets que ha tocado cada sesión.
+`sessions.py` lee todos los transcripts de `~/.claude/projects/` y guarda un
+índice local con una línea por sesión: última actividad, directorio, título
+y las PRs y tickets que esa sesión tocó de verdad (abrió la PR, hizo push,
+movió el ticket), con su estado en vivo.
+
+```bash
+python3 ~/.claude/skills/sessions/sessions.py [all] [query] [--sync]
+```
+
+Sin argumentos abre fzf sobre todas las sesiones. Escribo `GC-1234`, `open`
+o `draft` para filtrar, y Enter reanuda la sesión en su directorio con `ccr`.
+
+Desde tmux uso dos atajos:
 
 ```tmux
 bind g new-pane -O -x 60% -y 30% -X 20% -Y 35% "python3 $HOME/.claude/skills/sessions/sessions.py ask"
@@ -205,7 +218,42 @@ bind G display-popup -E -w 80% -h 70% "python3 $HOME/.claude/skills/sessions/ses
   pequeño (haiku) elige la sesión que encaja y me lleva a su pane; si la
   sesión ya no está abierta, la reanuda en una ventana nueva.
 
-## 9. Nombre automático
+Al cerrar una sesión, el hook `SessionEnd` mira si dejó algún ticket
+desactualizado (PR mergeada con el ticket aún abierto, por ejemplo) y lo
+apunta en la barra de estado. No toca Jira, solo avisa.
+
+También es un skill de Claude Code, así que puedo pedirle "vuelve a la
+sesión de la PR 2032" y lo resuelve con el mismo script.
+
+## 9. `/todo`
+
+Es un skill de Claude Code. Junta en una sola vista:
+
+- mis tickets de Jira asignados y los cerrados en la última semana,
+- mis PRs abiertas, las reviews que me piden y las mergeadas en 7 días,
+- las ventanas de tmux donde hay una sesión trabajando, con su resumen,
+- los tickets desactualizados que apuntó el índice de sesiones.
+
+Lo une todo por ticket y lo reparte en tres secciones según de quién es el
+siguiente movimiento:
+
+```
+## Te toca
+| Ticket          | Siguiente paso              | Ventana |
+| GC-1234 timeout | validar en producción       | doing:4 |
+| GC-1235 tokens  | empezar (30 días en To Do)  |         |
+
+## Esperas a otros
+- GC-1236 → review de un compañero en repo#123 · doing:6
+
+## Terminado (7 días)
+- Tickets: GC-1230, GC-1231
+```
+
+Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
+ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
+
+## 10. Nombre automático
 
 Por defecto la ventana se llama como su directorio:
 
@@ -218,7 +266,7 @@ Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
 renombra la ventana con el título de la sesión. Así la barra dice "fix
 timeout" y no "seedtag" diez veces.
 
-## 10. Avisos por Telegram
+## 11. Avisos por Telegram
 
 Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
 y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
