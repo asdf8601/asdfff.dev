@@ -1,7 +1,7 @@
 ---
-title: "SwiftBar + GitHub/GitLab: your PRs in the menu bar"
+title: "SwiftBar + GitHub: your PRs in the menu bar"
 date: 2026-10-21
-tag: [english, macos, swiftbar, github, gitlab, productivity]
+tag: [english, macos, swiftbar, github, productivity]
 category: programming
 ---
 
@@ -29,9 +29,8 @@ dropdown menu.
 
 ```bash
 brew install --cask swiftbar
-brew install gh glab jq
+brew install gh jq
 gh auth login
-glab auth login
 mkdir -p ~/swiftbar   # pick it as the plugin folder when SwiftBar opens
 ```
 
@@ -132,54 +131,6 @@ request per search, in parallel, they're gone.
 - Aligned columns need a monospaced font: `font=Menlo`.
 - For more sections: `mergeStateStatus` (`DIRTY` = conflicts, `CLEAN` = ready), `reviewDecision`, `isDraft`.
 
-## GitLab
-
-Same thing, with `glab`. I haven't tested this one yet.
-
-```bash
-#!/usr/bin/env bash
-# <swiftbar.hideRunInTerminal>true</swiftbar.hideRunInTerminal>
-# <swiftbar.hideAbout>true</swiftbar.hideAbout>
-
-export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-unset GITLAB_TOKEN
-# export GITLAB_HOST=gitlab.example.com   # if self-hosted
-
-query='
-fragment mr on MergeRequest {
-  iid title webUrl draft detailedMergeStatus
-  project { fullPath }
-  headPipeline { status }
-}
-query {
-  currentUser {
-    mine: authoredMergeRequests(state: opened, first: 50) { nodes { ...mr } }
-    review: reviewRequestedMergeRequests(state: opened, first: 50) { nodes { ...mr } }
-  }
-}'
-
-if ! json=$(glab api graphql -f query="$query" 2>&1); then
-  echo "GL !"; echo "---"; echo "glab failed | color=red"; exit 0
-fi
-
-jq -r '
-def ci: {"SUCCESS": "✓", "FAILED": "✗", "RUNNING": "…", "PENDING": "…"}[.headPipeline.status // ""] // "";
-def row: "\(.project.fullPath)!\(.iid) \(.title | gsub("\\|"; "/")) \(ci) | href=\(.webUrl)";
-.data.currentUser as $u
-| ($u.mine.nodes | map(select(.draft | not))) as $mine
-| ($mine | map(select(.detailedMergeStatus == "MERGEABLE"))) as $ready
-| "🦊 👀 \($u.review.nodes | length) 🚀 \($ready | length)",
-  "---", "Review requested", ($u.review.nodes[] | row),
-  "---", "Ready to merge", ($ready[] | row),
-  "---", "My MRs", ($mine[] | row)
-' <<<"$json"
-echo "---"
-echo "Refresh | refresh=true"
-```
-
-- `detailedMergeStatus` tells you what's blocking: `CONFLICT`, `NOT_APPROVED`, `CI_MUST_PASS`, `DISCUSSIONS_NOT_RESOLVED`.
-- One plugin per provider. If one fails, the other keeps going.
-
 ## Cheat sheet
 
 | Parameter                           | What it does                                      |
@@ -225,5 +176,4 @@ Don't put tokens in the scripts.
 
 - [SwiftBar](https://github.com/swiftbar/SwiftBar) (the README is the full reference)
 - [gh api](https://cli.github.com/manual/gh_api) · [GitHub GraphQL](https://docs.github.com/en/graphql) · [PR search](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests)
-- [glab](https://gitlab.com/gitlab-org/cli) · [glab api](https://docs.gitlab.com/cli/api/) · [GitLab GraphQL](https://docs.gitlab.com/api/graphql/reference/)
 - [jq](https://jqlang.org/manual/)
