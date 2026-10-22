@@ -19,13 +19,17 @@ cuál me está esperando.
    apunto un TODO sin romper el layout.
 4. **Wrapper `ccr` para Claude Code.** Para que cada pane vuelva a su chat y
    no al último chat del directorio.
-5. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
+5. **`cc-spawn` para lanzar sesiones.** Abrir un Claude con nombre, en su
+   ventana y si hace falta en su propio worktree, con una tecla.
+6. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
    todas las ventanas sin pensar.
-6. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
+7. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
    mirando una a una cuál ha terminado.
-7. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
+8. **Saltar a una sesión con `g` y `G`.** Con tantas ventanas, buscar a ojo
+   dónde estaba el chat de una PR es lento.
+9. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
    va la sesión, no el directorio.
-8. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
+10. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
    tmux.
 
 La config vive en mis dotfiles: `~/.dotfiles/macos/home/.tmux.conf`.
@@ -113,10 +117,29 @@ fi
   pane: `cc <uuid>`.
 - Con flags (`cc -c`, `cc -r`) pasa todo tal cual a `claude`.
 
-Para lanzar una sesión nueva en otra ventana, `prefix C` pide un nombre y
-abre Claude en el directorio actual (script `cc-spawn`).
+## 5. `cc-spawn`
 
-## 5. Autosave
+```bash
+cc-spawn [-p] [-w <branch>] <name> [dir]
+```
+
+Abre una ventana nueva (o un pane con `-p`) que ejecuta
+`ccr <uuid> --name <name>` y devuelve el uuid de la sesión.
+
+- Con `-w <branch>` la sesión corre en `<repo>/.worktree/<branch>`, y si el
+  worktree no existe lo crea desde `origin/main`. Así puedo tener varias
+  sesiones tocando el mismo repo sin pisarse.
+- El pane solo lleva `ccr` con su uuid, nunca el prompt de la tarea: resurrect
+  relanza ese comando al restaurar, y un prompt ahí se volvería a enviar en
+  cada reinicio. La tarea se le pasa después.
+
+Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual:
+
+```tmux
+bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-spawn %1 #{pane_current_path} >/dev/null'"
+```
+
+## 6. Autosave
 
 ```tmux
 set -g @resurrect-processes '~ipython ~ccr "~claude->claude --continue"'
@@ -148,7 +171,7 @@ Para comprobarlo después de recargar (tiene que dar 1):
 tmux show-option -gv status-right | grep -c continuum_save
 ```
 
-## 6. Estado de Claude en la barra
+## 7. Estado de Claude en la barra
 
 Unos hooks de Claude Code (`UserPromptSubmit`, `Stop`, `Notification`,
 `SessionEnd`) llaman a un script, `cc-tmux-state`, que guarda el estado de
@@ -166,7 +189,23 @@ atención hasta que la miras.
 Con `prefix A` abro un popup con los panes que me esperan: primero los que
 piden permiso, luego los turnos terminados que no he mirado.
 
-## 7. Nombre automático
+## 8. Saltar a una sesión: `g` y `G`
+
+Un script en Python indexa los transcripts de Claude Code por las PRs y los
+tickets que ha tocado cada sesión.
+
+```tmux
+bind g new-pane -O -x 60% -y 30% -X 20% -Y 35% "python3 $HOME/.claude/skills/sessions/sessions.py ask"
+bind G display-popup -E -w 80% -h 70% "python3 $HOME/.claude/skills/sessions/sessions.py panes"
+```
+
+- `prefix G` abre fzf sobre todos los panes de tmux, con la ventana, el nombre
+  y el título de cada sesión de Claude. Enter me lleva al pane.
+- `prefix g` acepta texto libre ("pr 2032", "el del timeout"). Un modelo
+  pequeño (haiku) elige la sesión que encaja y me lleva a su pane; si la
+  sesión ya no está abierta, la reanuda en una ventana nueva.
+
+## 9. Nombre automático
 
 Por defecto la ventana se llama como su directorio:
 
@@ -179,7 +218,7 @@ Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
 renombra la ventana con el título de la sesión. Así la barra dice "fix
 timeout" y no "seedtag" diez veces.
 
-## 8. Avisos por Telegram
+## 10. Avisos por Telegram
 
 Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
 y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
