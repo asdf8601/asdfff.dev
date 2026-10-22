@@ -5,13 +5,32 @@ tag: [spanish, tmux, claude-code, productivity]
 category: programming
 ---
 
-Una chuleta para mi yo del futuro: cómo tengo montado tmux y por qué.
-Trabajo con muchas sesiones de Claude Code abiertas a la vez, una por
-ventana, y casi todo lo que hay aquí existe para no perderlas de vista.
+**En una frase:** cada chat de Claude Code vive en su propia ventana de tmux,
+vuelve a su conversación exacta tras un reinicio, y la barra de estado me dice
+cuál me está esperando.
+
+## Qué tengo y por qué
+
+1. **Prefijo `C-a` y movimiento estilo vim.** Mis dedos ya saben vim, y
+   `C-a` queda más cerca que `C-b`.
+2. **Splits en el directorio actual.** Casi siempre abro un pane para hacer
+   algo en la misma carpeta.
+3. **Popups para todo lo que no es código.** Busco una sesión, un ticket o
+   apunto un TODO sin romper el layout.
+4. **Wrapper `ccr` para Claude Code.** Para que cada pane vuelva a su chat y
+   no al último chat del directorio.
+5. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
+   todas las ventanas sin pensar.
+6. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
+   mirando una a una cuál ha terminado.
+7. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
+   va la sesión, no el directorio.
+8. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
+   tmux.
 
 La config vive en mis dotfiles: `~/.dotfiles/macos/home/.tmux.conf`.
 
-## Lo básico
+## 1. Prefijo y movimiento
 
 ```tmux
 set -g prefix C-a
@@ -21,19 +40,28 @@ set-option -g detach-on-destroy off
 set -g mouse off
 ```
 
-- El prefijo es `C-a` y la barra va arriba.
-- Navegación estilo vim: `h j k l` para moverse entre panes, `M-h/j/k/l`
-  para redimensionar.
-- Los splits y las ventanas nuevas abren en el directorio del pane actual
-  (`i` o `/` en vertical, `-` en horizontal, `c` ventana nueva).
+- `h j k l` para moverse entre panes, `M-h/j/k/l` para redimensionar.
 - `b` vuelve a la última ventana.
 - `S` y `V` traen otra ventana como pane.
 - `m` enciende o apaga el ratón, que por defecto está apagado.
+- La barra va arriba y `detach-on-destroy off` hace que cerrar una sesión
+  me lleve a otra en vez de sacarme de tmux.
 
-## Popups
+## 2. Splits en el directorio actual
 
-Casi todo lo que no es editar código lo abro en un popup que desaparece
-al terminar:
+```tmux
+bind i split-window -h -c "#{pane_current_path}"
+bind / split-window -h -c "#{pane_current_path}"
+bind - split-window -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+```
+
+`i` o `/` en vertical, `-` en horizontal, `c` ventana nueva. Todos heredan
+el directorio del pane donde estoy.
+
+## 3. Popups
+
+Se abren encima del layout y desaparecen al terminar:
 
 | Tecla | Qué hace                                     |
 | ----- | -------------------------------------------- |
@@ -46,19 +74,15 @@ al terminar:
 | `J`   | buscar tickets de Jira                       |
 | `N`   | crear un ticket                              |
 
-## Una ventana por chat de Claude
-
-Aquí está la parte interesante.
-
-### Restaurar cada pane a su chat
+## 4. El wrapper `ccr`
 
 tmux-resurrect guarda el comando de cada pane y lo relanza al restaurar. El
 problema es que `claude --continue` abre el último chat del directorio, así
 que si tengo cinco panes en la misma carpeta, los cinco vuelven al mismo
 chat.
 
-La solución es un wrapper, `ccr` (con `alias cc=ccr`), que fija un uuid de
-sesión en su propia línea de comandos:
+`ccr` (con `alias cc=ccr`) fija un uuid de sesión en su propia línea de
+comandos:
 
 ```zsh
 #!/bin/zsh
@@ -87,8 +111,12 @@ fi
   aparece en `ps` sin argumentos.
 - Con un uuid que ya existe hace `--resume`. Para anclar un chat viejo a un
   pane: `cc <uuid>`.
+- Con flags (`cc -c`, `cc -r`) pasa todo tal cual a `claude`.
 
-En la config de resurrect:
+Para lanzar una sesión nueva en otra ventana, `prefix C` pide un nombre y
+abre Claude en el directorio actual (script `cc-spawn`).
+
+## 5. Autosave
 
 ```tmux
 set -g @resurrect-processes '~ipython ~ccr "~claude->claude --continue"'
@@ -97,31 +125,10 @@ set -g @continuum-restore 'on'
 set -g @continuum-save-interval '5'
 ```
 
-### Estado en la barra
+Guarda cada 5 minutos y restaura al arrancar tmux. Relanza `ccr`, `ipython`
+y `claude` (este último con `--continue`), y nvim con su sesión.
 
-Unos hooks de Claude Code (`UserPromptSubmit`, `Stop`, `Notification`,
-`SessionEnd`) llaman a un script, `cc-tmux-state`, que guarda el estado de
-cada pane y pinta un icono delante del nombre de la ventana: trabajando,
-terminado o pidiendo permiso.
-
-```tmux
-setw -g window-status-format " #I #{@cc}#[default]#W "
-set-hook -g pane-focus-in 'run-shell -b "$HOME/.local/bin/cc-tmux-state seen #{pane_id}"'
-```
-
-El hook `pane-focus-in` marca el pane como visto, así una ventana solo pide
-atención hasta que la miras.
-
-Otro hook (`Stop`) renombra la ventana con el título de la sesión, y con
-`prefix A` abro un popup con los panes que me esperan: primero los que piden
-permiso, luego los turnos terminados que no he mirado.
-
-### Lanzar una sesión nueva
-
-`prefix C` pide un nombre y abre una ventana nueva con Claude en el
-directorio actual (script `cc-spawn`).
-
-## Cuidado con `prefix r`
+### Cuidado con `prefix r`
 
 Recargar la config (`source-file`) machaca `status-right`, y tmux-continuum
 guarda las sesiones a través de un comando metido en `status-right`. Tras
@@ -141,7 +148,38 @@ Para comprobarlo después de recargar (tiene que dar 1):
 tmux show-option -gv status-right | grep -c continuum_save
 ```
 
-## Notificaciones
+## 6. Estado de Claude en la barra
+
+Unos hooks de Claude Code (`UserPromptSubmit`, `Stop`, `Notification`,
+`SessionEnd`) llaman a un script, `cc-tmux-state`, que guarda el estado de
+cada pane y pinta un icono delante del nombre de la ventana: trabajando,
+terminado o pidiendo permiso.
+
+```tmux
+setw -g window-status-format " #I #{@cc}#[default]#W "
+set-hook -g pane-focus-in 'run-shell -b "$HOME/.local/bin/cc-tmux-state seen #{pane_id}"'
+```
+
+El hook `pane-focus-in` marca el pane como visto, así una ventana solo pide
+atención hasta que la miras.
+
+Con `prefix A` abro un popup con los panes que me esperan: primero los que
+piden permiso, luego los turnos terminados que no he mirado.
+
+## 7. Nombre automático
+
+Por defecto la ventana se llama como su directorio:
+
+```tmux
+set-option -g automatic-rename on
+set-option -g automatic-rename-format '#{b:pane_current_path}'
+```
+
+Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
+renombra la ventana con el título de la sesión. Así la barra dice "fix
+timeout" y no "seedtag" diez veces.
+
+## 8. Avisos por Telegram
 
 Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
 y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
