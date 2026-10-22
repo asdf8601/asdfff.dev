@@ -11,30 +11,40 @@ esperando.**
 
 ## Qué tengo y por qué
 
-1. **Splits en el directorio actual.** Casi siempre abro un pane para hacer
-   algo en la misma carpeta.
-2. **Popups para todo lo que no es código.** Busco una sesión, un ticket o
-   apunto un TODO sin romper el layout.
-3. **Wrapper `ccr` para Claude Code.** Así cada pane vuelve a su chat y no
-   al último chat del directorio.
-4. **`cc-spawn` para lanzar sesiones.** Desde una sesión puedo mandar
-   trabajo a otra nueva, en su ventana y su worktree, y recibir su informe
-   sin dejar lo que estaba haciendo.
-5. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
-   todas las ventanas sin pensar.
-6. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
-   mirando una a una cuál ha terminado.
-7. **Índice de sesiones (`sessions`).** Con tantas ventanas y chats
-   viejos, buscar a ojo dónde estaba el chat de una PR es lento.
-8. **`/todo` y la ventana `board`.** Tickets, PRs y ventanas están en
-   sitios distintos. Los veo juntos en una ventana fija, y desde ahí rescato
-   trabajo que se me olvida.
-9. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Con veinte
-   ventanas abiertas necesito separar lo que llevo ahora de lo que espera.
-10. **Nombre de ventana: hook `cc-tmux-name` y skill `/tmux-name`.** El
-   nombre de la ventana dice de qué va la sesión, no el directorio.
-11. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
-   tmux.
+Trabajo con muchas sesiones de Claude Code a la vez, a veces veinte, cada una
+en su ventana de tmux. Casi todo lo de abajo existe para que eso no se vuelva
+un caos. Quiero no perder ninguna, saber cuál me necesita y no olvidar trabajo
+a medias.
+
+1. **Splits en el directorio actual.** Al partir un pane, el nuevo abre en la
+   misma carpeta, porque casi siempre lo abro para hacer algo ahí.
+2. **Popups.** Busco una sesión o un ticket, o edito los dotfiles, en una
+   ventana flotante que se cierra al terminar sin tocar el layout.
+3. **Cada pane vuelve a su chat.** Tras un reinicio, tmux relanza Claude en
+   cada pane, pero por defecto todos los panes de una carpeta abren el mismo
+   chat. Un wrapper pequeño, `ccr`, apunta el id del chat en el comando para
+   que cada pane recupere el suyo.
+4. **Sesiones que se reparten trabajo.** Desde una sesión de Claude lanzo otra
+   en una ventana nueva, le paso una tarea y recibo su informe sin dejar lo
+   que estaba haciendo. Lo hace un script, `cc-spawn`.
+5. **Autosave.** tmux guarda todas las ventanas cada 5 minutos y las restaura
+   al arrancar, así que un reinicio del Mac no me cuesta nada.
+6. **Un icono por ventana con el estado de Claude.** El icono es amarillo si
+   Claude trabaja, verde si terminó y rojo si pide permiso. Con diez sesiones
+   abiertas no puedo ir mirando una a una.
+7. **Buscar una sesión por PR o ticket.** Un índice de todos mis chats me deja
+   saltar a "la sesión de la PR 2032" sin recordar en qué ventana estaba.
+8. **Una lista de lo que me toca.** `/todo` junta tickets, PRs y ventanas
+   abiertas y me dice el siguiente paso de cada uno. Lo lanzo desde una
+   ventana fija, `board`, que uso para rescatar trabajo olvidado.
+9. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Separo lo que
+   llevo ahora de lo aparcado y de la guardia, para que veinte ventanas no se
+   mezclen.
+10. **Ventanas con un nombre útil.** Cada ventana de Claude se llama como su
+    tarea y no como su carpeta. Un hook pone el nombre solo, y un skill me
+    deja pedir uno mejor.
+11. **Avisos por Telegram.** Cuando algo largo termina me llega un mensaje al
+    móvil, porque las notificaciones del escritorio no atraviesan tmux.
 
 La config y los scripts `cc-*` están en mis
 [dotfiles](https://github.com/asdf8601/dotfiles) (`macos/home/.tmux.conf` y
