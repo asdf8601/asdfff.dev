@@ -366,6 +366,15 @@ Nada de esto es grande. Un wrapper de veinte líneas, cinco hooks, tres
 sesiones de tmux y un Claude fijo que ordena a los demás. Lo que cambia es que
 puedo reiniciar el Mac con veinte chats abiertos y seguir donde lo dejé.
 
+<Card type="success" title="Buen diseño">
+  Que todo esto se pueda hacer me parece buen diseño de tmux, Claude Code y
+  fzf. tmux guarda su estado en opciones y hooks que cualquier script lee y
+  escribe. Claude Code avisa de cada evento con un hook y se puede lanzar,
+  reanudar y nombrar desde la línea de comandos. fzf convierte cualquier lista
+  en un selector. No he parcheado ninguno de los tres, solo los he unido con
+  scripts pequeños.
+</Card>
+
 Si solo pruebas una cosa, que sea `ccr`. Son veinte líneas y con eso las
 sesiones sobreviven al reinicio. Lo segundo es el icono de estado, cinco
 hooks y una línea de tmux.
