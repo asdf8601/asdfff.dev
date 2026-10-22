@@ -626,6 +626,32 @@
     "content": "Los tests unitarios que escribimos y gestionamos nosotros tienen, por definición, un sesgo de selección. La implementación resuelve un problema específico y se prueba para los casos que se espera encontrar, lo que lleva a escribir tests que reflejan la implementación. No obstante, el margen de maniobra es limitado. La implementación evidentemente soluciona al menos el 80% de la casuística, y los tests son redundantes ya que buscan asegurar la corrección de lo implementado. Sin embargo, la razón principal para testear no es solo la corrección inmediata o la duda sobre la implementación, sino asegurar la funcionalidad a futuro, previniendo que cambios ulteriores alteren su comportamiento. Cuanto más experimentados son los desarrolladores, más redundantes son los tests, dado que la experiencia conlleva un código más robusto y eficiente. Se priorizan las piezas pequeñas, buscando minimalismo y sencillez, cualidades que los programadores experimentados reconocen por su trayectoria. El problema surge con el tiempo, cuando se acumulan cambios (relacionados con el interés compuesto, donde a más cambios, los riesgos crecen exponencialmente), y aparecen casos límite no anticipados. Es aquí donde se manifiesta el sesgo de selección. Los tests son una herramienta útil para recordar errores pasados y evitar su recurrencia, aunque no son una solución universal."
   },
   {
+    "url": "/posts/tmux-workflow-en",
+    "title": "Drowning in Claude Code sessions (and how I survive)",
+    "date": "2026-10-22",
+    "category": "programming",
+    "tags": [
+      "english",
+      "tmux",
+      "claude-code",
+      "productivity"
+    ],
+    "content": "Leer en español(/posts/tmux-workflow/) Each Claude Code chat lives in its own tmux window and comes back to its conversation after a restart. The status bar tells me which one is waiting for me, and a dedicated Claude sorts the windows and hands out the work. In this new era of working with AI I went from more than 50 Chrome tabs to more than 20 Claude Code sessions. I work in tmux, so I usually keep one session per tmux window. That brings a few problems you can probably imagine, and this is how I try to solve them: 1. not losing any session 2. knowing which one needs me 3. finding a session 4. not forgetting work 5. handing work between sessions In this post, a session is a Claude Code chat. When I mean a tmux session I say so. The config and the `cc-` scripts are in my dotfiles(https://github.com/asdf8601/dotfiles). You need tmux 3.8. Key bindings use the prefix, which I set to `Ctrl+a`, so `prefix C` means `Ctrl+a` and then `C`. Not losing any session At first, restarting the Mac lost every open session. Then I added a script that brought them back with tmux-resurrect and `claude --continue`, but after a restart every pane reopened the same session. With twenty windows open, that meant lost sessions. Each pane goes back to its chat: `ccr` tmux-resurrect saves the command of each pane and runs it again on restore. The catch is that `claude --continue` opens the latest chat of the directory, so if I have five panes in the same folder, all five come back to the same chat. `ccr` (with `alias cc=ccr`) pins a session uuid in its own command line: ```zsh !/bin/zsh if \"$1\" == - ; then exec claude \"$@\" fi id=\"$1\" if \"$id\" = '^0-9a-f{8}-0-9a-f{4}-0-9a-f{4}-0-9a-f{4}-0-9a-f{12}$' ; then shift else exec \"$0\" \"$(uuidgen | tr ':upper:' ':lower:')\" \"$@\" fi sessionfiles=(/.claude/projects//\"$id\".jsonl(N)) if (( ${sessionfiles} )); then claude --resume \"$id\" \"$@\" else claude --session-id \"$id\" \"$@\" fi ``` - With no arguments it re-runs itself with a fresh uuid, so the uuid ends "
+  },
+  {
+    "url": "/posts/tmux-workflow",
+    "title": "Inundado de sesiones de Claude Code (y cómo sobrevivo)",
+    "date": "2026-10-22",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "tmux",
+      "claude-code",
+      "productivity"
+    ],
+    "content": "Read in English(/posts/tmux-workflow-en/) Cada chat de Claude Code vive en su ventana de tmux y vuelve a su conversación tras un reinicio. La barra me dice cuál me espera, y un Claude fijo ordena las ventanas y reparte el trabajo. En esta nueva era de trabajo con AI he pasado de tener más de 50 pestañas de Chrome a más de 20 sesiones de Claude Code. Para trabajar uso tmux, así que suelo tener una sesión por ventana de tmux. Esto me genera unos problemas que podéis imaginar y que intento solucionar: 1. no perder ninguna sesión 2. saber cuál me necesita 3. encontrar una sesión 4. no olvidar trabajo 5. repartir trabajo entre sesiones En este post, sesión es un chat de Claude Code. Cuando hablo de las de tmux lo digo. La config y los scripts `cc-` están en mis dotfiles(https://github.com/asdf8601/dotfiles). Hace falta tmux 3.8. Los atajos van con el prefijo, que tengo en `Ctrl+a`, así que `prefix C` es `Ctrl+a` y luego `C`. No perder ninguna sesión Al principio, reiniciar el Mac me hacía perder todas las sesiones abiertas. Después añadí un script que las recuperaba con tmux-resurrect y `claude --continue`, pero tras un reinicio todos los panes reabrían la misma sesión. Con veinte ventanas abiertas, eso acababa en sesiones perdidas. Cada pane vuelve a su chat: `ccr` tmux-resurrect guarda el comando de cada pane y lo relanza al restaurar. El problema es que `claude --continue` abre el último chat del directorio, así que si tengo cinco panes en la misma carpeta, los cinco vuelven al mismo chat. `ccr` (con `alias cc=ccr`) fija un uuid de sesión en su propia línea de comandos: ```zsh !/bin/zsh if \"$1\" == - ; then exec claude \"$@\" fi id=\"$1\" if \"$id\" = '^0-9a-f{8}-0-9a-f{4}-0-9a-f{4}-0-9a-f{4}-0-9a-f{12}$' ; then shift else exec \"$0\" \"$(uuidgen | tr ':upper:' ':lower:')\" \"$@\" fi sessionfiles=(/.claude/projects//\"$id\".jsonl(N)) if (( ${sessionfiles} )); then claude --resume \"$id\" \"$@\" else claude --session-id \"$id\" \"$@\" fi ``` - Sin argumentos se relanza a sí mismo con un uuid"
+  },
+  {
     "url": "/posts/train-on-servers",
     "title": "Kubernetes resources to train on servers",
     "date": "2026-01-17",
