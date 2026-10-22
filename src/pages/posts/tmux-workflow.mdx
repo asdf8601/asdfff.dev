@@ -16,34 +16,46 @@ en su ventana de tmux. Casi todo lo de abajo existe para que eso no se vuelva
 un caos. Quiero no perder ninguna, saber cuál me necesita y no olvidar trabajo
 a medias.
 
-1. **Popups.** Busco una sesión o un ticket, o edito los dotfiles, en una
-   ventana flotante que se cierra al terminar sin tocar el layout.
-2. **Cada pane vuelve a su chat.** Tras un reinicio, tmux relanza Claude en
-   cada pane, pero por defecto todos los panes de una carpeta abren el mismo
-   chat. Un wrapper pequeño, `ccr`, apunta el id del chat en el comando para
-   que cada pane recupere el suyo.
-3. **Sesiones que se reparten trabajo.** Desde una sesión de Claude lanzo otra
-   en una ventana nueva, le paso una tarea y recibo su informe sin dejar lo
-   que estaba haciendo. Lo hace un script, `cc-spawn`.
-4. **Autosave.** tmux guarda todas las ventanas cada 5 minutos y las restaura
-   al arrancar, así que un reinicio del Mac no me cuesta nada.
-5. **Un icono por ventana con el estado de Claude.** El icono es amarillo si
-   Claude trabaja, verde si terminó y rojo si pide permiso. Con diez sesiones
-   abiertas no puedo ir mirando una a una.
-6. **Buscar una sesión por PR o ticket.** Un índice de todos mis chats me deja
-   saltar a "la sesión de la PR 2032" sin recordar en qué ventana estaba.
-7. **Una lista de lo que me toca.** `/todo` junta tickets, PRs y ventanas
-   abiertas y me dice el siguiente paso de cada uno. Lo lanzo desde una
-   ventana fija, `board`, que uso para rescatar trabajo olvidado.
-8. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Separo lo que
-   llevo ahora de lo aparcado y de la guardia, para que veinte ventanas no se
-   mezclen. No las ordeno yo, se lo pido a Claude, así que en `doing` siempre
-   está lo relevante y lo demás queda en `parked`.
-9. **Ventanas con un nombre útil.** Cada ventana de Claude se llama como su
-    tarea y no como su carpeta. Un hook pone el nombre solo, y un skill me
-    deja pedir uno mejor.
-10. **Avisos por Telegram.** Cuando algo largo termina me llega un mensaje al
-    móvil, porque las notificaciones del escritorio no atraviesan tmux.
+1. **Popups.** Para lanzar un comando rápido tenía que abrir un pane,
+   esperar a que acabara y cerrarlo. Lo hago tantas veces al día que me hacía
+   falta algo mejor. Ahora lo lanzo en una ventana flotante que se cierra sola
+   al terminar y no toca el layout.
+2. **Cada pane vuelve a su chat.** Tenía varios chats abiertos en la misma
+   carpeta y, tras un reinicio, todos los panes reabrían el mismo, porque tmux
+   relanzaba `claude --continue`. Un wrapper pequeño, `ccr`, apunta el id del
+   chat en el comando para que cada pane recupere el suyo.
+3. **Sesiones que se reparten trabajo.** En mitad de una tarea veo un arreglo
+   que no toca, o quiero separar el diseño de la ejecución, y si cambio de
+   sesión pierdo el hilo. Desde la sesión en la que estoy lanzo otra en una
+   ventana nueva, le paso la tarea y recibo su informe. Lo hace un script,
+   `cc-spawn`.
+4. **Autosave.** Con veinte ventanas, un reinicio del Mac me obligaba a volver
+   a montarlo todo a mano. tmux guarda todas las ventanas cada 5 minutos y las
+   restaura al arrancar. Tiene una trampa con `prefix r` que cuento en su
+   sección.
+5. **Un icono por ventana con el estado de Claude.** Con diez sesiones
+   abiertas no sabía cuál había terminado ni cuál llevaba un rato parada en un
+   permiso sin mirarlas una a una. El icono es amarillo si Claude trabaja,
+   verde si terminó y rojo si pide permiso.
+6. **Buscar una sesión por PR o ticket.** Encontrar "la sesión donde hice la
+   PR 2032" entre veinte ventanas y chats viejos era lento. Un índice de todos
+   mis chats me deja saltar a esa sesión sin recordar en qué ventana estaba.
+7. **Una lista de lo que me toca.** Se me olvidaba trabajo, como una sesión a
+   medias o un ticket desplegado que nadie llegó a validar. `/todo` junta
+   tickets, PRs y ventanas abiertas y me dice el siguiente paso de cada uno.
+   Lo lanzo desde una ventana fija, `board`.
+8. **Tres sesiones de tmux: `doing`, `parked` y `oncall`.** Las veinte
+   ventanas mezclaban lo de hoy con lo terminado y lo que esperaba a otro
+   equipo. Separo lo que llevo ahora de lo aparcado y de la guardia. No las
+   ordeno yo, se lo pido a Claude, así que en `doing` siempre está lo
+   relevante.
+9. **Ventanas con un nombre útil.** tmux nombraba cada ventana por su
+   carpeta, así que la barra decía el mismo repo diez veces. Ahora cada
+   ventana de Claude se llama como su tarea. Un hook pone el nombre solo, y un
+   skill me deja pedir uno mejor.
+10. **Avisos por Telegram.** Las notificaciones de Ghostty no atraviesan tmux,
+    así que me perdía el aviso de que una tarea larga había terminado. Ahora
+    me llega un mensaje al móvil.
 
 La config y los scripts `cc-*` están en mis
 [dotfiles](https://github.com/asdf8601/dotfiles) (`macos/home/.tmux.conf` y
@@ -56,7 +68,8 @@ Los atajos van con el prefijo de tmux, que tengo en `Ctrl+a`. Cuando escribo
 
 ## 1. Popups
 
-Se abren encima del layout y desaparecen al terminar:
+Abrir un pane para un comando y cerrarlo después es poco trabajo, pero lo
+hacía decenas de veces al día. Los popups se abren encima del layout y desaparecen al terminar:
 
 | Tecla | Qué hace                                     |
 | ----- | -------------------------------------------- |
@@ -115,6 +128,9 @@ fi
 
 ## 3. `cc-spawn`
 
+En mitad de una tarea veo un arreglo que no toca, o quiero separar el diseño
+de la ejecución, y cambiar de sesión me hace perder el hilo.
+
 ```bash
 cc-spawn [-p] [-w <branch>] <name> [dir]
 ```
@@ -139,9 +155,8 @@ bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-
 
 ### Mandar trabajo a otra sesión
 
-Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. Si en mitad de
-una tarea veo un arreglo que no toca, o quiero separar el diseño de la
-ejecución, la sesión en la que estoy:
+Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. La sesión en la
+que estoy:
 
 1. lanza otra con `cc-spawn -w <branch> <name>`,
 2. le escribe la tarea en un archivo y se la pasa con un mensaje entre
@@ -153,6 +168,8 @@ lo resume en una línea. Si hace falta, siguen hablando en las dos
 direcciones. Yo solo miro la ventana nueva si el icono se pone rojo.
 
 ## 4. Autosave
+
+Un reinicio del Mac con veinte ventanas abiertas era recolocarlo todo a mano.
 
 ```tmux
 set -g @resurrect-processes '~ipython ~ccr "~claude->claude --continue"'
@@ -166,10 +183,9 @@ y `claude` (este último con `--continue`), y nvim con su sesión.
 
 ### Cuidado con `prefix r`
 
-Recargar la config (`source-file`) machaca `status-right`, y tmux-continuum
+Un reinicio me devolvió un layout de dos semanas antes. Recargar la config (`source-file`) machaca `status-right`, y tmux-continuum
 guarda las sesiones a través de un comando metido en `status-right`. Tras
-recargar, el autosave se moría en silencio hasta el siguiente reinicio. Me
-enteré cuando un reinicio me devolvió un layout de dos semanas antes.
+recargar, el autosave se moría en silencio hasta el siguiente reinicio.
 
 El arreglo es poner el hook a mano en la config, con la misma ruta absoluta
 que usa el plugin (el `#{@cc_count}` del principio es el contador del punto 5):
@@ -185,6 +201,9 @@ tmux show-option -gv status-right | grep -c continuum_save
 ```
 
 ## 5. Estado de Claude en la barra
+
+Con diez sesiones abiertas no sabía cuál había terminado ni cuál llevaba un
+rato esperando un permiso sin ir ventana por ventana.
 
 Unos hooks de Claude Code en `~/.claude/settings.json` llaman a un script,
 `cc-tmux-state`, que guarda el estado de cada pane y pinta un icono delante
@@ -214,6 +233,9 @@ permiso y luego los turnos terminados que no he mirado, de más viejo a más
 nuevo.
 
 ## 6. Índice de sesiones
+
+Encontrar la sesión donde trabajé una PR concreta, entre ventanas abiertas y
+chats cerrados, me llevaba un rato cada vez.
 
 `sessions.py` es un script mío sin publicar, porque está atado a mi Jira y a
 mis repos. Lee todos los transcripts de `~/.claude/projects/` y guarda un índice
@@ -252,6 +274,9 @@ sesión de la PR 2032" y lo resuelve con el mismo script.
 
 ## 7. `/todo` y la ventana `board`
 
+Se me olvidaba trabajo, como una sesión que se quedó a medias o un ticket
+desplegado que nadie llegó a validar.
+
 `/todo` es un skill de Claude Code, también sin publicar. Tira del MCP de
 Atlassian, de `gh` y del índice de sesiones, y junta en una sola vista:
 
@@ -284,12 +309,14 @@ ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
 La primera ventana de mi sesión de tmux se llama `board` y tiene un Claude
 fijo que no trabaja en nada concreto. Es mi centro de control.
 
-Ahí lanzo `/todo` y rescato trabajo que se me ha olvidado, como una sesión que
-se quedó a medias o un ticket desplegado que nadie validó. También veo qué
+Ahí lanzo `/todo` y rescato el trabajo olvidado. También veo qué
 tareas pendientes necesitan su propia sesión. La abro con `cc-spawn`, o vuelvo
 a la que ya existía con `prefix g`.
 
 ## 8. `doing`, `parked` y `oncall`
+
+Con veinte ventanas en una sola sesión, lo que estaba haciendo se mezclaba con
+lo terminado y con lo que esperaba a otro equipo.
 
 Mis ventanas viven en tres sesiones de tmux:
 
@@ -330,6 +357,8 @@ cada sesión con su nombre.
 
 ## 9. Nombre de ventana
 
+Con el nombre automático la barra decía el mismo repo diez veces.
+
 Un hook renombra la ventana solo, y un skill me deja pedir un nombre mejor
 cuando el automático no sirve.
 
@@ -345,8 +374,7 @@ set-option -g automatic-rename-format '#{b:pane_current_path}'
 Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
 renombra la ventana con el título de la sesión. Solo toca ventanas de un
 pane con nombre genérico (el directorio, `zsh`) o que ya nombró antes. Un
-nombre puesto a mano se respeta. Así la barra dice "fix timeout" y no el
-nombre del repo diez veces.
+nombre puesto a mano se respeta.
 
 ### El skill `/tmux-name`
 
