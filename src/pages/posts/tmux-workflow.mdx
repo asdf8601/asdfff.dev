@@ -27,8 +27,8 @@ cuál me está esperando.
    viejos, buscar a ojo dónde estaba el chat de una PR es lento.
 8. **`/todo` para saber qué me toca.** Tickets, PRs y ventanas están en
    sitios distintos, y quiero verlos juntos con el siguiente paso.
-9. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
-   va la sesión, no el directorio.
+9. **Nombre de ventana: hook `cc-tmux-name` y skill `/tmux-name`.** El
+   nombre de la ventana dice de qué va la sesión, no el directorio.
 10. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
    tmux.
 
@@ -262,7 +262,10 @@ siguiente movimiento:
 Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
 ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
 
-## 9. Nombre automático
+## 9. Nombre de ventana
+
+Hay dos piezas: un hook que renombra solo y un skill para cuando quiero un
+nombre mejor.
 
 Por defecto la ventana se llama como su directorio:
 
@@ -271,11 +274,21 @@ set-option -g automatic-rename on
 set-option -g automatic-rename-format '#{b:pane_current_path}'
 ```
 
+### Automático: `cc-tmux-name`
+
 Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
 renombra la ventana con el título de la sesión. Solo toca ventanas de un
 pane con nombre genérico (el directorio, `zsh`) o que ya nombró antes; un
 nombre puesto a mano se respeta. Así la barra dice "fix timeout" y no el
 nombre del repo diez veces.
+
+### A mano: `/tmux-name`
+
+El título automático a veces es largo o vago. Con `/tmux-name` le pido a la
+propia sesión que se ponga nombre: como sabe en qué está trabajando, elige
+`<ticket>-<slug>` si hay ticket o PR, o dos o tres palabras de la tarea si
+no. Renombra su ventana y me dice el `/rename <nombre>` para que la sesión
+de Claude lleve el mismo título. Así el hook ve ese nombre y no lo pisa.
 
 ## 10. Avisos por Telegram
 
