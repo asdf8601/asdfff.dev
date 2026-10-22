@@ -626,6 +626,19 @@
     "content": "Los tests unitarios que escribimos y gestionamos nosotros tienen, por definición, un sesgo de selección. La implementación resuelve un problema específico y se prueba para los casos que se espera encontrar, lo que lleva a escribir tests que reflejan la implementación. No obstante, el margen de maniobra es limitado. La implementación evidentemente soluciona al menos el 80% de la casuística, y los tests son redundantes ya que buscan asegurar la corrección de lo implementado. Sin embargo, la razón principal para testear no es solo la corrección inmediata o la duda sobre la implementación, sino asegurar la funcionalidad a futuro, previniendo que cambios ulteriores alteren su comportamiento. Cuanto más experimentados son los desarrolladores, más redundantes son los tests, dado que la experiencia conlleva un código más robusto y eficiente. Se priorizan las piezas pequeñas, buscando minimalismo y sencillez, cualidades que los programadores experimentados reconocen por su trayectoria. El problema surge con el tiempo, cuando se acumulan cambios (relacionados con el interés compuesto, donde a más cambios, los riesgos crecen exponencialmente), y aparecen casos límite no anticipados. Es aquí donde se manifiesta el sesgo de selección. Los tests son una herramienta útil para recordar errores pasados y evitar su recurrencia, aunque no son una solución universal."
   },
   {
+    "url": "/posts/tmux-workflow",
+    "title": "Mi flujo con tmux (y muchos Claude Code a la vez)",
+    "date": "2026-10-22",
+    "category": "programming",
+    "tags": [
+      "spanish",
+      "tmux",
+      "claude-code",
+      "productivity"
+    ],
+    "content": "Una chuleta para mi yo del futuro: cómo tengo montado tmux y por qué. Trabajo con muchas sesiones de Claude Code abiertas a la vez, una por ventana, y casi todo lo que hay aquí existe para no perderlas de vista. La config vive en mis dotfiles: `/.dotfiles/macos/home/.tmux.conf`. Lo básico ```tmux set -g prefix C-a set -g base-index 1 set-option -g status-position top set-option -g detach-on-destroy off set -g mouse off ``` - El prefijo es `C-a` y la barra va arriba. - Navegación estilo vim: `h j k l` para moverse entre panes, `M-h/j/k/l` para redimensionar. - Los splits y las ventanas nuevas abren en el directorio del pane actual (`i` o `/` en vertical, `-` en horizontal, `c` ventana nueva). - `b` vuelve a la última ventana. - `S` y `V` traen otra ventana como pane. - `m` enciende o apaga el ratón, que por defecto está apagado. Popups Casi todo lo que no es editar código lo abro en un popup que desaparece al terminar: | Tecla | Qué hace | | ----- | -------------------------------------------- | | `s` | elegir sesión con fzf y preview | | `P` | hacer attach a otra sesión | | `Z` | tmux-sessionizer (sesión por proyecto) | | `T` | `TODO.md` en un split al lado | | `O` | navegar sesiones con tmux-oil.nvim | | `D` | editar los dotfiles, commit y push al cerrar | | `J` | buscar tickets de Jira | | `N` | crear un ticket | Una ventana por chat de Claude Aquí está la parte interesante. Restaurar cada pane a su chat tmux-resurrect guarda el comando de cada pane y lo relanza al restaurar. El problema es que `claude --continue` abre el último chat del directorio, así que si tengo cinco panes en la misma carpeta, los cinco vuelven al mismo chat. La solución es un wrapper, `ccr` (con `alias cc=ccr`), que fija un uuid de sesión en su propia línea de comandos: ```zsh !/bin/zsh if \"$1\" == - ; then exec claude \"$@\" fi id=\"$1\" if \"$id\" = '^0-9a-f{8}-0-9a-f{4}-0-9a-f{4}-0-9a-f{4}-0-9a-f{12}$' ; then shift else exec \"$0\" \"$(uuidgen | tr ':upper:' ':lower:')\" \"$@\" fi sessionfiles=(/.clau"
+  },
+  {
     "url": "/posts/train-on-servers",
     "title": "Kubernetes resources to train on servers",
     "date": "2026-01-17",
