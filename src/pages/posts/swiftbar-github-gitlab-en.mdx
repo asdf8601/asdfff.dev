@@ -1,0 +1,179 @@
+---
+title: "SwiftBar + GitHub: your PRs in the menu bar"
+date: 2026-10-21
+tag: [english, macos, swiftbar, github, productivity]
+category: programming
+---
+
+_[Leer en español](/posts/swiftbar-github-gitlab/)_
+
+I wanted to see at a glance which PRs need me. It takes very little with
+[SwiftBar](https://github.com/swiftbar/SwiftBar), a bash script and `jq`.
+
+![SwiftBar menu with my PRs grouped by what they need from me](/images/swiftbar-menu.png)
+
+The screenshot is my extended version, with five sections and sample data. The
+script below is the base one, with two.
+
+## The idea
+
+SwiftBar runs a script every so often and draws its stdout in the menu bar.
+That's all.
+
+- The file name sets the interval: `github.10m.sh` (every 10 min).
+- What comes before the first `---` shows in the bar. What comes after, in the
+dropdown menu.
+- Each line takes parameters after a vertical bar: `text | href=URL color=red`.
+
+## Requirements
+
+```bash
+brew install --cask swiftbar
+brew install gh jq
+gh auth login
+mkdir -p ~/swiftbar   # pick it as the plugin folder when SwiftBar opens
+```
+
+## MVP
+
+
+```bash
+# create file
+cat > ~/swiftbar/mvp.5m.sh <<'EOF'
+#!/usr/bin/env bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+prs=$(gh search prs --author=@me --state=open --json number,title,url,repository)
+echo "PRs $(jq length <<<"$prs")"
+echo "---"
+jq -r '.[] | "\(.repository.name)#\(.number) \(.title | gsub("\\|"; "/")) | href=\(.url)"' <<<"$prs"
+EOF
+
+# make it executable
+chmod +x ~/swiftbar/mvp.5m.sh
+
+# run it
+open -g 'swiftbar://refreshallplugins'
+```
+
+If you see `PRs N` in the bar, it works. The rest is the same with more filters.
+
+## GitHub
+
+Reviews requested from you + your PRs with CI status, in columns.
+
+```bash
+#!/usr/bin/env bash
+# <swiftbar.hideRunInTerminal>true</swiftbar.hideRunInTerminal>
+# <swiftbar.hideAbout>true</swiftbar.hideAbout>
+
+# SwiftBar doesn't read your .zshrc: without this it can't find gh or jq.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+# An exported GH_TOKEN overrides the gh login and may not see all your repos.
+unset GH_TOKEN GITHUB_TOKEN
+
+fragment='
+fragment pr on PullRequest {
+  number title url
+  repository { name }
+  commits(last: 1) { nodes { commit { statusCheckRollup { state } } } }
+}'
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+# All searches in one query take longer than the ~10 s GitHub gives GraphQL
+# and come back as 502/504. Each search gets its own request, in parallel,
+# and is retried once because the timeout is intermittent.
+search() { # name filter
+  local query="$fragment query { $1: search(query: \"$2\", type: ISSUE, first: 50) { nodes { ...pr } } }"
+  gh api graphql -f query="$query" >"$tmp/$1" 2>/dev/null ||
+    gh api graphql -f query="$query" >"$tmp/$1" 2>/dev/null ||
+    echo "{\"data\": {\"$1\": {\"nodes\": []}}, \"failed\": [\"$1\"]}" >"$tmp/$1"
+}
+
+# user-review-requested, not review-requested, which includes requests to your teams.
+search review "is:open is:pr archived:false user-review-requested:@me" &
+search mine "is:open is:pr archived:false author:@me" &
+wait
+
+# If a search fails, its section is marked with ! and the other one keeps
+# working. An empty menu looks the same as "nothing pending".
+# shellcheck disable=SC2016
+jq -rs '
+def ci: {"SUCCESS": "✓", "FAILURE": "✗", "ERROR": "✗", "PENDING": "…"}[.commits.nodes[0].commit.statusCheckRollup.state // ""] // "";
+def cap($n): if length > $n then .[0:$n - 1] + "…" else . end;
+def pad($n): . + ((" " * ($n - length)) // "");
+def clean: gsub("\\|"; "/") | gsub("\""; "'\''");
+(map(.data) | add) as $d
+| (map(.failed // []) | add) as $failed
+| [{key: "review", icon: "👀", label: "Review requested"}, {key: "mine", icon: "📝", label: "My PRs"}]
+| map(. + {prs: $d[.key].nodes, failed: (.key as $k | $failed | index($k) != null)})
+# Long repo names and 80-character titles make the menu wider than the
+# screen: the repo is cut to 24, the title to 40, and the full one goes in the tooltip.
+| map(.prs |= map(. + {ref: ("#\(.number)" as $n | (.repository.name | cap(24 - ($n | length))) + $n),
+                         short: (.title | clean | cap(40))}))
+# One width shared by all sections so the columns line up.
+| ([.[].prs[].ref | length] | max // 0) as $wr
+| ([.[].prs[].short | length] | max // 0) as $wt
+| (map("\(.icon) \(if .failed then "!" else .prs | length end)") | join(" ")),
+  (.[] | "---",
+    "\(.icon) \(.label)\(if .failed then " (failed) | color=red" else "" end)",
+    (.prs[] | "\(.ref | pad($wr))  \(.short | pad($wt))  \(ci) | href=\(.url) tooltip=\"\(.title | clean)\" font=Menlo size=12 symbolize=false"))
+' "$tmp"/review "$tmp"/mine
+echo "---"
+echo "Refresh | refresh=true"
+```
+
+- The filters are the same as the search on github.com/pulls. Try them there first.
+- My version has five searches, with review threads and comments. As a single
+query it took 9 to 12 s and GitHub cut it off at ~10 s with 502/504. With one
+request per search, in parallel, they're gone.
+- Aligned columns need a monospaced font: `font=Menlo`.
+- For more sections: `mergeStateStatus` (`DIRTY` = conflicts, `CLEAN` = ready), `reviewDecision`, `isDraft`.
+
+## Cheat sheet
+
+| Parameter                           | What it does                                      |
+| ----------------------------------- | ------------------------------------------------- |
+| `href=URL`                          | Opens the URL on click                            |
+| `color=red`                         | Text color                                        |
+| `length=70`                         | Truncates and puts the full title in the tooltip  |
+| `sfimage=name`                      | SF Symbol icon                                    |
+| `symbolize=false`                   | Doesn't turn `:text:` into icons                  |
+| `alternate=true`                    | Replaces the previous line while Option is held   |
+| `bash=path param1=x terminal=false` | Runs a script in the background                   |
+| `refresh=true`                      | Re-runs the plugin on click                       |
+
+- `--` in front of a line = submenu of the previous one.
+- What shows below Refresh in the screenshot is added by SwiftBar. Hide it with the `swiftbar.hide*` metadata.
+
+Useful metadata, in script comments:
+
+```bash
+# <swiftbar.refreshOnOpen>true</swiftbar.refreshOnOpen>      # refresh when the menu opens
+# <swiftbar.schedule>*/10 9-19 * * 1-5</swiftbar.schedule>   # cron instead of the file name
+```
+
+## When it breaks
+
+Test it with the empty environment SwiftBar uses:
+
+```bash
+env -i HOME=$HOME PATH=/usr/bin:/bin ~/swiftbar/github.10m.sh
+```
+
+- **Doesn't show up:** missing `chmod +x`.
+- **`command not found`:** SwiftBar doesn't read your `.zshrc`. Put the `export PATH` at the top.
+- **Missing repos:** an exported `GH_TOKEN` overrides the login. The `unset` fixes it.
+- **Broken row:** a title with a vertical bar. That's what the `gsub` is for.
+- **Stale data:** the script failed silently. Print an error title and `exit 0`.
+- **`GH !` or sections with `!`:** GraphQL cut the request (502/504). Split the query into several.
+- **Rate limit:** few GraphQL requests and a 5 to 10 min interval.
+
+Don't put tokens in the scripts.
+
+## Links
+
+- [SwiftBar](https://github.com/swiftbar/SwiftBar) (the README is the full reference)
+- [gh api](https://cli.github.com/manual/gh_api) · [GitHub GraphQL](https://docs.github.com/en/graphql) · [PR search](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests)
+- [jq](https://jqlang.org/manual/)
