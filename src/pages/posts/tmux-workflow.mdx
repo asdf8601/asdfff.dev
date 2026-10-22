@@ -11,59 +11,37 @@ cuál me está esperando.
 
 ## Qué tengo y por qué
 
-1. **Prefijo `Ctrl+a` y movimiento con `h j k l`.** `Ctrl+a` se pulsa con
-   una mano sin estirarse. `h j k l` son las flechas de vim, así que para
-   cambiar de pane uso las mismas teclas que ya uso para mover el cursor.
-2. **Splits en el directorio actual.** Casi siempre abro un pane para hacer
+1. **Splits en el directorio actual.** Casi siempre abro un pane para hacer
    algo en la misma carpeta.
-3. **Popups para todo lo que no es código.** Busco una sesión, un ticket o
+2. **Popups para todo lo que no es código.** Busco una sesión, un ticket o
    apunto un TODO sin romper el layout.
-4. **Wrapper `ccr` para Claude Code.** Para que cada pane vuelva a su chat y
+3. **Wrapper `ccr` para Claude Code.** Para que cada pane vuelva a su chat y
    no al último chat del directorio.
-5. **`cc-spawn` para lanzar sesiones.** Abrir un Claude con nombre, en su
+4. **`cc-spawn` para lanzar sesiones.** Abrir un Claude con nombre, en su
    ventana y si hace falta en su propio worktree, con una tecla.
-6. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
+5. **Autosave con resurrect y continuum.** Si se reinicia el Mac, recupero
    todas las ventanas sin pensar.
-7. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
+6. **Estado de Claude en la barra.** Con diez sesiones abiertas no puedo ir
    mirando una a una cuál ha terminado.
-8. **Índice de sesiones (`sessions`).** Con tantas ventanas y chats
+7. **Índice de sesiones (`sessions`).** Con tantas ventanas y chats
    viejos, buscar a ojo dónde estaba el chat de una PR es lento.
-9. **`/todo` para saber qué me toca.** Tickets, PRs y ventanas están en
+8. **`/todo` para saber qué me toca.** Tickets, PRs y ventanas están en
    sitios distintos, y quiero verlos juntos con el siguiente paso.
-10. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
+9. **Ventanas con nombre automático.** El nombre de la ventana dice de qué
    va la sesión, no el directorio.
-11. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
+10. **Avisos por Telegram.** Las notificaciones del escritorio no atraviesan
    tmux.
 
 La config y los scripts `cc-*` están en mis
 [dotfiles](https://github.com/asdf8601/dotfiles) (`macos/home/.tmux.conf` y
 `macos/home/.local/bin`). Hace falta tmux 3.8: uso `new-pane -O` y eventos de
-usuario que no existen en versiones anteriores. Los puntos 8 y 9 dependen de
+usuario que no existen en versiones anteriores. Los puntos 7 y 8 dependen de
 scripts que no he publicado; lo digo en cada sección.
 
-## 1. Prefijo y movimiento
+Los atajos van con el prefijo de tmux, que tengo en `Ctrl+a`: `prefix C`
+significa `Ctrl+a` y luego `C`.
 
-Todos los atajos de tmux empiezan con una tecla llamada prefijo: pulsas el
-prefijo, sueltas, y luego la tecla del atajo. Por defecto es `Ctrl+b`; yo lo
-cambio a `Ctrl+a`, que está justo al lado del meñique. En el resto del post,
-`prefix C` significa `Ctrl+a` y luego `C`.
-
-```tmux
-set -g prefix C-a
-set -g base-index 1
-set-option -g status-position top
-set-option -g detach-on-destroy off
-set -g mouse off
-```
-
-- `h j k l` para moverse entre panes, `M-h/j/k/l` para redimensionar.
-- `b` vuelve a la última ventana.
-- `S` y `V` traen otra ventana como pane.
-- `m` enciende o apaga el ratón, que por defecto está apagado.
-- La barra va arriba y `detach-on-destroy off` hace que cerrar una sesión
-  me lleve a otra en vez de sacarme de tmux.
-
-## 2. Splits en el directorio actual
+## 1. Splits en el directorio actual
 
 ```tmux
 bind i split-window -h -c "#{pane_current_path}"
@@ -75,7 +53,7 @@ bind c new-window -c "#{pane_current_path}"
 `i` o `/` en vertical, `-` en horizontal, `c` ventana nueva. Todos heredan
 el directorio del pane donde estoy.
 
-## 3. Popups
+## 2. Popups
 
 Se abren encima del layout y desaparecen al terminar:
 
@@ -93,7 +71,7 @@ Se abren encima del layout y desaparecen al terminar:
 `tmux-fzf-session` y `tmux-sessionizer` están en los dotfiles; `jira-fzf` y
 `jira-new` son scripts míos sin publicar sobre el CLI de Jira.
 
-## 4. El wrapper `ccr`
+## 3. El wrapper `ccr`
 
 tmux-resurrect guarda el comando de cada pane y lo relanza al restaurar. El
 problema es que `claude --continue` abre el último chat del directorio, así
@@ -133,7 +111,7 @@ fi
   pane: `cc <uuid>`.
 - Con flags (`cc -c`, `cc -r`) pasa todo tal cual a `claude`.
 
-## 5. `cc-spawn`
+## 4. `cc-spawn`
 
 ```bash
 cc-spawn [-p] [-w <branch>] <name> [dir]
@@ -157,7 +135,7 @@ Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual:
 bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-spawn %1 #{pane_current_path} >/dev/null'"
 ```
 
-## 6. Autosave
+## 5. Autosave
 
 ```tmux
 set -g @resurrect-processes '~ipython ~ccr "~claude->claude --continue"'
@@ -177,7 +155,7 @@ recargar, el autosave se moría en silencio hasta el siguiente reinicio. Me
 enteré cuando un reinicio me devolvió un layout de dos semanas antes.
 
 El arreglo es poner el hook a mano en la config, con la misma ruta absoluta
-que usa el plugin (el `#{@cc_count}` del principio es el contador del punto 7):
+que usa el plugin (el `#{@cc_count}` del principio es el contador del punto 6):
 
 ```tmux
 set -g status-right "#{@cc_count}#[default]#($HOME/.tmux/plugins/tmux-continuum/scripts/continuum_save.sh) %Y-%m-%d  %H:%M "
@@ -189,7 +167,7 @@ Para comprobarlo después de recargar (tiene que dar 1):
 tmux show-option -gv status-right | grep -c continuum_save
 ```
 
-## 7. Estado de Claude en la barra
+## 6. Estado de Claude en la barra
 
 Unos hooks de Claude Code en `~/.claude/settings.json` llaman a un script,
 `cc-tmux-state`, que guarda el estado de cada pane y pinta un icono delante
@@ -218,7 +196,7 @@ verde. Con `prefix A` abro un popup con esos panes: primero los que piden
 permiso, luego los turnos terminados que no he mirado, los más viejos
 primero.
 
-## 8. Índice de sesiones
+## 7. Índice de sesiones
 
 `sessions.py` es un script mío sin publicar: está atado a mi Jira y a mis
 repos. Lee todos los transcripts de `~/.claude/projects/` y guarda un índice
@@ -255,7 +233,7 @@ segundos en la barra. No toca Jira, solo avisa.
 También es un skill de Claude Code, así que puedo pedirle "vuelve a la
 sesión de la PR 2032" y lo resuelve con el mismo script.
 
-## 9. `/todo`
+## 8. `/todo`
 
 Es un skill de Claude Code, también sin publicar: tira del MCP de Atlassian,
 de `gh` y del índice de sesiones. Junta en una sola vista:
@@ -284,7 +262,7 @@ siguiente movimiento:
 Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
 ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
 
-## 10. Nombre automático
+## 9. Nombre automático
 
 Por defecto la ventana se llama como su directorio:
 
@@ -299,7 +277,7 @@ pane con nombre genérico (el directorio, `zsh`) o que ya nombró antes; un
 nombre puesto a mano se respeta. Así la barra dice "fix timeout" y no el
 nombre del repo diez veces.
 
-## 11. Avisos por Telegram
+## 10. Avisos por Telegram
 
 Las notificaciones de escritorio de Ghostty no atraviesan tmux (probé OSC 9
 y 777, con y sin `allow-passthrough`). Cuando quiero que me avisen de que
