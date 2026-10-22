@@ -1,5 +1,5 @@
 ---
-title: "Mi flujo con tmux (y muchos Claude Code a la vez)"
+title: "Inundado de sesiones de Claude Code (y cómo sobrevivo con tmux)"
 date: 2026-10-22
 tag: [spanish, tmux, claude-code, productivity]
 category: programming
@@ -20,22 +20,19 @@ podéis imaginar y que intento solucionar:
 
 1. no perder ninguna sesión
 2. saber cuál me necesita
-3. encontrar una sesión concreta
-4. no olvidar trabajo a medias
-5. repartir trabajo sin perder el hilo
+3. encontrar una sesión
+4. no olvidar trabajo
+5. repartir trabajo entre sesiones
 
 En este post, sesión es un chat de Claude Code. Cuando hablo de las de tmux lo
 digo.
 
-La config y los scripts `cc-*` están en mis
-[dotfiles](https://github.com/asdf8601/dotfiles) (`macos/home/.tmux.conf` y
-`macos/home/.local/bin`). Hace falta tmux 3.8, porque uso `new-pane -O` y
-eventos de usuario que no existen en versiones anteriores. El índice de
-sesiones y `/todo` dependen de scripts que no he publicado, y lo digo en su
-sección.
-
-Los atajos van con el prefijo de tmux, que tengo en `Ctrl+a`. Cuando escribo
-`prefix C`, significa `Ctrl+a` y luego `C`.
+<Card type="info" title="Antes de empezar">
+  La config y los scripts `cc-*` están en mis
+  [dotfiles](https://github.com/asdf8601/dotfiles). Hace falta tmux 3.8. Los
+  atajos van con el prefijo, que tengo en `Ctrl+a`, así que `prefix C` es
+  `Ctrl+a` y luego `C`.
+</Card>
 
 ## No perder ninguna sesión
 
@@ -126,6 +123,10 @@ estado de tmux tampoco ayudaba. Cada ventana se llamaba como su carpeta, y
 como casi todas estaban en el mismo repo, veía el mismo nombre repetido diez
 veces.
 
+Vuelvo de una reunión. La barra dice un rojo y dos verdes. Pulso `prefix A`,
+el rojo sale primero y respondo al permiso. Los verdes los miro cuando acabe
+lo que tengo entre manos.
+
 ### Un icono de estado por ventana
 
 Unos hooks de Claude Code en `~/.claude/settings.json` llaman a un script,
@@ -162,14 +163,8 @@ más nuevo.
 
 ### Ventanas con un nombre útil
 
-Por defecto la ventana se llama como su directorio:
-
-```tmux
-set-option -g automatic-rename on
-set-option -g automatic-rename-format '#{b:pane_current_path}'
-```
-
-Para las ventanas de Claude, el hook `Stop` llama a `cc-tmux-name`, que
+Por defecto tmux llama a la ventana como su directorio. Para las ventanas de
+Claude, el hook `Stop` llama a `cc-tmux-name`, que
 renombra la ventana con el título de la sesión. Solo toca ventanas de un
 pane con nombre genérico (el directorio, `zsh`) o que ya nombró antes. Un
 nombre puesto a mano se respeta.
@@ -208,12 +203,8 @@ python3 ~/.claude/skills/sessions/sessions.py [all] [query] [--sync]
 Sin argumentos abre fzf sobre todas las sesiones. Escribo `PROJ-1234`, `open`
 o `draft` para filtrar, y Enter reanuda la sesión en su directorio con `ccr`.
 
-Desde tmux uso dos atajos:
-
-```tmux
-bind g new-pane -O -x 60% -y 30% -X 20% -Y 35% "python3 $HOME/.claude/skills/sessions/sessions.py ask"
-bind G display-popup -E -w 80% -h 70% "python3 $HOME/.claude/skills/sessions/sessions.py panes"
-```
+Desde tmux uso dos atajos. Los dos van en un `bind` de tmux que abre el
+script en un popup.
 
 - `prefix G` abre fzf sobre todos los panes de tmux, con la ventana, el nombre
   y el título de cada sesión de Claude. Enter me lleva al pane.
@@ -283,7 +274,7 @@ siguiente movimiento:
 ## Te toca
 | Ticket            | Siguiente paso             | Ventana |
 | PROJ-1234 timeout | validar en producción      | doing:4 |
-| PROJ-1235 tokens  | empezar (30 días en To Do) |         |
+| PROJ-1235 tokens  | empezar (2 semanas en To Do) |         |
 
 ## Esperas a otros
 - PROJ-1236 → review de un compañero en repo#123 · doing:6
@@ -293,7 +284,9 @@ siguiente movimiento:
 ```
 
 Cada fila dice qué hacer y en qué ventana está la sesión que lleva ese
-ticket, así paso directo de "qué toca" a la ventana con `prefix G`.
+ticket, así paso directo de "qué toca" a la ventana con `prefix G`. La fila de
+PROJ-1235 es el tipo de ticket que se me perdía, dos semanas en To Do y
+ninguna sesión abierta.
 
 Desde `board` lanzo `/todo` y rescato el trabajo olvidado. También veo qué
 tareas pendientes necesitan su propia sesión. Esa sesión la abro con
@@ -322,27 +315,17 @@ Abre una ventana nueva (o un pane con `-p`) que ejecuta
   enviar en cada reinicio. La tarea la escribo luego en el pane, o se la
   manda la sesión que lo abrió.
 
-Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual:
+Desde tmux, `prefix C` pide un nombre y lo lanza en el directorio actual.
 
-```tmux
-bind C command-prompt -p "claude session name:" "run-shell '$HOME/.local/bin/cc-spawn %1 #{pane_current_path} >/dev/null'"
-```
+Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. Estoy en
+`login-timeout` y veo que el README está viejo. Le digo a la sesión que lo
+haga aparte. Lanza `cc-spawn -w docs-readme docs-readme`, le pasa la tarea en
+un archivo con un mensaje entre sesiones (`SendMessage`) y sigue con el
+timeout. La ventana 5 se pone amarilla. Cuando pasa a verde, la sesión del
+timeout me dice en una línea que el README está listo.
 
-Lo mejor de `cc-spawn` es usarlo desde una sesión de Claude. La sesión en la
-que estoy:
-
-1. lanza otra con `cc-spawn -w <branch> <name>`,
-2. le escribe la tarea en un archivo y se la pasa con un mensaje entre
-   sesiones (`SendMessage`),
-3. sigue con lo suyo.
-
-Cuando la sesión nueva termina, manda su informe a la que la lanzó, y esa me
-lo resume en una línea. Si hace falta, siguen hablando en las dos
-direcciones. Yo solo miro la ventana nueva si el icono se pone rojo.
-
-Nada de esto es grande. Un wrapper de veinte líneas, cinco hooks, tres
-sesiones de tmux y un Claude fijo que ordena a los demás. Lo que cambia es que
-puedo reiniciar el Mac con veinte chats abiertos y seguir donde lo dejé.
+Si hace falta, siguen hablando en las dos direcciones. Yo solo miro la
+ventana nueva si el icono se pone rojo.
 
 ## Extras
 
@@ -376,6 +359,16 @@ set -g @plugin 'tmux-plugins/tmux-continuum' # automatic restore and continuous 
 set -g @plugin 'tmux-plugins/tmux-open' # open on selection: o, c-o, s-s
 set -g @plugin 'wfxr/tmux-fzf-url' # fzf for urls in tmux: c-u
 ```
+
+## Para terminar
+
+Nada de esto es grande. Un wrapper de veinte líneas, cinco hooks, tres
+sesiones de tmux y un Claude fijo que ordena a los demás. Lo que cambia es que
+puedo reiniciar el Mac con cincuenta chats abiertos y seguir donde lo dejé.
+
+Si solo pruebas una cosa, que sea `ccr`. Son veinte líneas y con eso las
+sesiones sobreviven al reinicio. Lo segundo es el icono de estado, cinco
+hooks y una línea de tmux.
 
 ## Links
 
