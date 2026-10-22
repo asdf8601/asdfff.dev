@@ -147,10 +147,14 @@ hasta que miro la ventana. El rojo se queda hasta que respondo al permiso,
 porque solo lo quita `PostToolUse` cuando la herramienta aprobada ya ha
 corrido.
 
+![Barra de estado de tmux con un icono por ventana: rojo pide permiso, verde terminado, amarillo trabajando, y el contador de rojos y verdes a la derecha](/images/tmux-status-bar.png)
+
 A la derecha de la barra va `#{@cc_count}`, el número de panes en rojo y en
 verde. Con `prefix A` abro un popup con esos panes. Salen primero los que
 piden permiso y luego los turnos terminados que no he mirado, de más viejo a
 más nuevo.
+
+![Popup de prefix A con los panes que esperan: primero el que pide permiso, luego los turnos terminados sin mirar](/images/tmux-attention-popup.png)
 
 ### Ventanas con un nombre útil
 
@@ -213,6 +217,8 @@ bind G display-popup -E -w 80% -h 70% "python3 $HOME/.claude/skills/sessions/ses
   pequeño (haiku, vía `claude -p`) elige la sesión que encaja y me lleva a su
   pane. Si la sesión ya no está abierta, la reanuda en una ventana nueva.
   Tarda unos 3 segundos.
+
+![Popup de prefix G: fzf sobre todos los panes de tmux con ventana, nombre de la sesión de Claude y título, y una vista previa del pane](/images/tmux-pane-picker.png)
 
 También es un skill de Claude Code, así que puedo pedirle "vuelve a la
 sesión de la PR 2032" y lo resuelve con el mismo script.
