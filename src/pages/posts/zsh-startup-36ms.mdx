@@ -33,11 +33,11 @@ Esta vez lo perfilé con Claude Code. Le pedí "haz profiling de mi zsh".
 Primero quería saber cuánto tarda y cuánto podría tardar. Mido tres formas
 de arrancar zsh. `-c exit` hace que arranque y salga, así que solo cuenta el arranque:
 
-| Comando | Lee | Es |
+| Comando | Lee | En la práctica |
 |---|---|---|
 | `zsh -i` | `.zshrc` | un `zsh` lanzado desde otro shell |
 | `zsh -l -i` | `.zprofile` + `.zshrc` | una ventana de Terminal o Ghostty, un pane de tmux |
-| `zsh -f` | nada | zsh pelado |
+| `zsh -f` | nada | zsh bare |
 
 [hyperfine](https://github.com/sharkdp/hyperfine) ejecuta cada uno 20 veces
 (`-r 20`), tras 3 de calentamiento (`-w 3`), y sin un shell intermedio
@@ -53,7 +53,7 @@ Benchmark 3: zsh -f -c exit (20 runs)
   Wall Time      4.3 ms ±  0.3 ms     3.8 ms …   4.9 ms   -96.6%  (29.8x faster)
 ```
 
-- zsh pelado tarda 4 ms. De ahí no se baja.
+- zsh bare tarda 4 ms. De ahí no se baja.
 - Con mi config tarda 129 ms. Los otros 125 ms son míos, el 97%.
 - El login añade 16 ms más, lo que cuesta el `.zprofile`.
 
