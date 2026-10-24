@@ -6,10 +6,18 @@ import "../styles/global.css"
 interface Props {
   title: string
   description?: string
+  type?: "website" | "article"
+  noindex?: boolean
 }
 
-const { title, description = "Write the Fucking Manual - A minimalist guide to documentation" } =
-  Astro.props
+const {
+  title,
+  description = "Write the Fucking Manual - A minimalist guide to documentation",
+  type = "website",
+  noindex = false,
+} = Astro.props
+
+const canonical = new URL(Astro.url.pathname, Astro.site)
 ---
 
 <!doctype html>
@@ -22,6 +30,17 @@ const { title, description = "Write the Fucking Manual - A minimalist guide to d
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="alternate" type="application/rss+xml" title="wtfm" href="/rss.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="wtfm" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

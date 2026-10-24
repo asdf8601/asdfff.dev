@@ -7,7 +7,12 @@ const title = frontmatter?.title || "Untitled"
 const description = frontmatter?.description
 ---
 
-<BaseLayout title={`${title} - wtfm`} description={description}>
+<BaseLayout
+  title={`${title} - wtfm`}
+  description={description}
+  type="article"
+  noindex={frontmatter?.draft === true}
+>
   <article>
     <h1>{title}</h1>
     {
