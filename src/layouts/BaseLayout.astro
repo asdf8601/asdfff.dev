@@ -10,6 +10,7 @@ interface Props {
   image?: string
   type?: "website" | "article"
   noindex?: boolean
+  lang?: "en" | "es"
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   image = "/og/default.png",
   type = "website",
   noindex = false,
+  lang = "en",
 } = Astro.props
 
 const canonical = new URL(Astro.url.pathname, Astro.site)
@@ -26,7 +28,7 @@ const imageUrl = new URL(image, Astro.site)
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -40,6 +42,7 @@ const imageUrl = new URL(image, Astro.site)
     <link rel="alternate" type="application/rss+xml" title="wtfm" href="/rss.xml" />
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="wtfm" />
+    <meta property="og:locale" content={lang === "es" ? "es_ES" : "en_US"} />
     <meta property="og:title" content={shareTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

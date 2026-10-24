@@ -15,13 +15,14 @@ const slug = Astro.url.pathname.split("/").filter(Boolean).pop()
   description={description}
   type="article"
   noindex={frontmatter?.draft === true}
+  lang={frontmatter?.lang === "es" ? "es" : "en"}
 >
   <article>
     <h1>{title}</h1>
     {
       frontmatter?.date && (
         <time class="post-date" datetime={frontmatter.date}>
-          {new Date(frontmatter.date).toLocaleDateString("en-US", {
+          {new Date(frontmatter.date).toLocaleDateString(frontmatter?.lang === "es" ? "es-ES" : "en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
