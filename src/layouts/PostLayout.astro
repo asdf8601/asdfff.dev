@@ -5,10 +5,13 @@ import PageSearchModal from "../components/PageSearchModal.astro"
 const { frontmatter } = Astro.props
 const title = frontmatter?.title || "Untitled"
 const description = frontmatter?.description
+const slug = Astro.url.pathname.split("/").filter(Boolean).pop()
 ---
 
 <BaseLayout
   title={`${title} - wtfm`}
+  shareTitle={title}
+  image={`/og/${slug}.png`}
   description={description}
   type="article"
   noindex={frontmatter?.draft === true}
