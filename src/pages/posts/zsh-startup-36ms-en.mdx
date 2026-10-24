@@ -192,8 +192,31 @@ check. If you install something and Tab doesn't work for it,
 
 ### envman
 
-Some installer added it. It ran four `touch` commands and sourced four empty
-files. I removed it.
+I installed Go with [webi](https://webinstall.dev).
+webi doesn't edit your `.zshrc` directly. It keeps variables, PATH, aliases
+and functions in `~/.config/envman/` and adds one line that loads them all:
+
+```zsh
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+```
+
+And `load.sh` does this in every shell:
+
+```zsh
+# ~/.config/envman/load.sh (excerpt)
+touch -a ~/.config/envman/PATH.env
+touch -a ~/.config/envman/ENV.env
+touch -a ~/.config/envman/alias.env
+touch -a ~/.config/envman/function.sh
+
+test -z "${ENVMAN_LOAD:-}" && . ~/.config/envman/ENV.env
+test -z "${ENVMAN_LOAD:-}" && . ~/.config/envman/PATH.env
+```
+
+All four files were empty. And `touch` isn't a zsh builtin, it's
+`/usr/bin/touch`, so that's four new processes per shell to create files
+that already exist. That's ~15 ms to load nothing. I removed it.
 
 With these four:
 

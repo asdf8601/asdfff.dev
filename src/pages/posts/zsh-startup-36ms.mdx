@@ -193,8 +193,31 @@ siguiente. Si instalas algo y no te sale el Tab, `rm ~/.zcompdump`.
 
 ### envman
 
-Lo metió algún instalador. Hacía cuatro `touch` y cargaba cuatro ficheros
-vacíos. Lo quité.
+Instalé Go con [webi](https://webinstall.dev).
+webi no toca tu `.zshrc` directamente. Guarda variables, PATH, alias y
+funciones en `~/.config/envman/` y añade una línea que lo carga todo:
+
+```zsh
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+```
+
+Y `load.sh` hace esto en cada shell:
+
+```zsh
+# ~/.config/envman/load.sh (extracto)
+touch -a ~/.config/envman/PATH.env
+touch -a ~/.config/envman/ENV.env
+touch -a ~/.config/envman/alias.env
+touch -a ~/.config/envman/function.sh
+
+test -z "${ENVMAN_LOAD:-}" && . ~/.config/envman/ENV.env
+test -z "${ENVMAN_LOAD:-}" && . ~/.config/envman/PATH.env
+```
+
+Los cuatro ficheros estaban vacíos. Y `touch` no es un builtin de zsh, es
+`/usr/bin/touch`, así que son cuatro procesos nuevos por shell para crear
+ficheros que ya existen. Eran ~15 ms para cargar nada. Lo quité.
 
 Con estos cuatro:
 
