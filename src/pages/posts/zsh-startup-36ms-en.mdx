@@ -141,9 +141,20 @@ already has it.
 
 ### `compinit`
 
-I wasn't calling it. bun's completion script was, without `-C`, so
-`compaudit` ran on every start. `compinit -C` skips it: 29 ms → 15 ms,
-timing `compinit` alone under `zsh -f`. The full check runs once a day:
+The oddest find of the whole profile. I wasn't calling `compinit`, bun's
+completion script was:
+
+```zsh
+# ~/.oh-my-zsh/completions/_bun
+if ! command -v compinit >/dev/null; then
+    autoload -U compinit && compinit
+fi
+```
+
+Since my `.zshrc` didn't load it first, `_bun` ran the full `compinit`, with
+`compaudit` checking permissions, in every shell. `compinit -C` skips that:
+29 ms → 15 ms, timing `compinit` alone under `zsh -f`. Load it yourself first
+and `_bun` leaves it alone. The full check runs once a day:
 
 ```zsh
 autoload -Uz compinit

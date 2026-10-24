@@ -143,9 +143,20 @@ siguiente shell ya la tiene.
 
 ### `compinit`
 
-Yo no lo llamaba. Lo llamaba el completado de bun, sin `-C`, así que pasaba
-por `compaudit` en cada arranque. `compinit -C` se lo salta: 29 ms → 15 ms
-midiendo solo `compinit` bajo `zsh -f`. La revisión completa la dejo una vez al día:
+Lo más curioso del profiling. Yo no llamaba a `compinit`, lo llamaba el
+completado de bun:
+
+```zsh
+# ~/.oh-my-zsh/completions/_bun
+if ! command -v compinit >/dev/null; then
+    autoload -U compinit && compinit
+fi
+```
+
+Como mi `.zshrc` no lo cargaba antes, `_bun` lanzaba el `compinit` completo,
+con `compaudit` revisando permisos, en cada shell. `compinit -C` se lo salta:
+29 ms → 15 ms midiendo solo `compinit` bajo `zsh -f`. Si lo cargas tú antes,
+`_bun` ya no lo toca. La revisión completa la dejo una vez al día:
 
 ```zsh
 autoload -Uz compinit
