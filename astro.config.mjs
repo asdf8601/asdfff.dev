@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config"
 import mdx from "@astrojs/mdx"
+import sitemap from "@astrojs/sitemap"
 import remarkMath from "remark-math"
 import remarkToc from "remark-toc"
 import rehypeKatex from "rehype-katex"
@@ -29,6 +30,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    sitemap(),
     expressiveCode({
       themes: ["vitesse-light", "vitesse-dark"],
       themeCssSelector: theme => `[data-theme="${theme.type}"]`,
