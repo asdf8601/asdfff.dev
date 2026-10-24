@@ -141,20 +141,35 @@ already has it.
 
 ### `compinit`
 
-This was the oddest find of the whole profile. I wasn't calling `compinit`, bun's
-completion script was:
+`compinit` turns on zsh completion. It finds the completion files (`_git`,
+`_kubectl`...) and saves an index in `~/.zcompdump`. Before that,
+`compaudit` checks the permissions of every completion directory, and that
+is the slow part.
+
+I wasn't calling `compinit`. bun's installer added this to my `.zshrc`:
 
 ```zsh
-# ~/.oh-my-zsh/completions/_bun
+# bun completions
+[ -s "$HOME/.oh-my-zsh/completions/_bun" ] && source "$HOME/.oh-my-zsh/completions/_bun"
+```
+
+And `_bun` ends like this:
+
+```zsh
 if ! command -v compinit >/dev/null; then
     autoload -U compinit && compinit
 fi
 ```
 
-Since my `.zshrc` didn't load it first, `_bun` ran the full `compinit`, with
-`compaudit` checking permissions, in every shell. `compinit -C` skips that:
-29 ms → 15 ms, timing `compinit` alone under `zsh -f`. Load it yourself first
-and `_bun` leaves it alone. The full check runs once a day:
+If nobody loaded `compinit`, bun loads it, the full version. I'd been
+avoiding `compinit` and bun was calling it for me. You can't make this up.
+
+The fix is to load it myself first with `-C`, which skips `compaudit` and
+uses the index as is. bun sees `compinit` already exists and does nothing.
+Timing `compinit` alone under `zsh -f`, it drops from 29 ms to 15 ms.
+
+Skipping `compaudit` forever doesn't sit right either, so it runs once a
+day:
 
 ```zsh
 autoload -Uz compinit
@@ -167,8 +182,13 @@ fi
 unset _zcompdump_stale
 ```
 
-`(N.mh+24)` only matches the file if it's older than 24 hours. If you
-install something and its completions don't show up, `rm ~/.zcompdump`.
+`(N.mh+24)` only matches `.zcompdump` if it's older than 24 hours, and the
+`N` avoids an error when it doesn't match. The first shell of the day runs
+the full check and bumps the file's date. The rest use `-C`.
+
+The catch is that `-C` won't see new completions until the next day's
+check. If you install something and Tab doesn't work for it,
+`rm ~/.zcompdump`.
 
 ### envman
 

@@ -143,20 +143,35 @@ siguiente shell ya la tiene.
 
 ### `compinit`
 
-Esto fue lo más curioso del profiling. Yo no llamaba a `compinit`, lo llamaba el
-completado de bun:
+`compinit` activa el autocompletado de zsh. Busca los ficheros de completado
+(`_git`, `_kubectl`...) y guarda un índice en `~/.zcompdump`. Antes de eso,
+`compaudit` revisa los permisos de cada carpeta de completados, y eso es lo
+lento.
+
+Yo no llamaba a `compinit`. El instalador de bun añadió esto a mi `.zshrc`:
 
 ```zsh
-# ~/.oh-my-zsh/completions/_bun
+# bun completions
+[ -s "$HOME/.oh-my-zsh/completions/_bun" ] && source "$HOME/.oh-my-zsh/completions/_bun"
+```
+
+Y `_bun` acaba así:
+
+```zsh
 if ! command -v compinit >/dev/null; then
     autoload -U compinit && compinit
 fi
 ```
 
-Como mi `.zshrc` no lo cargaba antes, `_bun` lanzaba el `compinit` completo,
-con `compaudit` revisando permisos, en cada shell. `compinit -C` se lo salta:
-29 ms → 15 ms midiendo solo `compinit` bajo `zsh -f`. Si lo cargas tú antes,
-`_bun` ya no lo toca. La revisión completa la dejo una vez al día:
+Si nadie ha cargado `compinit`, lo carga bun, en versión completa. Yo
+evitando `compinit` y resulta que bun lo llamaba por mí. Es de broma.
+
+El arreglo es cargarlo yo antes con `-C`, que se salta `compaudit` y usa el
+índice tal cual. Bun ve que `compinit` ya existe y no hace nada. Midiendo
+solo `compinit` bajo `zsh -f`, baja de 29 ms a 15 ms.
+
+Saltarse `compaudit` siempre tampoco me convence, así que lo dejo una vez al
+día:
 
 ```zsh
 autoload -Uz compinit
@@ -169,8 +184,12 @@ fi
 unset _zcompdump_stale
 ```
 
-`(N.mh+24)` solo encuentra el fichero si tiene más de 24 horas. Si instalas
-algo y no salen sus completados, `rm ~/.zcompdump`.
+`(N.mh+24)` encuentra `.zcompdump` solo si tiene más de 24 horas, y la `N`
+evita el error cuando no lo encuentra. El primer shell del día hace la
+revisión completa y actualiza la fecha del fichero. El resto usa `-C`.
+
+La pega es que `-C` no ve completados nuevos hasta la revisión del día
+siguiente. Si instalas algo y no te sale el Tab, `rm ~/.zcompdump`.
 
 ### envman
 
