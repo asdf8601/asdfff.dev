@@ -29,6 +29,18 @@ This time I asked Claude Code to profile my zsh.
 
 ## Profiling
 
+First I wanted to know how long it takes and how long it could take. I time three ways to
+start zsh. `-c exit` makes it start and quit, so only startup counts:
+
+| Command | Reads | Is |
+|---|---|---|
+| `zsh -i` | `.zshrc` | a `zsh` started from another shell |
+| `zsh -l -i` | `.zprofile` + `.zshrc` | a Terminal or Ghostty window, a tmux pane |
+| `zsh -f` | nothing | bare zsh |
+
+[hyperfine](https://github.com/sharkdp/hyperfine) runs each one 20 times
+(`-r 20`), after 3 warmups (`-w 3`), with no shell in between (`-N`):
+
 ```zsh
 $ hyperfine -N -w 3 -r 20 'zsh -i -c exit' 'zsh -l -i -c exit' 'zsh -f -c exit'
 Benchmark 1: zsh -i -c exit (20 runs)
@@ -39,8 +51,9 @@ Benchmark 3: zsh -f -c exit (20 runs)
   Wall Time      4.3 ms ±  0.3 ms     3.8 ms …   4.9 ms   -96.6%  (29.8x faster)
 ```
 
-`zsh -f` starts with no config. zsh takes 4 ms, the other 125 are mine.
-macOS terminals open login shells (`-l`), which also read `.zprofile`.
+- Bare zsh takes 4 ms. You can't go below that.
+- With my config, 129 ms. The other 125 ms are mine, 97% of it.
+- Login adds 16 ms more, the cost of `.zprofile`.
 
 ## Where the time goes
 
