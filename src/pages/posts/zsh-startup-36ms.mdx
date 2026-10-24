@@ -28,7 +28,7 @@ Esta vez lo perfilé con Claude Code. Le pedí "haz profiling de mi zsh".
   | direnv | 36 ms | (no lo medí) |
 </Card>
 
-## Medir
+## Profiling
 
 ```zsh
 $ hyperfine -N -w 3 -r 20 'zsh -i -c exit' 'zsh -l -i -c exit' 'zsh -f -c exit'
@@ -98,7 +98,7 @@ $ python3 xtrace.py xtrace.log
 El trazado infla los tiempos. Así que cada sospechoso lo medí aislado con
 hyperfine, restando los 4 ms de base:
 
-| Pieza | Coste |
+| Llamada | Coste |
 |---|---|
 | `brew shellenv` (solo login) | ~33 ms |
 | autoenv | ~30 ms |
@@ -106,7 +106,7 @@ hyperfine, restando los 4 ms de base:
 | `compinit` | ~25 ms |
 | envman | ~15 ms |
 
-## Arreglos
+## Manos a la obra
 
 ### `brew shellenv`
 

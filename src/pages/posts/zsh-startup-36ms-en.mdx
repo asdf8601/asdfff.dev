@@ -27,7 +27,7 @@ This time I asked Claude Code to profile my zsh.
   | direnv | 36 ms | (not measured) |
 </Card>
 
-## Measure
+## Profiling
 
 ```zsh
 $ hyperfine -N -w 3 -r 20 'zsh -i -c exit' 'zsh -l -i -c exit' 'zsh -f -c exit'
@@ -96,7 +96,7 @@ $ python3 xtrace.py xtrace.log
 Tracing inflates the times. So I measured each suspect alone with
 hyperfine, minus the 4 ms baseline:
 
-| Piece | Cost |
+| Call | Cost |
 |---|---|
 | `brew shellenv` (login only) | ~33 ms |
 | autoenv | ~30 ms |
@@ -104,7 +104,7 @@ hyperfine, minus the 4 ms baseline:
 | `compinit` | ~25 ms |
 | envman | ~15 ms |
 
-## Fixes
+## Hands on
 
 ### `brew shellenv`
 
