@@ -108,8 +108,20 @@ hyperfine, minus the 4 ms baseline:
 
 ### `brew shellenv`
 
-The `eval` launches brew in every login shell to print a few `export` lines that never
-change. I pasted them into `.zprofile`:
+On an Apple Silicon Mac, Homebrew installs into `/opt/homebrew`, which isn't
+on the PATH. The install tells you to add this to `.zprofile`:
+
+```zsh
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+`brew shellenv` changes nothing, it only prints a few `export` lines (PATH,
+`fpath` for completions, `HOMEBREW_PREFIX`...) and the `eval` runs them. The
+problem is that printing them means starting brew, in every login shell.
+And the output only depends on where Homebrew lives, so it's always the
+same.
+
+So I pasted it as is into `.zprofile`:
 
 ```zsh
 # static output of `brew shellenv zsh`, inlined because running brew costs ~30ms
@@ -120,6 +132,9 @@ fpath[1,0]="/opt/homebrew/share/zsh/site-functions"
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
 export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 ```
+
+If you move Homebrew or a new version changes what it prints, compare it
+with `brew shellenv zsh`.
 
 ### podman
 
