@@ -250,13 +250,23 @@ que tenía en algún `.autoenv` pasaron a scripts.
 ## Resultado
 
 ```zsh
+# antes
+$ hyperfine -N -w 3 -r 20 'zsh -i -c exit'
+Benchmark 1: zsh -i -c exit (20 runs)
+  Wall Time    128.7 ms ±  8.4 ms   110.0 ms … 143.8 ms
+
+# después
 $ hyperfine -N -w 3 -r 20 'zsh -i -c exit'
 Benchmark 1: zsh -i -c exit (20 runs)
   Wall Time     36.2 ms ±  2.6 ms    32.1 ms …  41.1 ms
 ```
 
+De 128.7 ms a 36.2 ms. Son 92 ms menos, un 72% menos de tiempo, y arranca
+3.6 veces más rápido.
+
 ## Links
 
 - [Post anterior: Optimizing zsh on macOS](/posts/zsh-on-macos-profiling/)
+- [How fast is your shell?](https://registerspill.thorstenball.com/p/how-fast-is-your-shell), de Thorsten Ball. Me encanta.
 - [hyperfine](https://github.com/sharkdp/hyperfine) · [direnv](https://direnv.net/) · [zsh completion system](https://zsh.sourceforge.io/Doc/Release/Completion-System.html)
 - Commits: [perf(zsh)](https://github.com/asdf8601/dotfiles/commit/dec8cb4806cd6bedcabd3965abcadb25b6c7dbf0) · [direnv](https://github.com/asdf8601/dotfiles/commit/1331881d560659e6d7a123eff03784546d59c4ad)
