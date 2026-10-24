@@ -292,6 +292,31 @@ Benchmark 1: zsh -i -c exit (20 runs)
 De 128.7 ms a 36.2 ms. Son 92 ms menos, un 72% menos de tiempo, y arranca
 3.6 veces más rápido.
 
+## Learnings
+
+Sobre zsh:
+
+- Cada proceso externo cuesta ~25 ms. `podman --version` solo ya tarda 25.
+  Saca del arranque todo lo que no sea builtin.
+- Tres de los cinco culpables los metió un instalador: bun, webi y Homebrew.
+  Revisa tu `.zshrc` de vez en cuando.
+- `zprof` no ve `eval` ni subprocesos. Para eso está el `xtrace` con
+  timestamps.
+- Si un valor casi nunca cambia, cachéalo.
+- Mide el shell que usas de verdad. Las terminales y tmux abren shells de
+  login, que también leen el `.zprofile`.
+
+Sobre Claude:
+
+- Le pedí "haz profiling de mi zsh" sin más, y eligió el método: medir el
+  total, trazar cada línea y medir cada sospechoso aislado.
+- No se fió del `xtrace`, que infla los tiempos, y volvió a medir antes de
+  proponer nada.
+- Propuso los cambios en una tabla, los aplicó cuando le dije y luego
+  comprobó que todo seguía funcionando.
+- Empezó como profiling y acabó en una limpieza del `.zshrc`, con direnv
+  incluido.
+
 ## Links
 
 - [Post anterior: Optimizing zsh on macOS](/posts/zsh-on-macos-profiling/)
