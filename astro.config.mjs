@@ -1,3 +1,4 @@
+import { readdirSync, readFileSync } from "node:fs"
 import { defineConfig } from "astro/config"
 import mdx from "@astrojs/mdx"
 import sitemap from "@astrojs/sitemap"
@@ -7,6 +8,10 @@ import rehypeKatex from "rehype-katex"
 import rehypeAutolinkHeadings from "rehype-autolink-headings"
 
 import expressiveCode from "astro-expressive-code"
+
+const draftPaths = readdirSync("src/pages/posts")
+  .filter(file => /^draft:\s*true\s*$/m.test(readFileSync(`src/pages/posts/${file}`, "utf8")))
+  .map(file => `/posts/${file.replace(/\.mdx?$/, "")}/`)
 
 export default defineConfig({
   site: "https://blog.asdfff.dev",
@@ -30,7 +35,9 @@ export default defineConfig({
     },
   },
   integrations: [
-    sitemap(),
+    sitemap({
+      filter: page => !draftPaths.some(path => page.endsWith(path)),
+    }),
     expressiveCode({
       themes: ["vitesse-light", "vitesse-dark"],
       themeCssSelector: theme => `[data-theme="${theme.type}"]`,
