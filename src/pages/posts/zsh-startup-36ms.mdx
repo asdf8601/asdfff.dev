@@ -1,0 +1,203 @@
+---
+title: "Mi zsh volvió a engordar: de 130 ms a 36 ms"
+lang: es
+description: "Mi zsh tardaba 130 ms en arrancar. Con hyperfine y un xtrace con marcas de tiempo encontré cinco culpables, y ahora arranca en 36 ms."
+date: 2026-10-24
+tag: [spanish, zsh, macos, performance, claude-code]
+category: programming
+---
+
+import Card from "../../components/Card.astro"
+
+_[Read in English](/posts/zsh-startup-36ms-en/)_
+
+<Card title="Resumen">
+  zsh tardaba 130 ms en arrancar. Copié a mano la salida de `brew shellenv`,
+  cacheé el socket de podman, llamé a `compinit -C`, quité envman y cambié
+  autoenv por direnv. Ahora arranca en 36 ms.
+</Card>
+
+En 2024 [dejé zsh en 50 ms](/posts/zsh-on-macos-profiling/) quitando
+oh-my-zsh. Dos años después volvía a tardar 130 ms. Nadie añade 80 ms de
+golpe, se cuelan de 10 en 10 con cada herramienta que instalas y que te pide
+una línea en el `.zshrc`.
+
+Esta vez hice el profiling con Claude Code, en una sesión sobre mis
+[dotfiles](https://github.com/asdf8601/dotfiles). Le pedí "haz profiling de
+mi zsh" y fue midiendo pieza a pieza. Aquí cuento cómo lo medimos y qué
+cambió.
+
+## Medir
+
+Lo primero es saber cuánto tarda y cuánto podría tardar.
+[hyperfine](https://github.com/sharkdp/hyperfine) lanza el comando muchas
+veces y da la media:
+
+```zsh
+hyperfine -N -w 3 -r 20 'zsh -i -c exit' 'zsh -l -i -c exit' 'zsh -f -c exit'
+```
+
+```
+zsh -i -c exit      128.7 ms ±  8.4 ms
+zsh -l -i -c exit   145.2 ms ± 18.0 ms
+zsh -f -c exit        4.3 ms ±  0.3 ms
+```
+
+`zsh -f` arranca sin leer ninguna configuración, así que zsh en sí tarda
+4 ms. Los otros 125 ms son míos.
+
+## Encontrar a los culpables
+
+`zprof`, que usé en el post anterior, solo mide funciones. Un `eval
+"$(brew shellenv)"` no es una función, así que no aparece. Para ver cada
+línea, Claude activó el trazado de zsh con una marca de tiempo en el prompt
+de traza (`PS4`):
+
+```zsh
+PS4='+%D{%s.%6.}|%x|%I> ' zsh -l -i -x -c exit 2> xtrace.log
+```
+
+Cada línea del log lleva el instante en microsegundos, el fichero y el
+número de línea. Un script de Python de veinte líneas resta cada marca de la
+siguiente y suma por fichero:
+
+```
+-- per file (ms)
+   39.4  ~/.autoenv/activate.sh
+   38.7  ~/.zprofile
+   32.2  ~/.zshrc
+   14.9  ~/.config/envman/load.sh
+   13.2  /usr/share/zsh/5.9/functions/compaudit
+
+-- slowest single lines (ms)
+   37.4  ~/.zprofile:5  /opt/homebrew/bin/brew shellenv
+   25.5  ~/.zshrc:659   podman machine inspect
+```
+
+El trazado infla los tiempos, porque escribir cada línea al log también
+cuesta. Por eso, una vez localizado cada sospechoso, lo medimos aislado con
+hyperfine y restamos los 4 ms de base:
+
+| Pieza | Coste |
+|---|---|
+| `brew shellenv` | ~33 ms |
+| autoenv | ~30 ms |
+| `podman machine inspect` | ~27 ms |
+| `compinit` | ~25 ms |
+| envman | ~15 ms |
+
+## Los arreglos
+
+### `brew shellenv`: copiar su salida
+
+`eval "$(brew shellenv)"` lanza brew en cada shell solo para imprimir unos
+`export` que no cambian nunca. Los copié al `.zprofile`:
+
+```zsh
+# static output of `brew shellenv zsh`, inlined because running brew costs ~30ms
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+fpath[1,0]="/opt/homebrew/share/zsh/site-functions"
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+```
+
+Si algún día mueves Homebrew, compara este bloque con la salida de `brew
+shellenv zsh`.
+
+### podman: leer el socket de una caché
+
+Uso podman en vez de Docker, y `DOCKER_HOST` tiene que apuntar a su socket.
+Preguntarle la ruta a `podman machine inspect` costaba 27 ms en cada shell.
+Ahora la leo de un fichero y la refresco en segundo plano:
+
+```zsh
+_podman_host_cache=$HOME/.cache/podman-docker-host
+[[ -s $_podman_host_cache ]] && export DOCKER_HOST=$(<$_podman_host_cache)
+(
+    sock=$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' 2>/dev/null) \
+        && [[ -n $sock ]] && print -r -- "unix://$sock" >| $_podman_host_cache
+) &!
+```
+
+`&!` lanza el subshell en segundo plano y lo desvincula, así que el prompt
+no lo espera. Si la ruta cambia, el primer shell usa la vieja y el
+siguiente ya tiene la nueva.
+
+### `compinit -C`, con revisión diaria
+
+Yo no llamaba a `compinit`. Lo llamaba el script de completado de bun, que
+lo ejecuta completo si nadie lo ha cargado antes. El modo completo pasa por
+`compaudit`, que revisa los permisos de cada directorio de completados en
+cada arranque. `compinit -C` se lo salta y baja de 29 ms a 15 ms.
+
+Saltarse la revisión siempre no me gusta, así que se hace una vez al día:
+
+```zsh
+autoload -Uz compinit
+_zcompdump_stale=(${ZDOTDIR:-$HOME}/.zcompdump(N.mh+24))
+if (( $#_zcompdump_stale )); then
+    compinit && touch ${ZDOTDIR:-$HOME}/.zcompdump
+else
+    compinit -C
+fi
+unset _zcompdump_stale
+```
+
+`(N.mh+24)` es un glob de zsh que solo encuentra el fichero si se modificó
+hace más de 24 horas. Si instalas algo con completados nuevos y no aparecen,
+borra `~/.zcompdump`.
+
+### envman: fuera
+
+envman lo había metido algún instalador. Su loader hacía cuatro `touch` y
+cargaba cuatro ficheros vacíos. Lo borré.
+
+Con estos cuatro cambios, zsh pasó de 129 ms a **52 ms**.
+
+### autoenv: cambio a direnv
+
+autoenv era lo más lento que quedaba, con 30 ms. Además hace `source` de
+cada `.autoenv` dentro de tu shell. Yo tenía `AUTOENV_ASSUME_YES=1`, así que
+cualquier repo que clonara podía ejecutar código con solo hacer `cd`. Y al
+salir del directorio no deshace nada, el venv y las variables se quedan
+puestos.
+
+[direnv](https://direnv.net/) ejecuta el `.envrc` en un bash aparte, aplica
+solo las variables que cambiaron y las quita al salir. No ejecuta un
+`.envrc` nuevo hasta que lo apruebas con `direnv allow`. Su hook cuesta unos
+8 ms:
+
+```zsh
+eval "$(direnv hook zsh)"
+```
+
+Tiene una pega. direnv solo exporta variables, así que lo que mis
+`.autoenv` hacían además, como definir funciones o abrir un túnel SSH al
+entrar, tuvo que pasar a scripts aparte.
+
+Con direnv, zsh arranca en **36 ms**.
+
+## Resultado
+
+| | `zsh -i` |
+|---|---|
+| Antes | 129 ms |
+| Cuatro arreglos | 52 ms |
+| Con direnv | 36 ms |
+
+36 ms no se notan al abrir una terminal. Con decenas de panes de tmux
+abriéndose y cerrándose cada día, sí se nota cuando son 130.
+
+Lo que me llevo de esta vez es el método más que los arreglos. `zprof` no
+ve los `eval` ni los subprocesos, y casi todo el tiempo perdido estaba ahí.
+El trazado con marcas de tiempo dice dónde mirar, y hyperfine dice cuánto
+cuesta de verdad cada sospechoso.
+
+## Links
+
+- [Post anterior: Optimizing zsh on macOS](/posts/zsh-on-macos-profiling/)
+- [hyperfine](https://github.com/sharkdp/hyperfine) · [direnv](https://direnv.net/) · [zsh: completion system](https://zsh.sourceforge.io/Doc/Release/Completion-System.html)
+- Los commits: [perf(zsh): cut shell startup](https://github.com/asdf8601/dotfiles/commit/dec8cb4806cd6bedcabd3965abcadb25b6c7dbf0) · [feat(shell): replace autoenv with direnv](https://github.com/asdf8601/dotfiles/commit/1331881d560659e6d7a123eff03784546d59c4ad)
+- [Mis dotfiles](https://github.com/asdf8601/dotfiles)
