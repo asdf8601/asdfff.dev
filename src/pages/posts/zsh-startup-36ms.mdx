@@ -30,8 +30,8 @@ Esta vez lo perfilé con Claude Code. Le pedí "haz profiling de mi zsh".
 
 ## Profiling
 
-Primero quería saber cuánto tarda y cuánto podría tardar. Mido tres formas de arrancar
-zsh. `-c exit` hace que arranque y salga, así que solo cuenta el arranque:
+Primero quería saber cuánto tarda y cuánto podría tardar. Mido tres formas
+de arrancar zsh. `-c exit` hace que arranque y salga, así que solo cuenta el arranque:
 
 | Comando | Lee | Es |
 |---|---|---|
@@ -54,7 +54,7 @@ Benchmark 3: zsh -f -c exit (20 runs)
 ```
 
 - zsh pelado tarda 4 ms. De ahí no se baja.
-- Con mi config, 129 ms. Los otros 125 ms son míos, el 97%.
+- Con mi config tarda 129 ms. Los otros 125 ms son míos, el 97%.
 - El login añade 16 ms más, lo que cuesta el `.zprofile`.
 
 ## Dónde se va el tiempo
