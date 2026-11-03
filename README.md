@@ -16,6 +16,7 @@ Minimalist personal site. Terminal aesthetic. Zero bloat.
 - TIL entries with anchor links
 - Custom beveled borders (6px left/bottom, 1px top/right)
 - Monospace typography
+- Sitemap, robots.txt, RSS feed and Open Graph share images
 
 ## Commands
 
@@ -41,15 +42,22 @@ npm run build
 src/
 ├── components/
 │   ├── Search.astro         # Client-side search component
-│   └── ThemeToggle.astro    # Dark/light mode toggle
+│   ├── ThemeToggle.astro    # Dark/light mode toggle
+│   └── ...                  # Cards, grids, charts, diagrams
 ├── layouts/
-│   └── BaseLayout.astro     # Base layout with nav + footer
+│   ├── BaseLayout.astro     # Base layout with nav + footer
+│   └── PostLayout.astro     # Post layout
 ├── pages/
 │   ├── index.astro          # Main page (wtfm)
+│   ├── posts/               # Blog posts (.mdx)
 │   ├── posts.astro          # Blog index
 │   ├── til.astro            # Today I Learned notes
 │   ├── projects.astro       # Projects showcase
+│   ├── quotes.astro         # Quotes
+│   ├── search.astro         # Search page
 │   ├── about.astro          # About page
+│   ├── rss.xml.ts           # RSS feed
+│   ├── og/                  # Open Graph share images
 │   └── 404.astro            # Error page
 └── styles/
     └── global.css           # Global styles + theme variables
@@ -58,6 +66,10 @@ src/
 ## Search
 
 Search data is generated at build time via `generate-search-data.js`. The script crawls all pages and creates a JSON index at `public/search-data.json`.
+
+## Analytics
+
+Visits are tracked with [GoatCounter](https://www.goatcounter.com/). The script is in `src/layouts/BaseLayout.astro` and points to `https://asdfff.goatcounter.com`. Stats are in the GoatCounter dashboard.
 
 ## Deployment
 
