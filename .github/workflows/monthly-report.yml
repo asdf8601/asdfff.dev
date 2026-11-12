@@ -1,0 +1,41 @@
+name: Monthly analytics report
+
+on:
+  schedule:
+    - cron: "0 8 1 * *"
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build report from GoatCounter
+        env:
+          TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+        run: |
+          start=$(date -u -d "$(date -u +%Y-%m-01) -1 month" +%Y-%m-01T00:00:00Z)
+          end=$(date -u +%Y-%m-01T00:00:00Z)
+          month=$(date -u -d "$start" +%B\ %Y)
+          api=https://asdfff.goatcounter.com/api/v0/stats
+          curl -fsS -H "Authorization: Bearer $TOKEN" "$api/total?start=$start&end=$end" -o total.json
+          curl -fsS -H "Authorization: Bearer $TOKEN" "$api/hits?start=$start&end=$end&limit=10" -o hits.json
+          {
+            echo "From: asdfff.dev <mmngreco@gmail.com>"
+            echo "To: mmngreco@gmail.com"
+            echo "Subject: asdfff.dev - visitas $month"
+            echo "Content-Type: text/plain; charset=UTF-8"
+            echo
+            echo "Visitas en $month: $(jq .total total.json)"
+            echo
+            echo "Top paginas:"
+            jq -r '.hits[] | "\(.count)\t\(.path)"' hits.json
+          } > mail.txt
+
+      - name: Send email
+        env:
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          curl -fsS --ssl-reqd --url smtp://smtp.gmail.com:587 \
+            --mail-from mmngreco@gmail.com --mail-rcpt mmngreco@gmail.com \
+            --user "mmngreco@gmail.com:$GMAIL_APP_PASSWORD" \
+            -T mail.txt
