@@ -13,8 +13,8 @@ jobs:
         env:
           TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
         run: |
-          start=$(date -u -d "$(date -u +%Y-%m-01) -1 month" +%Y-%m-01T00:00:00Z)
-          end=$(date -u +%Y-%m-01T00:00:00Z)
+          start=$(date -u -d "$(date -u +%Y-%m-01) -1 month" +%Y-%m-%d)
+          end=$(date -u +%Y-%m-%d)
           month=$(date -u -d "$start" +%B\ %Y)
           api=https://asdfff.goatcounter.com/api/v0/stats
           curl -fsS -H "Authorization: Bearer $TOKEN" "$api/total?start=$start&end=$end" -o total.json
